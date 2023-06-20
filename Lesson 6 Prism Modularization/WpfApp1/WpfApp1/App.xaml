@@ -1,0 +1,14 @@
+﻿<dryIoc:PrismApplication x:Class="WpfApp1.App"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:local="clr-namespace:WpfApp1"
+                        xmlns:dryIoc="http://prismlibrary.com/">
+    <Application.Resources>
+        <!--添加写好的资源字典-->
+        <ResourceDictionary>
+             <ResourceDictionary.MergedDictionaries>
+                 <ResourceDictionary Source="ButtonStyle.xaml"></ResourceDictionary>
+             </ResourceDictionary.MergedDictionaries>
+         </ResourceDictionary>
+    </Application.Resources>
+</dryIoc:PrismApplication>
