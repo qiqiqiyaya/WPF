@@ -12,7 +12,7 @@ namespace Practice
     {
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation<MainWindow>();
+            containerRegistry.RegisterForNavigation<MainWindow,MainWindowViewModel>();
         }
 
         protected override Window CreateShell()

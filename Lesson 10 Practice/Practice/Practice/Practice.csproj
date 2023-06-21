@@ -8,16 +8,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\MiSans-Normal.ttf" />
     <None Remove="Resources\201962717351564989.jpeg" />
+    <None Remove="Resources\R.gif" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Fonts\MiSans-Normal.ttf" />
     <Resource Include="Resources\201962717351564989.jpeg" />
+    <Resource Include="Resources\R.gif" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
+    <PackageReference Include="XamlAnimatedGif" Version="2.1.1" />
   </ItemGroup>
 
 </Project>

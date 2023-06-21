@@ -23,15 +23,9 @@ namespace Practice
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly MainWindowViewModel _viewModel;
-
-        public MainWindow(MainWindowViewModel viewModel)
+        public MainWindow()
         {
             InitializeComponent();
-
-            _viewModel = viewModel;
-            DataContext = _viewModel;
-
             //MenuClose.Content = new DynamicResourceExtension()
             //{
             //    ResourceKey = new PackIconExtension(PackIconKind.MenuClose, 24)
@@ -51,6 +45,18 @@ namespace Practice
                 this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             };
 
+            //BindingOperations.SetBinding()
+
+
+            //var packIcon = new PackIcon();
+            //packIcon.Kind = PackIconKind.MenuClose;
+            //packIcon.Height = 24;
+            //packIcon.Width = 24;
+
+            //var bind = new Binding("");
+            //bind.Source = packIcon;
+
+            //MenuClose.SetBinding(ContentControl.ContentProperty, bind);
 
         }
 
