@@ -8,8 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Practice.ViewModels"
     Title="MainWindow"
-    Width="1200"
-    Height="650"
+    Width="1300"
+    Height="750"
     AllowsTransparency="True"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{materialDesign:MaterialDesignFont}"
@@ -115,7 +115,7 @@
                             <TextBlock
                                 Margin="5,0,0,0"
                                 VerticalAlignment="Center"
-                                Text="中国制造" />
+                                Text="Home" />
                         </StackPanel>
                     </Button>
 
@@ -386,7 +386,6 @@
             </Grid.RowDefinitions>
             <materialDesign:ColorZone
                 x:Name="Header"
-                Grid.Column="1"
                 Padding="0,16,16,16"
                 materialDesign:ElevationAssist.Elevation="Dp0"
                 DockPanel.Dock="Top"
@@ -426,25 +425,58 @@
                             Margin="2.5,0"
                             Click="Minimized_OnClick"
                             Content="—"
-                            Style="{StaticResource MaterialDesignFlatDarkButton}"
-                            ToolTip="MaterialDesignFlatButton" />
+                            Style="{StaticResource MaterialDesignFlatDarkButton}" />
                         <Button
                             x:Name="Maximized"
                             Margin="2.5,0"
                             Click="Maximized_OnClick"
                             Content="☐"
-                            Style="{StaticResource MaterialDesignFlatDarkButton}"
-                            ToolTip="MaterialDesignFlatButton" />
+                            Style="{StaticResource MaterialDesignFlatDarkButton}" />
                         <Button
                             x:Name="Close"
                             Margin="2.5,0"
                             Click="Close_OnClick"
                             Content="✕"
-                            Style="{StaticResource MaterialDesignFlatDarkButton}"
-                            ToolTip="MaterialDesignFlatButton" />
+                            Style="{StaticResource MaterialDesignFlatDarkButton}" />
                     </StackPanel>
                 </Grid>
             </materialDesign:ColorZone>
+
+            <TabControl
+                Grid.Row="1"
+                Margin="0,0,5,0"
+                HorizontalContentAlignment="Left">
+                <TabItem Header="Home">
+                    <TextBlock Margin="8" Text="Not filled, required width, tab 2" />
+                </TabItem>
+                <TabItem>
+                    <TabItem.HeaderTemplate>
+                        <ItemContainerTemplate>
+                            <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="TAB1" />
+                                <Button
+                                    Height="{Binding Height, ElementName=TabItemHeader}"
+                                    Margin="10,0,0,0"
+                                    Padding="0"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignFlatButton}">
+                                    <materialDesign:PackIcon
+                                        Width="22"
+                                        Height="22"
+                                        Kind="Close" />
+                                </Button>
+                            </StackPanel>
+                        </ItemContainerTemplate>
+                    </TabItem.HeaderTemplate>
+                    <TextBlock Margin="8" Text="Not filled, required width, tab 1" />
+                </TabItem>
+                <TabItem Header="TAB 3 Extremely Wide">
+                    <TextBlock Margin="8" Text="Not filled, required width, tab 3" />
+                </TabItem>
+                <TabItem Header="TAB 4">
+                    <TextBlock Margin="8" Text="Not filled, required width, tab 4" />
+                </TabItem>
+            </TabControl>
         </Grid>
 
     </Grid>
