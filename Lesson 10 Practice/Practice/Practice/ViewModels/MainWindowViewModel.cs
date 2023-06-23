@@ -1,7 +1,12 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Mvvm;
 using System.Windows;
+using Practice.Models;
+using System.Windows.Controls;
 
 namespace Practice.ViewModels
 {
@@ -20,6 +25,7 @@ namespace Practice.ViewModels
             IconMenuClose = new PackIcon() { Kind = PackIconKind.MenuClose, Width = 24, Height = 24 };
             IconMenuOpen = new PackIcon() { Kind = PackIconKind.MenuOpen, Width = 24, Height = 24 };
             _leftContentButtonIcon = IconMenuOpen;
+            LoadMenu();
         }
 
         #region LeftMenu
@@ -118,6 +124,43 @@ namespace Practice.ViewModels
             }
 
             _leftMenuClose = !_leftMenuClose;
+        }
+
+        private ObservableCollection<MenuBar> _menuItems;
+        /// <summary>
+        /// 菜单
+        /// </summary>
+        public ObservableCollection<MenuBar> MenuItems
+        {
+            get => _menuItems;
+            set => SetProperty(ref _menuItems, value);
+        }
+
+        protected virtual void LoadMenu()
+        {
+            MenuItems = new ObservableCollection<MenuBar>();
+            MenuItems.AddRange(new List<MenuBar>()
+            {
+                new MenuBar() { Icon = "Home", NameSpace = "", Title = "Home" },
+                new MenuBar() { Icon = "Microsoft", NameSpace = "", Title = "工作软件" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+            });
         }
         #endregion
     }

@@ -25,4 +25,8 @@
     <PackageReference Include="XamlAnimatedGif" Version="2.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
+
 </Project>

@@ -12,11 +12,6 @@
     Height="750"
     AllowsTransparency="True"
     Background="{DynamicResource MaterialDesignPaper}"
-    FontFamily="{materialDesign:MaterialDesignFont}"
-    TextElement.FontSize="14"
-    TextElement.FontWeight="Medium"
-    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
     <Window.DataContext>
@@ -95,288 +90,26 @@
                 </Button>
             </Border>
 
-            <ScrollViewer
-                x:Name="MenuViewer"
+            <ListBox
                 Grid.Row="2"
-                Background="{DynamicResource PrimaryHueMidForegroundBrush}"
-                Style="{StaticResource ForScrollViewer}">
-
-                <StackPanel Margin="15,0" Orientation="Vertical">
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
+                ItemContainerStyle="{DynamicResource MenuListBoxItemStyle}"
+                ItemsSource="{Binding MenuItems}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
+                                Width="25"
+                                Height="25"
+                                Margin="17,0"
+                                Kind="{Binding Path=Icon}" />
                             <TextBlock
-                                Margin="5,0,0,0"
                                 VerticalAlignment="Center"
-                                Text="Home" />
+                                Text="{Binding Title}"
+                                Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.BigAvatarVisibility}" />
                         </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-                    <Button
-                        Margin="0,2.5"
-                        HorizontalContentAlignment="Left"
-                        Style="{DynamicResource MaterialDesignFlatDarkButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Kind="Home" />
-                            <TextBlock
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Center"
-                                Text="中国制造" />
-                        </StackPanel>
-                    </Button>
-
-
-                </StackPanel>
-            </ScrollViewer>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
 
         <Grid Grid.Column="1">

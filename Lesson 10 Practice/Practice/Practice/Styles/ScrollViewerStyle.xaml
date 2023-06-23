@@ -256,5 +256,5 @@
     <!--<Style BasedOn="{StaticResource ForScrollbar}" TargetType="ScrollBar" />-->
 
     <!--  默认ScrollView  -->
-    <!--<Style BasedOn="{StaticResource ForScrollViewer}" TargetType="ScrollViewer" />-->
+    <Style BasedOn="{StaticResource ForScrollViewer}" TargetType="ScrollViewer" />
 </ResourceDictionary>
