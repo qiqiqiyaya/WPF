@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using MaterialDesignThemes.Wpf;
@@ -7,6 +8,10 @@ using Prism.Mvvm;
 using System.Windows;
 using Practice.Models;
 using System.Windows.Controls;
+using Prism.Regions;
+using Prism.Ioc;
+using System.Reflection.Metadata;
+using Practice.Views;
 
 namespace Practice.ViewModels
 {
@@ -14,9 +19,16 @@ namespace Practice.ViewModels
     {
         public DelegateCommand LeftContentButtonCommand { get; }
 
-        public MainWindowViewModel()
+        public DelegateCommand<MenuBar> MenuNavigateCommand { get; }
+        private readonly IRegionManager _regionManager;
+        private readonly IContainerProvider _containerProvider;
+
+        public MainWindowViewModel(IRegionManager regionManager, IContainerExtension containerProvider)
         {
+            MenuNavigateCommand = new DelegateCommand<MenuBar>(MenuNavigate);
             LeftContentButtonCommand = new DelegateCommand(LeftContentButtonAction);
+            _regionManager = regionManager;
+            _containerProvider = containerProvider;
             this.Init();
         }
 
@@ -136,12 +148,19 @@ namespace Practice.ViewModels
             set => SetProperty(ref _menuItems, value);
         }
 
+        public ObservableCollection<TabMenuItem> TabItems { get; set; } = new ObservableCollection<TabMenuItem>(
+            new List<TabMenuItem>()
+            {
+                new TabMenuItem() {Header = "Home" ,Icon = "Home",ViewType = typeof(HomeView)},
+                new TabMenuItem() {Header = "工作软件",Icon = "Microsoft" ,ViewType = typeof(WorkingSoftwareView)},
+            });
+
         protected virtual void LoadMenu()
         {
             MenuItems = new ObservableCollection<MenuBar>();
             MenuItems.AddRange(new List<MenuBar>()
             {
-                new MenuBar() { Icon = "Home", NameSpace = "", Title = "Home" },
+                new MenuBar() { Icon = "Home", NameSpace = "", Title = "Home",MenuTabItem = new MenuTabItem(){CloseBtn = Visibility.Hidden}},
                 new MenuBar() { Icon = "Microsoft", NameSpace = "", Title = "工作软件" },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
@@ -161,6 +180,22 @@ namespace Practice.ViewModels
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
             });
+
+            TabItems[0].Content = _containerProvider.Resolve(TabItems[0].ViewType);
+        }
+
+        protected virtual void MenuNavigate(MenuBar menu)
+        {
+            //var homeView = _containerProvider.Resolve<HomeView>();
+            //Test = homeView;
+            //MenuItems[0].MenuTabItem = new MenuTabItem() { CloseBtn = Visibility.Hidden, Content = homeView };
+
+            TabItems[1].Content = _containerProvider.Resolve(TabItems[1].ViewType);
+            //_regionManager.Regions["ContentRegion"].RequestNavigate("HomeView");
+            //var aa = _regionManager;
+            //var bb = _containerProvider;
+            //_containerProvider.GetService<>();
+
         }
         #endregion
     }

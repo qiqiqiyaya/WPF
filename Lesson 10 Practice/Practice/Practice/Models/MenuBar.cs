@@ -1,4 +1,6 @@
 ﻿using Prism.Mvvm;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Practice.Models
 {
@@ -31,5 +33,17 @@ namespace Practice.Models
             set { _nameSpace = value; }
         }
 
+        /// <summary>
+        /// tab内容
+        /// </summary>
+        public MenuTabItem MenuTabItem { get; set; }
+
+    }
+
+    public class MenuTabItem
+    {
+        public Visibility CloseBtn { get; set; } 
+
+        public object Content { get; set; }
     }
 }

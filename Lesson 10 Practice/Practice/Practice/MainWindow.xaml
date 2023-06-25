@@ -4,19 +4,43 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
     xmlns:viewModels="clr-namespace:Practice.ViewModels"
     Title="MainWindow"
     Width="1300"
     Height="750"
+    d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
     AllowsTransparency="True"
     Background="{DynamicResource MaterialDesignPaper}"
     WindowStyle="None"
     mc:Ignorable="d">
-    <Window.DataContext>
+    <!--  使用 d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}" Resharp 给出提示  -->
+    <!--<Window.DataContext>
         <viewModels:MainWindowViewModel />
-    </Window.DataContext>
+    </Window.DataContext>-->
+    <Window.Resources>
+        <DataTemplate x:Key="TestTemplate" DataType="TabItem">
+            <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="{Binding Path=Header}" />
+                <Button
+                    Height="{Binding Height, ElementName=TabItemHeader}"
+                    Margin="10,0,0,0"
+                    Padding="0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    Visibility="Visible">
+                    <materialDesign:PackIcon
+                        Width="22"
+                        Height="22"
+                        Kind="Close" />
+                </Button>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="LeftContent" Width="{Binding LeftContentWidth}" />
@@ -91,9 +115,16 @@
             </Border>
 
             <ListBox
+                x:Name="MenuBar"
                 Grid.Row="2"
                 ItemContainerStyle="{DynamicResource MenuListBoxItemStyle}"
                 ItemsSource="{Binding MenuItems}">
+                <!--  设置item绑定事件  -->
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding MenuNavigateCommand}" CommandParameter="{Binding ElementName=MenuBar, Path=SelectedItem}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -129,11 +160,6 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <!--
-                        Content="{materialDesign:PackIcon Kind=MenuClose,
-                        Size=24}"
-                    -->
-                    <!--  Command="{Binding MenuAction}"  -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal">
                         <Button
                             x:Name="MenuClose"
@@ -176,39 +202,43 @@
             </materialDesign:ColorZone>
 
             <TabControl
+                x:Name="TabControl"
                 Grid.Row="1"
                 Margin="0,0,5,0"
-                HorizontalContentAlignment="Left">
-                <TabItem Header="Home">
-                    <TextBlock Margin="8" Text="Not filled, required width, tab 2" />
-                </TabItem>
-                <TabItem>
-                    <TabItem.HeaderTemplate>
-                        <ItemContainerTemplate>
-                            <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
-                                <TextBlock VerticalAlignment="Center" Text="TAB1" />
-                                <Button
-                                    Height="{Binding Height, ElementName=TabItemHeader}"
-                                    Margin="10,0,0,0"
-                                    Padding="0"
-                                    VerticalAlignment="Center"
-                                    Style="{StaticResource MaterialDesignFlatButton}">
-                                    <materialDesign:PackIcon
-                                        Width="22"
-                                        Height="22"
-                                        Kind="Close" />
-                                </Button>
-                            </StackPanel>
-                        </ItemContainerTemplate>
-                    </TabItem.HeaderTemplate>
-                    <TextBlock Margin="8" Text="Not filled, required width, tab 1" />
-                </TabItem>
-                <TabItem Header="TAB 3 Extremely Wide">
-                    <TextBlock Margin="8" Text="Not filled, required width, tab 3" />
-                </TabItem>
-                <TabItem Header="TAB 4">
-                    <TextBlock Margin="8" Text="Not filled, required width, tab 4" />
-                </TabItem>
+                HorizontalContentAlignment="Left"
+                ItemsSource="{Binding TabItems}">
+                <!--  设置 tab item 演示  -->
+                <TabControl.ItemContainerStyle>
+                    <!--  继承 MaterialDesignThemes 的tabItem样式  -->
+                    <Style BasedOn="{StaticResource MaterialDesignTabItem}" TargetType="TabItem">
+                        <Setter Property="HeaderTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Width="25"
+                                            Height="25"
+                                            Margin="17,0"
+                                            Kind="{Binding Icon}" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding RelativeSource={RelativeSource AncestorType=TabItem, Mode=FindAncestor}, Path=Header}" />
+                                        <Button
+                                            Height="{Binding Height, ElementName=TabItemHeader}"
+                                            Margin="10,0,0,0"
+                                            Padding="0"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                            Visibility="Visible">
+                                            <materialDesign:PackIcon
+                                                Width="22"
+                                                Height="22"
+                                                Kind="Close" />
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.ItemContainerStyle>
             </TabControl>
         </Grid>
 
