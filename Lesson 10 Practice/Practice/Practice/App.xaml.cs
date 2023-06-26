@@ -17,6 +17,8 @@ namespace Practice
             containerRegistry.RegisterForNavigation<MainWindow, MainWindowViewModel>();
             containerRegistry.RegisterForNavigation<HomeView, HomeViewModel>("Home");
             containerRegistry.RegisterForNavigation<WorkingSoftwareView, WorkingSoftwareViewModel>("WorkingSoftware");
+            containerRegistry.RegisterForNavigation<GameView, GameViewModel>("Test");
+            containerRegistry.RegisterForNavigation<ThemeChangeView, ThemeChangeViewModel>("ThemeChange");
             //regionManager
         }
 

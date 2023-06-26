@@ -7,6 +7,7 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Practice.Models"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewModels="clr-namespace:Practice.ViewModels"
     Title="MainWindow"
@@ -22,28 +23,9 @@
     <!--<Window.DataContext>
         <viewModels:MainWindowViewModel />
     </Window.DataContext>-->
-    <Window.Resources>
-        <DataTemplate x:Key="TestTemplate" DataType="TabItem">
-            <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center" Text="{Binding Path=Header}" />
-                <Button
-                    Height="{Binding Height, ElementName=TabItemHeader}"
-                    Margin="10,0,0,0"
-                    Padding="0"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource MaterialDesignFlatButton}"
-                    Visibility="Visible">
-                    <materialDesign:PackIcon
-                        Width="22"
-                        Height="22"
-                        Kind="Close" />
-                </Button>
-            </StackPanel>
-        </DataTemplate>
-    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="LeftContent" Width="{Binding LeftContentWidth}" />
+            <ColumnDefinition x:Name="LeftContent" Width="{Binding LeftMenuContentWidth}" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -115,14 +97,15 @@
             </Border>
 
             <ListBox
-                x:Name="MenuBar"
+                x:Name="MenuItems"
                 Grid.Row="2"
                 ItemContainerStyle="{DynamicResource MenuListBoxItemStyle}"
-                ItemsSource="{Binding MenuItems}">
+                ItemsSource="{Binding MenuItems}"
+                SelectedIndex="{Binding MenuSelectIndex}">
                 <!--  设置item绑定事件  -->
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding MenuNavigateCommand}" CommandParameter="{Binding ElementName=MenuBar, Path=SelectedItem}" />
+                        <i:InvokeCommandAction Command="{Binding MenuNavigateCommand}" CommandParameter="{Binding ElementName=MenuItems, Path=SelectedItem}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <ListBox.ItemTemplate>
@@ -202,11 +185,18 @@
             </materialDesign:ColorZone>
 
             <TabControl
-                x:Name="TabControl"
+                x:Name="TabMenus"
                 Grid.Row="1"
-                Margin="0,0,5,0"
+                Margin="15,0,5,0"
                 HorizontalContentAlignment="Left"
-                ItemsSource="{Binding TabItems}">
+                ItemsSource="{Binding TabItems}"
+                SelectedIndex="{Binding TabItemSelectedIndex}">
+                <!--  设置item绑定事件  -->
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding TabItemChangeCommand}" CommandParameter="{Binding ElementName=TabMenus, Path=SelectedItem}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <!--  设置 tab item 演示  -->
                 <TabControl.ItemContainerStyle>
                     <!--  继承 MaterialDesignThemes 的tabItem样式  -->
@@ -219,15 +209,17 @@
                                             Width="25"
                                             Height="25"
                                             Margin="17,0"
-                                            Kind="{Binding Icon}" />
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding RelativeSource={RelativeSource AncestorType=TabItem, Mode=FindAncestor}, Path=Header}" />
+                                            Kind="{Binding Path=Icon}" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Path=Title}" />
                                         <Button
                                             Height="{Binding Height, ElementName=TabItemHeader}"
                                             Margin="10,0,0,0"
                                             Padding="0"
                                             VerticalAlignment="Center"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
+                                            CommandParameter="{Binding}"
                                             Style="{StaticResource MaterialDesignFlatButton}"
-                                            Visibility="Visible">
+                                            Visibility="{Binding TabItemInfo.CloseBtn}">
                                             <materialDesign:PackIcon
                                                 Width="22"
                                                 Height="22"
@@ -239,6 +231,13 @@
                         </Setter>
                     </Style>
                 </TabControl.ItemContainerStyle>
+                <TabControl.ContentTemplate>
+                    <!--  指定类型 DataType="models:MenuBar"  -->
+                    <DataTemplate DataType="models:MenuBar">
+                        <!--  ContentControl 的 DataContext 就是每一个 item 项  -->
+                        <ContentControl Content="{Binding Path=TabItemInfo.Content}" />
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
             </TabControl>
         </Grid>
 

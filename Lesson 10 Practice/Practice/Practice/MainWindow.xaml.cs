@@ -30,7 +30,7 @@ namespace Practice
 
             this.Header.MouseDown += (sender, args) =>
             {
-                if (args.LeftButton==MouseButtonState.Pressed)
+                if (args.LeftButton == MouseButtonState.Pressed)
                 {
                     this.DragMove();
                 }
@@ -55,6 +55,11 @@ namespace Practice
         private void Close_OnClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void TabMenu_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

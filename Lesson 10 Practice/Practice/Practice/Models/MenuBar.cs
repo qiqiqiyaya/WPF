@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,41 +10,56 @@ namespace Practice.Models
     /// </summary>
     public class MenuBar : BindableBase
     {
-        private string _icon;
-
-        public string Icon
-        {
-            get { return _icon; }
-            set { _icon = value; }
-        }
-
-        private string _title;
-
-        public string Title
-        {
-            get { return _title; }
-            set { _title = value; }
-        }
-
-        private string _nameSpace;
-
-        public string NameSpace
-        {
-            get { return _nameSpace; }
-            set { _nameSpace = value; }
-        }
-
         /// <summary>
-        /// tab内容
+        /// 默认值 -1
         /// </summary>
-        public MenuTabItem MenuTabItem { get; set; }
+        public int Index { get; set; } = -1;
 
+        public string Icon { get; set; }
+
+        public string Title { get; set; }
+
+        public string NameSpace { get; set; }
+
+        private TabItemInfo _tabItemInfo;
+        /// <summary>
+        /// tab项目信息内容
+        /// </summary>
+        public TabItemInfo TabItemInfo
+        {
+            get => _tabItemInfo;
+            set => SetProperty(ref _tabItemInfo, value);
+        }
     }
 
-    public class MenuTabItem
+    public class TabItemInfo : BindableBase
     {
-        public Visibility CloseBtn { get; set; } 
+        /// <summary>
+        /// tab 上的索引，仅用于存储信息
+        /// </summary>
+        /// <remarks>
+        /// 默认值 -1
+        /// </remarks>
+        public int Index { get; set; } = -1;
 
-        public object Content { get; set; }
+        /// <summary>
+        /// 前台视图类型
+        /// </summary>
+        public Type ViewType { get; set; }
+
+        /// <summary>
+        /// 关闭按钮显示与否
+        /// </summary>
+        public Visibility CloseBtn { get; set; }
+
+        private UserControl? _content;
+        /// <summary>
+        /// TabItem 对应的用户控件
+        /// </summary>
+        public UserControl? Content
+        {
+            get => _content;
+            set => SetProperty(ref _content, value);
+        }
     }
 }
