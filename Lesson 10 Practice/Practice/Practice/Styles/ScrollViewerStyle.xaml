@@ -99,7 +99,7 @@
                                 <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource VerticalScrollBarPageButton}" />
                             </Track.IncreaseRepeatButton>
                             <Track.Thumb>
-                                <Thumb Style="{StaticResource ScrollBarThumb}" />
+                                <Thumb Style="{DynamicResource ScrollBarThumb}" />
                             </Track.Thumb>
                         </Track>
                         <RepeatButton
@@ -130,7 +130,7 @@
                                         <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}" Style="{StaticResource HorizontalScrollBarPageButton}" />
                                     </Track.IncreaseRepeatButton>
                                     <Track.Thumb>
-                                        <Thumb Style="{StaticResource ScrollBarThumb}" />
+                                        <Thumb Style="{DynamicResource ScrollBarThumb}" />
                                     </Track.Thumb>
                                 </Track>
                             </Grid>

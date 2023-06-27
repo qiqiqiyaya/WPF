@@ -147,8 +147,7 @@
                             x:Name="MenuClose"
                             Margin="0,0,0,0"
                             Command="{Binding LeftContentButtonCommand}"
-                            Content="{Binding LeftContentButtonIcon}"
-                            Style="{StaticResource MaterialDesignFlatDarkButton}" />
+                            Content="{Binding LeftContentButtonIcon}" />
                     </StackPanel>
 
                     <TextBlock
@@ -165,20 +164,17 @@
                             x:Name="Minimized"
                             Margin="2.5,0"
                             Click="Minimized_OnClick"
-                            Content="—"
-                            Style="{StaticResource MaterialDesignFlatDarkButton}" />
+                            Content="—" />
                         <Button
                             x:Name="Maximized"
                             Margin="2.5,0"
                             Click="Maximized_OnClick"
-                            Content="☐"
-                            Style="{StaticResource MaterialDesignFlatDarkButton}" />
+                            Content="☐" />
                         <Button
                             x:Name="Close"
                             Margin="2.5,0"
                             Click="Close_OnClick"
-                            Content="✕"
-                            Style="{StaticResource MaterialDesignFlatDarkButton}" />
+                            Content="✕" />
                     </StackPanel>
                 </Grid>
             </materialDesign:ColorZone>
