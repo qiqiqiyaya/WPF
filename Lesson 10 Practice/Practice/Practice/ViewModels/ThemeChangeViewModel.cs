@@ -1,46 +1,67 @@
-﻿using MaterialDesignColors;
+﻿using DynamicData;
+using MaterialDesignColors;
 using MaterialDesignColors.ColorManipulation;
 using MaterialDesignThemes.Wpf;
+using Practice.Services;
+using Practice.Services.Contract;
 using Prism.Commands;
-using Prism.Mvvm;
-using System;
+using ReactiveUI;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Media;
 
 namespace Practice.ViewModels
 {
-    public class ThemeChangeViewModel : BindableBase
+    public class ThemeChangeViewModel : ReactiveObject
     {
+        private readonly PaletteHelper _paletteHelper;
+        private readonly SettingsManager _settingsManager;
+        public DelegateCommand<object> ChangeHueCommand { get; private set; }
+        public DelegateCommand<ISwatch> MainColorButtonCommand { get; private set; }
+
+        public ThemeChangeViewModel(PaletteHelper paletteHelper, SettingsManager settingsManager)
+        {
+            _paletteHelper = paletteHelper;
+            _settingsManager = settingsManager;
+            ChangeHueCommand = new DelegateCommand<object>(ChangeHue);
+            MainColorButtonCommand = new DelegateCommand<ISwatch>(swatch =>
+            {
+                Colors.Clear();
+                Colors.AddRange(swatch.Hues);
+            });
+
+            _isDarkTheme = _paletteHelper.GetTheme().GetBaseTheme() == BaseTheme.Dark;
+            _colors = new ObservableCollection<Color>();
+        }
+
         private bool _isDarkTheme;
         public bool IsDarkTheme
         {
             get => _isDarkTheme;
             set
             {
-                if (SetProperty(ref _isDarkTheme, value))
-                {
-                    ModifyTheme(theme => theme.SetBaseTheme(value ? Theme.Dark : Theme.Light));
-                }
+                this.RaiseAndSetIfChanged(ref _isDarkTheme, value);
+                ModifyTheme(value ? Theme.Dark : Theme.Light);
             }
         }
 
-        public IEnumerable<ISwatch> Swatches { get; } = SwatchHelper.Swatches;
+        public IEnumerable<ISwatch> Swatches => SwatchHelper.Swatches;
 
-        public DelegateCommand<object> ChangeHueCommand { get; private set; }
+        private ObservableCollection<Color> _colors;
 
-        private readonly PaletteHelper _paletteHelper = new PaletteHelper();
-
-        public ThemeChangeViewModel()
+        public ObservableCollection<Color> Colors
         {
-            ChangeHueCommand = new DelegateCommand<object>(ChangeHue);
+            get => _colors;
+            set => this.RaiseAndSetIfChanged(ref _colors, value);
         }
 
-        private static void ModifyTheme(Action<ITheme> modificationAction)
+
+        private void ModifyTheme(IBaseTheme baseTheme)
         {
-            var paletteHelper = new PaletteHelper();
-            ITheme theme = paletteHelper.GetTheme();
-            modificationAction?.Invoke(theme);
-            paletteHelper.SetTheme(theme);
+            ITheme theme = _paletteHelper.GetTheme();
+            theme.SetBaseTheme(baseTheme);
+            _paletteHelper.SetTheme(theme);
+            _settingsManager.SetSetting(SettingKeys.Theme, theme);
         }
 
         private void ChangeHue(object obj)
@@ -51,7 +72,7 @@ namespace Practice.ViewModels
             theme.PrimaryMid = new ColorPair(hue);
             theme.PrimaryDark = new ColorPair(hue.Darken());
             _paletteHelper.SetTheme(theme);
+            _settingsManager.SetSetting(SettingKeys.Theme, theme);
         }
-
     }
 }

@@ -134,7 +134,6 @@
             <materialDesign:ColorZone
                 x:Name="Header"
                 Padding="0,16,16,16"
-                materialDesign:ElevationAssist.Elevation="Dp0"
                 DockPanel.Dock="Top"
                 Mode="Standard">
                 <Grid>
@@ -187,7 +186,7 @@
             <TabControl
                 x:Name="TabMenus"
                 Grid.Row="1"
-                Margin="15,0,5,0"
+                Margin="15,0,0,5"
                 HorizontalContentAlignment="Left"
                 ItemsSource="{Binding TabItems}"
                 SelectedIndex="{Binding TabItemSelectedIndex}">
@@ -235,7 +234,12 @@
                     <!--  指定类型 DataType="models:MenuBar"  -->
                     <DataTemplate DataType="models:MenuBar">
                         <!--  ContentControl 的 DataContext 就是每一个 item 项  -->
-                        <ContentControl Content="{Binding Path=TabItemInfo.Content}" />
+                        <ScrollViewer>
+                            <ContentControl
+                                x:Name="Region"
+                                Margin="0,0,5,0"
+                                Content="{Binding Path=TabItemInfo.Content}" />
+                        </ScrollViewer>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>

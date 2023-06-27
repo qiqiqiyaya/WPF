@@ -11,6 +11,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ImTools;
+using Prism.Regions;
 
 // ReSharper disable ConvertToAutoProperty
 
@@ -19,21 +20,21 @@ namespace Practice.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         public DelegateCommand LeftContentButtonCommand { get; }
-
         public DelegateCommand<MenuBar> MenuNavigateCommand { get; }
         public DelegateCommand<MenuBar> TabItemChangeCommand { get; }
         public DelegateCommand<MenuBar> TabItemCloseCommand { get; }
 
-        //private readonly IRegionManager _regionManager;
+        private readonly IRegionManager _regionManager;
         private readonly IContainerProvider _containerProvider;
 
-        public MainWindowViewModel(IContainerExtension containerProvider)
+        public MainWindowViewModel(IContainerExtension containerProvider,
+            IRegionManager regionManager)
         {
             MenuNavigateCommand = new DelegateCommand<MenuBar>(MenuNavigate);
             LeftContentButtonCommand = new DelegateCommand(LeftContentButtonAction);
             TabItemChangeCommand = new DelegateCommand<MenuBar>(TabItemChange);
             TabItemCloseCommand = new DelegateCommand<MenuBar>(TabItemClose);
-            //_regionManager = regionManager;
+            _regionManager = regionManager;
             _containerProvider = containerProvider;
             LoadMenu();
         }
@@ -166,14 +167,14 @@ namespace Practice.ViewModels
         }
 
 
-        private readonly ObservableCollection<MenuBar> _tabItems = new ObservableCollection<MenuBar>();
+        private ObservableCollection<MenuBar> _tabItems = new ObservableCollection<MenuBar>();
         /// <summary>
         /// tab项
         /// </summary>
         public ObservableCollection<MenuBar> TabItems
         {
             get => _tabItems;
-            set => SetProperty(ref value, _tabItems);
+            set => SetProperty(ref _tabItems, value);
         }
 
         protected void LoadMenu()
@@ -203,7 +204,11 @@ namespace Practice.ViewModels
                     TabItemInfo = new TabItemInfo()
                         { CloseBtn = Visibility.Visible, ViewType = typeof(ThemeChangeView) }
                 },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar()
+                {
+                    Icon = "React", NameSpace = "", Title = "ReactiveUI",TabItemInfo =
+                        new TabItemInfo(){CloseBtn = Visibility.Visible,ViewType = typeof(ReactiveView)}
+                },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
@@ -230,6 +235,8 @@ namespace Practice.ViewModels
 
         protected virtual void MenuNavigate(MenuBar menu)
         {
+            //var aa = _regionManager.;
+
             // 初次，tabItem需要被添加
             if (menu.TabItemInfo.Index == -1)
             {
