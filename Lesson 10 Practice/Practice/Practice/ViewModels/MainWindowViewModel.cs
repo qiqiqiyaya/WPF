@@ -299,14 +299,7 @@ namespace Practice.ViewModels
         /// </summary>
         public virtual void CloseAllTabItem()
         {
-            Task.Run(async () =>
-            {
-                await Task.Delay(150);
-                _safetyUiDispatcher.UiDispatcher.Invoke(() =>
-                {
-                    TabItems.RemoveAll(x => x.TabItemInfo.CloseBtn == Visibility.Visible);
-                });
-            });
+            _safetyUiDispatcher.DelayWhen(() => TabItems.RemoveAll(x => x.TabItemInfo.CloseBtn == Visibility.Visible), 150);
         }
 
         /// <summary>

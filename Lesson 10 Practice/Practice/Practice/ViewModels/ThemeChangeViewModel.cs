@@ -19,7 +19,7 @@ namespace Practice.ViewModels
         public DelegateCommand<object> ChangeHueCommand { get; }
         public DelegateCommand<ISwatch> MainColorButtonCommand { get; }
 
-        public ThemeChangeViewModel(PaletteHelper paletteHelper, SettingsManager settingsManager)
+        public ThemeChangeViewModel(PaletteHelper paletteHelper, SettingsManager settingsManager, SafetyUiDispatcher safetyUiDispatcher)
         {
             _paletteHelper = paletteHelper;
             _settingsManager = settingsManager;
@@ -32,6 +32,8 @@ namespace Practice.ViewModels
 
             _isDarkTheme = _paletteHelper.GetTheme().GetBaseTheme() == BaseTheme.Dark;
             _colors = new ObservableCollection<Color>();
+
+            safetyUiDispatcher.DelayWhen(() => Swatches = new ObservableCollection<ISwatch>(SwatchHelper.Swatches), 150);
         }
 
         private bool _isDarkTheme;
@@ -45,7 +47,12 @@ namespace Practice.ViewModels
             }
         }
 
-        public IEnumerable<ISwatch> Swatches => SwatchHelper.Swatches;
+        private ObservableCollection<ISwatch> _swatches;
+        public ObservableCollection<ISwatch> Swatches
+        {
+            get => _swatches;
+            protected set => this.RaiseAndSetIfChanged(ref _swatches, value);
+        }
 
         private ObservableCollection<Color> _colors;
 
