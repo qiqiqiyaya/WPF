@@ -243,50 +243,62 @@
                             </Grid.RowDefinitions>
                             <DockPanel LastChildFill="True">
                                 <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges">
-                                    <ItemsControl ItemsSource="{Binding TabItems}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel MaxWidth="600" />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Button
-                                                    Margin="5,4"
-                                                    Padding="5,4"
-                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemChangeCommand}"
-                                                    CommandParameter="{Binding}"
-                                                    Style="{StaticResource MaterialDesignFlatLightButton}">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <materialDesign:PackIcon
-                                                            Width="25"
-                                                            Height="25"
-                                                            Margin="0,0,5,0"
-                                                            Kind="{Binding Path=Icon}" />
-                                                        <TextBlock Text="{Binding Path=Title}" />
+                                    <DockPanel>
+                                        <StackPanel
+                                            Margin="15,0"
+                                            HorizontalAlignment="Right"
+                                            DockPanel.Dock="Bottom"
+                                            Orientation="Horizontal">
+                                            <Button
+                                                Command="{Binding CloseAllTabItemCommand}"
+                                                Content="Close All"
+                                                Style="{StaticResource MaterialDesignRaisedLightButton}" />
+                                        </StackPanel>
 
-                                                        <Button
-                                                            Margin="10,0,0,0"
-                                                            Padding="0"
-                                                            VerticalAlignment="Center"
-                                                            Click="PreventEventRaise_OnClick"
-                                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
-                                                            CommandParameter="{Binding}"
-                                                            Style="{StaticResource MaterialDesignFlatButton}"
-                                                            Visibility="{Binding TabItemInfo.CloseBtn}">
+                                        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding TabItems}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel MaxWidth="600" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button
+                                                        Margin="5,4"
+                                                        Padding="5,4"
+                                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemChangeCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        Style="{StaticResource MaterialDesignFlatLightButton}">
+                                                        <StackPanel Orientation="Horizontal">
                                                             <materialDesign:PackIcon
-                                                                Width="22"
-                                                                Height="22"
-                                                                Kind="Close" />
-                                                        </Button>
-                                                    </StackPanel>
-                                                </Button>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                    <!--<WrapPanel MaxWidth="600">
+                                                                Width="25"
+                                                                Height="25"
+                                                                Margin="0,0,5,0"
+                                                                Kind="{Binding Path=Icon}" />
+                                                            <TextBlock Text="{Binding Path=Title}" />
 
-                                    </WrapPanel>-->
+                                                            <Button
+                                                                Margin="10,0,0,0"
+                                                                Padding="0"
+                                                                VerticalAlignment="Center"
+                                                                Click="PreventEventRaise_OnClick"
+                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource MaterialDesignFlatButton}"
+                                                                Visibility="{Binding TabItemInfo.CloseBtn}">
+                                                                <materialDesign:PackIcon
+                                                                    Width="22"
+                                                                    Height="22"
+                                                                    Kind="Close" />
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </DockPanel>
+
+
                                 </materialDesign:PopupBox>
                                 <StackPanel Orientation="Horizontal">
                                     <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />

@@ -16,10 +16,26 @@ namespace Practice.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        public DelegateCommand LeftContentButtonCommand { get; }
+        /// <summary>
+        /// 左侧菜单内容区域样式切换
+        /// </summary>
+        public DelegateCommand LeftContentSwitchCommand { get; }
+        /// <summary>
+        /// 菜单导航
+        /// </summary>
         public DelegateCommand<MenuBar> MenuNavigateCommand { get; }
+        /// <summary>
+        /// tabItem 发生切换
+        /// </summary>
         public DelegateCommand<MenuBar> TabItemChangeCommand { get; }
+        /// <summary>
+        /// 关闭指定 tab 菜单命令
+        /// </summary>
         public DelegateCommand<MenuBar> TabItemCloseCommand { get; }
+        /// <summary>
+        /// 关闭所有菜单命令，除 Home 外
+        /// </summary>
+        public DelegateCommand CloseAllTabItemCommand { get; }
 
         //private readonly IRegionManager _regionManager;
         private readonly IContainerProvider _containerProvider;
@@ -27,9 +43,10 @@ namespace Practice.ViewModels
         public MainWindowViewModel(IContainerExtension containerProvider)
         {
             MenuNavigateCommand = new DelegateCommand<MenuBar>(MenuNavigate);
-            LeftContentButtonCommand = new DelegateCommand(LeftContentButtonAction);
+            LeftContentSwitchCommand = new DelegateCommand(LeftContentSwitch);
             TabItemChangeCommand = new DelegateCommand<MenuBar>(TabItemChange);
             TabItemCloseCommand = new DelegateCommand<MenuBar>(TabItemClose);
+            CloseAllTabItemCommand = new DelegateCommand(CloseAllTabItem);
             //_regionManager = regionManager;
             _containerProvider = containerProvider;
             LoadMenu();
@@ -108,7 +125,10 @@ namespace Practice.ViewModels
             set => SetProperty(ref _minAvatarHeight, value);
         }
 
-        protected virtual void LeftContentButtonAction()
+        /// <summary>
+        /// 左侧菜单内容区域样式切换
+        /// </summary>
+        protected virtual void LeftContentSwitch()
         {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (LeftMenuContentWidth == 80)
@@ -233,6 +253,10 @@ namespace Practice.ViewModels
             MenuNavigate(MenuItems[0]);
         }
 
+        /// <summary>
+        /// 菜单导航
+        /// </summary>
+        /// <param name="menu"></param>
         protected virtual void MenuNavigate(MenuBar menu)
         {
             //var aa = _regionManager.;
@@ -255,6 +279,10 @@ namespace Practice.ViewModels
             }
         }
 
+        /// <summary>
+        /// tabItem 发生切换
+        /// </summary>
+        /// <param name="menu"></param>
         protected virtual void TabItemChange(MenuBar? menu)
         {
             if (menu == null) return;
@@ -264,6 +292,25 @@ namespace Practice.ViewModels
             }
         }
 
+        /// <summary>
+        /// 关闭所有菜单，除 Home 外
+        /// </summary>
+        public virtual void CloseAllTabItem()
+        {
+            var needCloseMenus = TabItems.RemoveAll(x => x.TabItemInfo.CloseBtn == Visibility.Visible);
+
+            foreach (var tabItem in needCloseMenus)
+            {
+                tabItem.TabItemInfo.Index = -1;
+                tabItem.TabItemInfo.Content = null;
+                TabItems.Remove(tabItem);
+            }
+        }
+
+        /// <summary>
+        /// 关闭指定 tab 菜单
+        /// </summary>
+        /// <param name="menu"></param>
         protected virtual void TabItemClose(MenuBar menu)
         {
             menu.TabItemInfo.Index = -1;
@@ -272,6 +319,10 @@ namespace Practice.ViewModels
             TabItemIndexReset();
         }
 
+        /// <summary>
+        /// tab内容区域动态解析
+        /// </summary>
+        /// <param name="menu"></param>
         private void TabContentResolve(MenuBar menu)
         {
             if (menu.TabItemInfo.Content != null || menu.TabItemInfo.ViewType == null) return;
@@ -282,6 +333,9 @@ namespace Practice.ViewModels
             }
         }
 
+        /// <summary>
+        /// TabItem索引重置
+        /// </summary>
         protected virtual void TabItemIndexReset()
         {
             for (int i = 0; i < TabItems.Count; i++)

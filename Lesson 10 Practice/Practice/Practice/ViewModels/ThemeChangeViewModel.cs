@@ -16,8 +16,8 @@ namespace Practice.ViewModels
     {
         private readonly PaletteHelper _paletteHelper;
         private readonly SettingsManager _settingsManager;
-        public DelegateCommand<object> ChangeHueCommand { get; private set; }
-        public DelegateCommand<ISwatch> MainColorButtonCommand { get; private set; }
+        public DelegateCommand<object> ChangeHueCommand { get; }
+        public DelegateCommand<ISwatch> MainColorButtonCommand { get; }
 
         public ThemeChangeViewModel(PaletteHelper paletteHelper, SettingsManager settingsManager)
         {
@@ -54,7 +54,6 @@ namespace Practice.ViewModels
             get => _colors;
             set => this.RaiseAndSetIfChanged(ref _colors, value);
         }
-
 
         private void ModifyTheme(IBaseTheme baseTheme)
         {
