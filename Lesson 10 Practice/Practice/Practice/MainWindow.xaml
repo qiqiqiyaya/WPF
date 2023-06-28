@@ -99,6 +99,7 @@
             <ListBox
                 x:Name="MenuItems"
                 Grid.Row="2"
+                materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
                 ItemContainerStyle="{DynamicResource MenuListBoxItemStyle}"
                 ItemsSource="{Binding MenuItems}"
                 SelectedIndex="{Binding MenuSelectIndex}">
@@ -192,40 +193,33 @@
                         <i:InvokeCommandAction Command="{Binding TabItemChangeCommand}" CommandParameter="{Binding ElementName=TabMenus, Path=SelectedItem}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-                <!--  设置 tab item 演示  -->
-                <TabControl.ItemContainerStyle>
-                    <!--  继承 MaterialDesignThemes 的tabItem样式  -->
-                    <Style BasedOn="{StaticResource MaterialDesignTabItem}" TargetType="TabItem">
-                        <Setter Property="HeaderTemplate">
-                            <Setter.Value>
-                                <DataTemplate>
-                                    <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Width="25"
-                                            Height="25"
-                                            Margin="17,0"
-                                            Kind="{Binding Path=Icon}" />
-                                        <TextBlock VerticalAlignment="Center" Text="{Binding Path=Title}" />
-                                        <Button
-                                            Height="{Binding Height, ElementName=TabItemHeader}"
-                                            Margin="10,0,0,0"
-                                            Padding="0"
-                                            VerticalAlignment="Center"
-                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
-                                            CommandParameter="{Binding}"
-                                            Style="{StaticResource MaterialDesignFlatButton}"
-                                            Visibility="{Binding TabItemInfo.CloseBtn}">
-                                            <materialDesign:PackIcon
-                                                Width="22"
-                                                Height="22"
-                                                Kind="Close" />
-                                        </Button>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </TabControl.ItemContainerStyle>
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Width="25"
+                                Height="25"
+                                Margin="0,0,10,0"
+                                VerticalAlignment="Center"
+                                Kind="{Binding Path=Icon}" />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Path=Title}" />
+                            <Button
+                                Height="{Binding Height, ElementName=TabItemHeader}"
+                                Margin="10,0,0,0"
+                                Padding="0"
+                                VerticalAlignment="Center"
+                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Visibility="{Binding TabItemInfo.CloseBtn}">
+                                <materialDesign:PackIcon
+                                    Width="22"
+                                    Height="22"
+                                    Kind="Close" />
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                     <!--  指定类型 DataType="models:MenuBar"  -->
                     <DataTemplate DataType="models:MenuBar">
@@ -238,6 +232,74 @@
                         </ScrollViewer>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
+
+                <TabControl.Template>
+                    <!--  控件模板设置  -->
+                    <ControlTemplate TargetType="{x:Type TabControl}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <DockPanel LastChildFill="True">
+                                <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges">
+                                    <ItemsControl ItemsSource="{Binding TabItems}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel MaxWidth="600" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button
+                                                    Margin="5,4"
+                                                    Padding="5,4"
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemChangeCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Style="{StaticResource MaterialDesignFlatLightButton}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon
+                                                            Width="25"
+                                                            Height="25"
+                                                            Margin="0,0,5,0"
+                                                            Kind="{Binding Path=Icon}" />
+                                                        <TextBlock Text="{Binding Path=Title}" />
+
+                                                        <Button
+                                                            Margin="10,0,0,0"
+                                                            Padding="0"
+                                                            VerticalAlignment="Center"
+                                                            Click="PreventEventRaise_OnClick"
+                                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                                            Visibility="{Binding TabItemInfo.CloseBtn}">
+                                                            <materialDesign:PackIcon
+                                                                Width="22"
+                                                                Height="22"
+                                                                Kind="Close" />
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <!--<WrapPanel MaxWidth="600">
+
+                                    </WrapPanel>-->
+                                </materialDesign:PopupBox>
+                                <StackPanel Orientation="Horizontal">
+                                    <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />
+                                </StackPanel>
+                            </DockPanel>
+                            <ContentPresenter
+                                x:Name="PART_SelectedContentHost"
+                                Grid.Row="1"
+                                Margin="4"
+                                ContentSource="SelectedContent" />
+                        </Grid>
+                    </ControlTemplate>
+                </TabControl.Template>
             </TabControl>
         </Grid>
 

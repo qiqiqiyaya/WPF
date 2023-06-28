@@ -1,17 +1,14 @@
-﻿using System;
-using MaterialDesignThemes.Wpf;
+﻿using MaterialDesignThemes.Wpf;
 using Practice.Models;
 using Practice.Views;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using ImTools;
-using Prism.Regions;
 
 // ReSharper disable ConvertToAutoProperty
 
@@ -24,17 +21,16 @@ namespace Practice.ViewModels
         public DelegateCommand<MenuBar> TabItemChangeCommand { get; }
         public DelegateCommand<MenuBar> TabItemCloseCommand { get; }
 
-        private readonly IRegionManager _regionManager;
+        //private readonly IRegionManager _regionManager;
         private readonly IContainerProvider _containerProvider;
 
-        public MainWindowViewModel(IContainerExtension containerProvider,
-            IRegionManager regionManager)
+        public MainWindowViewModel(IContainerExtension containerProvider)
         {
             MenuNavigateCommand = new DelegateCommand<MenuBar>(MenuNavigate);
             LeftContentButtonCommand = new DelegateCommand(LeftContentButtonAction);
             TabItemChangeCommand = new DelegateCommand<MenuBar>(TabItemChange);
             TabItemCloseCommand = new DelegateCommand<MenuBar>(TabItemClose);
-            _regionManager = regionManager;
+            //_regionManager = regionManager;
             _containerProvider = containerProvider;
             LoadMenu();
         }
@@ -66,7 +62,7 @@ namespace Practice.ViewModels
         /// <summary>
         /// 本机名称
         /// </summary>
-        public string HostName => Environment.MachineName;
+        public string HostName => Environment.UserName;
 
         private Visibility _bigAvatarVisibility = Visibility.Visible;
 
@@ -101,7 +97,7 @@ namespace Practice.ViewModels
             set => SetProperty(ref _minAvatarVisibility, value);
         }
 
-        private double _minAvatarHeight = 0;
+        private double _minAvatarHeight;
 
         /// <summary>
         /// 小头像高度
@@ -185,11 +181,11 @@ namespace Practice.ViewModels
                 new MenuBar()
                 {
                     Icon = "Home", NameSpace = "", Title = "Home",
-                    TabItemInfo = new TabItemInfo() { CloseBtn = Visibility.Hidden, ViewType = typeof(HomeView) }
+                    TabItemInfo = new TabItemInfo() { CloseBtn = Visibility.Collapsed, ViewType = typeof(HomeView) }
                 },
                 new MenuBar()
                 {
-                    Icon = "Microsoft", NameSpace = "", Title = "工作软件",
+                    Icon = "Apps", NameSpace = "", Title = "工作软件",
                     TabItemInfo = new TabItemInfo()
                         { CloseBtn = Visibility.Visible, ViewType = typeof(WorkingSoftwareView) }
                 },
@@ -209,7 +205,11 @@ namespace Practice.ViewModels
                     Icon = "React", NameSpace = "", Title = "ReactiveUI",TabItemInfo =
                         new TabItemInfo(){CloseBtn = Visibility.Visible,ViewType = typeof(ReactiveView)}
                 },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar()
+                {
+                    Icon = "MicrosoftWindows", NameSpace = "", Title = "系统信息",
+                    TabItemInfo = new TabItemInfo(){CloseBtn = Visibility.Visible ,ViewType = typeof(SystemInformationView)}
+                },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
@@ -274,7 +274,7 @@ namespace Practice.ViewModels
 
         private void TabContentResolve(MenuBar menu)
         {
-            if (menu.TabItemInfo.Content != null) return;
+            if (menu.TabItemInfo.Content != null || menu.TabItemInfo.ViewType == null) return;
             var userControl = _containerProvider.Resolve(menu.TabItemInfo.ViewType);
             if (userControl is UserControl control)
             {

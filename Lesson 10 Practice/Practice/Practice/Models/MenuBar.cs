@@ -45,7 +45,7 @@ namespace Practice.Models
         /// <summary>
         /// 前台视图类型
         /// </summary>
-        public Type ViewType { get; set; }
+        public Type? ViewType { get; set; }
 
         /// <summary>
         /// 关闭按钮显示与否

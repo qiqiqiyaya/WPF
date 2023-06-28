@@ -69,5 +69,15 @@ namespace Practice
         {
 
         }
+
+        /// <summary>
+        /// 阻止事件上浮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PreventEventRaise_OnClick(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }
