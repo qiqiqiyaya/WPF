@@ -10,6 +10,7 @@ using Serilog;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Practice
 {
@@ -84,6 +85,7 @@ namespace Practice
 
             containerRegistry.RegisterSingleton<PaletteHelper>();
             containerRegistry.RegisterSingleton<SettingsManager>();
+            containerRegistry.RegisterInstance(new SafetyUiDispatcher(Dispatcher));
         }
 
         protected override Window CreateShell()

@@ -26,12 +26,9 @@ namespace Practice
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IRegionManager _regionManager;
-        public MainWindow(IRegionManager regionManager)
+        public MainWindow()
         {
             InitializeComponent();
-
-            _regionManager = regionManager;
             this.Header.MouseDown += (sender, args) =>
             {
                 if (args.LeftButton == MouseButtonState.Pressed)
@@ -45,7 +42,7 @@ namespace Practice
                 this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             };
 
-            var aa = this.FindName("Region");
+            //var aa = this.FindName("Region");
             //_regionManager.RegisterViewWithRegion()
         }
 

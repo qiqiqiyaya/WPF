@@ -1,12 +1,14 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Practice.Models;
+using Practice.Services;
 using Practice.Views;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,7 +16,7 @@ using System.Windows.Controls;
 
 namespace Practice.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : ReactiveObject
     {
         /// <summary>
         /// 左侧菜单内容区域样式切换
@@ -39,8 +41,9 @@ namespace Practice.ViewModels
 
         //private readonly IRegionManager _regionManager;
         private readonly IContainerProvider _containerProvider;
+        private readonly SafetyUiDispatcher _safetyUiDispatcher;
 
-        public MainWindowViewModel(IContainerExtension containerProvider)
+        public MainWindowViewModel(IContainerExtension containerProvider, SafetyUiDispatcher safetyUiDispatcher)
         {
             MenuNavigateCommand = new DelegateCommand<MenuBar>(MenuNavigate);
             LeftContentSwitchCommand = new DelegateCommand(LeftContentSwitch);
@@ -49,6 +52,7 @@ namespace Practice.ViewModels
             CloseAllTabItemCommand = new DelegateCommand(CloseAllTabItem);
             //_regionManager = regionManager;
             _containerProvider = containerProvider;
+            _safetyUiDispatcher = safetyUiDispatcher;
             LoadMenu();
         }
 
@@ -60,7 +64,7 @@ namespace Practice.ViewModels
         public double LeftMenuContentWidth
         {
             get => _leftMenuMenuContentWidth;
-            set => SetProperty(ref _leftMenuMenuContentWidth, value);
+            set => this.RaiseAndSetIfChanged(ref _leftMenuMenuContentWidth, value);
         }
 
         protected static PackIcon IconMenuClose = new PackIcon() { Kind = PackIconKind.MenuClose, Width = 24, Height = 24 };
@@ -73,7 +77,7 @@ namespace Practice.ViewModels
         public PackIcon LeftContentButtonIcon
         {
             get => _leftContentButtonIcon;
-            set => SetProperty(ref _leftContentButtonIcon, value);
+            set => this.RaiseAndSetIfChanged(ref _leftContentButtonIcon, value);
         }
 
         /// <summary>
@@ -89,7 +93,7 @@ namespace Practice.ViewModels
         public Visibility BigAvatarVisibility
         {
             get => _bigAvatarVisibility;
-            set => SetProperty(ref _bigAvatarVisibility, value);
+            set => this.RaiseAndSetIfChanged(ref _bigAvatarVisibility, value);
         }
 
         private double _bigAvatarHeight = 200;
@@ -100,7 +104,7 @@ namespace Practice.ViewModels
         public double BigAvatarHeight
         {
             get => _bigAvatarHeight;
-            set => SetProperty(ref _bigAvatarHeight, value);
+            set => this.RaiseAndSetIfChanged(ref _bigAvatarHeight, value);
         }
 
         private Visibility _minAvatarVisibility = Visibility.Hidden;
@@ -111,7 +115,7 @@ namespace Practice.ViewModels
         public Visibility MinAvatarVisibility
         {
             get => _minAvatarVisibility;
-            set => SetProperty(ref _minAvatarVisibility, value);
+            set => this.RaiseAndSetIfChanged(ref _minAvatarVisibility, value);
         }
 
         private double _minAvatarHeight;
@@ -122,7 +126,7 @@ namespace Practice.ViewModels
         public double MinAvatarHeight
         {
             get => _minAvatarHeight;
-            set => SetProperty(ref _minAvatarHeight, value);
+            set => this.RaiseAndSetIfChanged(ref _minAvatarHeight, value);
         }
 
         /// <summary>
@@ -159,7 +163,7 @@ namespace Practice.ViewModels
         public ObservableCollection<MenuBar> MenuItems
         {
             get => _menuItems;
-            set => SetProperty(ref _menuItems, value);
+            set => this.RaiseAndSetIfChanged(ref _menuItems, value);
         }
 
         private int _menuSelectIndex = -1;
@@ -169,7 +173,7 @@ namespace Practice.ViewModels
         public int MenuSelectIndex
         {
             get => _menuSelectIndex;
-            set => SetProperty(ref _menuSelectIndex, value);
+            set => this.RaiseAndSetIfChanged(ref _menuSelectIndex, value);
         }
 
         private int _tabItemSelectedIndex = -1;
@@ -179,7 +183,7 @@ namespace Practice.ViewModels
         public int TabItemSelectedIndex
         {
             get => _tabItemSelectedIndex;
-            set => SetProperty(ref _tabItemSelectedIndex, value);
+            set => this.RaiseAndSetIfChanged(ref _tabItemSelectedIndex, value);
         }
 
 
@@ -190,7 +194,7 @@ namespace Practice.ViewModels
         public ObservableCollection<MenuBar> TabItems
         {
             get => _tabItems;
-            set => SetProperty(ref _tabItems, value);
+            set => this.RaiseAndSetIfChanged(ref _tabItems, value);
         }
 
         protected void LoadMenu()
@@ -259,8 +263,6 @@ namespace Practice.ViewModels
         /// <param name="menu"></param>
         protected virtual void MenuNavigate(MenuBar menu)
         {
-            //var aa = _regionManager.;
-
             // 初次，tabItem需要被添加
             if (menu.TabItemInfo.Index == -1)
             {
@@ -297,14 +299,14 @@ namespace Practice.ViewModels
         /// </summary>
         public virtual void CloseAllTabItem()
         {
-            var needCloseMenus = TabItems.RemoveAll(x => x.TabItemInfo.CloseBtn == Visibility.Visible);
-
-            foreach (var tabItem in needCloseMenus)
+            Task.Run(async () =>
             {
-                tabItem.TabItemInfo.Index = -1;
-                tabItem.TabItemInfo.Content = null;
-                TabItems.Remove(tabItem);
-            }
+                await Task.Delay(150);
+                _safetyUiDispatcher.UiDispatcher.Invoke(() =>
+                {
+                    TabItems.RemoveAll(x => x.TabItemInfo.CloseBtn == Visibility.Visible);
+                });
+            });
         }
 
         /// <summary>

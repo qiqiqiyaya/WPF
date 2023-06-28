@@ -147,7 +147,7 @@
                         <Button
                             x:Name="MenuClose"
                             Margin="0,0,0,0"
-                            Command="{Binding LeftContentButtonCommand}"
+                            Command="{Binding LeftContentSwitchCommand}"
                             Content="{Binding LeftContentButtonIcon}" />
                     </StackPanel>
 
