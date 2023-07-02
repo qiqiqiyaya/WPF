@@ -1,6 +1,5 @@
 ﻿using Practice.Services.interfaces;
 using System;
-using System.Threading;
 using System.Windows.Threading;
 
 namespace Practice.Services

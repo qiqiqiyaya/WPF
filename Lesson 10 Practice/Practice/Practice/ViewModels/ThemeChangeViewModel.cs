@@ -6,7 +6,6 @@ using Practice.Services;
 using Practice.Services.Contract;
 using Prism.Commands;
 using ReactiveUI;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 
@@ -19,7 +18,7 @@ namespace Practice.ViewModels
         public DelegateCommand<object> ChangeHueCommand { get; }
         public DelegateCommand<ISwatch> MainColorButtonCommand { get; }
 
-        public ThemeChangeViewModel(PaletteHelper paletteHelper, SettingsManager settingsManager, SafetyUiDispatcher safetyUiDispatcher)
+        public ThemeChangeViewModel(PaletteHelper paletteHelper, SettingsManager settingsManager, SafetyUiAction safetyUiAction)
         {
             _paletteHelper = paletteHelper;
             _settingsManager = settingsManager;
@@ -33,7 +32,7 @@ namespace Practice.ViewModels
             _isDarkTheme = _paletteHelper.GetTheme().GetBaseTheme() == BaseTheme.Dark;
             _colors = new ObservableCollection<Color>();
 
-            safetyUiDispatcher.DelayWhen(() => Swatches = new ObservableCollection<ISwatch>(SwatchHelper.Swatches), 150);
+            safetyUiAction.DelayWhen(() => Swatches = new ObservableCollection<ISwatch>(SwatchHelper.Swatches), 150);
         }
 
         private bool _isDarkTheme;
@@ -67,7 +66,7 @@ namespace Practice.ViewModels
             ITheme theme = _paletteHelper.GetTheme();
             theme.SetBaseTheme(baseTheme);
             _paletteHelper.SetTheme(theme);
-            _settingsManager.SetSetting(SettingKeys.Theme, theme);
+            _settingsManager.SetSetting(SystemSettingKeys.Theme, theme);
         }
 
         private void ChangeHue(object obj)
@@ -78,7 +77,7 @@ namespace Practice.ViewModels
             theme.PrimaryMid = new ColorPair(hue);
             theme.PrimaryDark = new ColorPair(hue.Darken());
             _paletteHelper.SetTheme(theme);
-            _settingsManager.SetSetting(SettingKeys.Theme, theme);
+            _settingsManager.SetSetting(SystemSettingKeys.Theme, theme);
         }
     }
 }

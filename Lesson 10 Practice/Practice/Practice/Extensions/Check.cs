@@ -1,12 +1,13 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using JetBrains.Annotations;
+
 // ReSharper disable RedundantNullnessAttributeWithNullableReferenceTypes
 // ReSharper disable UseNullableReferenceTypesAnnotationSyntax
 #pragma warning disable CS8603
 
-namespace Practice;
+namespace Practice.Extensions;
 
 [DebuggerStepThrough]
 public static class Check

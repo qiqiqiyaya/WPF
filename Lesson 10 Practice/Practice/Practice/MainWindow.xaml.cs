@@ -1,23 +1,7 @@
-﻿using MaterialDesignThemes.Wpf;
-using Practice.ViewModels;
-using Practice.Views;
-using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Practice.Services.Contract;
+using Practice.Services.interfaces;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace Practice
 {
@@ -26,9 +10,13 @@ namespace Practice
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly IRootDialogService _rootDialogService;
+
+        public MainWindow(IRootDialogService rootDialogService)
         {
+            _rootDialogService = rootDialogService;
             InitializeComponent();
+
             this.Header.MouseDown += (sender, args) =>
             {
                 if (args.LeftButton == MouseButtonState.Pressed)
@@ -42,13 +30,11 @@ namespace Practice
                 this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             };
 
-            //var aa = this.FindName("Region");
-            //_regionManager.RegisterViewWithRegion()
+            RootDialog.Identifier = SystemSettingKeys.RootDialogIdentity;
         }
 
         private void Minimized_OnClick(object sender, RoutedEventArgs e)
         {
-
             this.WindowState = WindowState.Minimized;
         }
 
@@ -60,11 +46,6 @@ namespace Practice
         private void Close_OnClick(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-
-        private void TabMenu_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
 
         /// <summary>

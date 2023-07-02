@@ -5,315 +5,328 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:models="clr-namespace:Practice.Models"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewModels="clr-namespace:Practice.ViewModels"
     Title="MainWindow"
     Width="1300"
     Height="750"
+    MinWidth="1000"
+    MinHeight="600"
     d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     AllowsTransparency="True"
     Background="{DynamicResource MaterialDesignPaper}"
+    WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
     <!--  使用 d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}" Resharp 给出提示  -->
     <!--<Window.DataContext>
         <viewModels:MainWindowViewModel />
     </Window.DataContext>-->
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="LeftContent" Width="{Binding LeftMenuContentWidth}" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
 
-        <Grid x:Name="NavRail" Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="{Binding BigAvatarHeight}" />
-                <RowDefinition Height="{Binding MinAvatarHeight}" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+    <md:DialogHost x:Name="RootDialog" Identifier="RootDialog">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftContent" Width="{Binding LeftMenuContentWidth}" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-            <Border
-                Margin="15"
-                BorderThickness="0"
-                Visibility="{Binding BigAvatarVisibility}">
-                <Button Height="170">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+            <Grid x:Name="NavRail" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="{Binding BigAvatarHeight}" />
+                    <RowDefinition Height="{Binding MinAvatarHeight}" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                        <StackPanel VerticalAlignment="Center">
+                <Border
+                    Margin="15"
+                    BorderThickness="0"
+                    Visibility="{Binding BigAvatarVisibility}">
+                    <Button Height="170">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <StackPanel VerticalAlignment="Center">
+                                <Image
+                                    Width="120"
+                                    Height="120"
+                                    gif:AnimationBehavior.SourceUri="Resources/R.gif"
+                                    Stretch="UniformToFill">
+                                    <!--  图片裁剪  -->
+                                    <Image.Clip>
+                                        <EllipseGeometry
+                                            Center="60,60"
+                                            RadiusX="60"
+                                            RadiusY="60" />
+                                    </Image.Clip>
+                                </Image>
+                            </StackPanel>
+
+                            <StackPanel
+                                Grid.Row="1"
+                                Margin="0,15,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                                <TextBlock FontSize="15" Text="{Binding HostName}" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+                </Border>
+                <Border
+                    Grid.Row="1"
+                    Height="70"
+                    Margin="5,0"
+                    BorderThickness="0">
+                    <Button Height="70" Padding="5,0">
+                        <StackPanel Height="60" Orientation="Horizontal">
                             <Image
-                                Width="120"
-                                Height="120"
+                                Height="60"
                                 gif:AnimationBehavior.SourceUri="Resources/R.gif"
                                 Stretch="UniformToFill">
                                 <!--  图片裁剪  -->
                                 <Image.Clip>
                                     <EllipseGeometry
-                                        Center="60,60"
-                                        RadiusX="60"
-                                        RadiusY="60" />
+                                        Center="30,30"
+                                        RadiusX="30"
+                                        RadiusY="30" />
                                 </Image.Clip>
                             </Image>
                         </StackPanel>
+                    </Button>
+                </Border>
 
-                        <StackPanel
-                            Grid.Row="1"
-                            Margin="0,15,0,0"
+                <ListBox
+                    x:Name="MenuItems"
+                    Grid.Row="2"
+                    md:ScrollViewerAssist.IsAutoHideEnabled="True"
+                    ItemContainerStyle="{DynamicResource MenuListBoxItemStyle}"
+                    ItemsSource="{Binding MenuItems}"
+                    SelectedIndex="{Binding MenuSelectIndex}">
+                    <!--  设置item绑定事件  -->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding MenuNavigateCommand}" CommandParameter="{Binding ElementName=MenuItems, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <md:PackIcon
+                                    Width="25"
+                                    Height="25"
+                                    Margin="17,0"
+                                    Kind="{Binding Path=Icon}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Title}"
+                                    Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.BigAvatarVisibility}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <md:ColorZone
+                    x:Name="Header"
+                    Padding="0,16,16,16"
+                    DockPanel.Dock="Top"
+                    Mode="Standard">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                            <Button
+                                x:Name="MenuClose"
+                                Margin="0,0,0,0"
+                                Command="{Binding LeftContentSwitchCommand}"
+                                Content="{Binding LeftContentButtonIcon}" />
+                        </StackPanel>
+
+                        <TextBlock
+                            Grid.Column="1"
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            <TextBlock FontSize="15" Text="{Binding HostName}" />
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="Material Design In XAML Toolkit"
+                            FontSize="22"
+                            Text="To Do List" />
+
+                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+
+                            <Button
+                                x:Name="Minimized"
+                                Margin="2.5,0"
+                                Click="Minimized_OnClick"
+                                Content="—" />
+                            <Button
+                                x:Name="Maximized"
+                                Margin="2.5,0"
+                                Click="Maximized_OnClick"
+                                Content="☐" />
+                            <Button
+                                x:Name="Close"
+                                Margin="2.5,0"
+                                Click="Close_OnClick"
+                                Content="✕" />
                         </StackPanel>
                     </Grid>
-                </Button>
-            </Border>
-            <Border
-                Grid.Row="1"
-                Height="70"
-                Margin="5,0"
-                BorderThickness="0">
-                <Button Height="70" Padding="5,0">
-                    <StackPanel Height="60" Orientation="Horizontal">
-                        <Image
-                            Height="60"
-                            gif:AnimationBehavior.SourceUri="Resources/R.gif"
-                            Stretch="UniformToFill">
-                            <!--  图片裁剪  -->
-                            <Image.Clip>
-                                <EllipseGeometry
-                                    Center="30,30"
-                                    RadiusX="30"
-                                    RadiusY="30" />
-                            </Image.Clip>
-                        </Image>
-                    </StackPanel>
-                </Button>
-            </Border>
+                </md:ColorZone>
 
-            <ListBox
-                x:Name="MenuItems"
-                Grid.Row="2"
-                materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
-                ItemContainerStyle="{DynamicResource MenuListBoxItemStyle}"
-                ItemsSource="{Binding MenuItems}"
-                SelectedIndex="{Binding MenuSelectIndex}">
-                <!--  设置item绑定事件  -->
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding MenuNavigateCommand}" CommandParameter="{Binding ElementName=MenuItems, Path=SelectedItem}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="25"
-                                Height="25"
-                                Margin="17,0"
-                                Kind="{Binding Path=Icon}" />
-                            <TextBlock
-                                VerticalAlignment="Center"
-                                Text="{Binding Title}"
-                                Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.BigAvatarVisibility}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </Grid>
+                <TabControl
+                    x:Name="TabMenus"
+                    Grid.Row="1"
+                    Margin="0,0,0,5"
+                    HorizontalContentAlignment="Left"
+                    ItemsSource="{Binding TabItems}"
+                    SelectedIndex="{Binding TabItemSelectedIndex}">
+                    <!--  设置item绑定事件  -->
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding TabItemChangeCommand}" CommandParameter="{Binding ElementName=TabMenus, Path=SelectedItem}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
+                                <md:PackIcon
+                                    Width="25"
+                                    Height="25"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Kind="{Binding Path=Icon}" />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Path=Title}" />
+                                <Button
+                                    Height="{Binding Height, ElementName=TabItemHeader}"
+                                    Margin="10,0,0,0"
+                                    Padding="0"
+                                    VerticalAlignment="Center"
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
+                                    CommandParameter="{Binding}"
+                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    Visibility="{Binding TabItemInfo.CloseBtn}">
+                                    <md:PackIcon
+                                        Width="22"
+                                        Height="22"
+                                        Kind="Close" />
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <!--  指定类型 DataType="models:MenuBar"  -->
+                        <DataTemplate DataType="models:MenuBar">
+                            <!--  ContentControl 的 DataContext 就是每一个 item 项  -->
+                            <ScrollViewer>
+                                <ContentControl
+                                    x:Name="Region"
+                                    Margin="0,0,5,0"
+                                    Content="{Binding Path=TabItemInfo.Content}" />
+                            </ScrollViewer>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
 
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <materialDesign:ColorZone
-                x:Name="Header"
-                Padding="0,16,16,16"
-                DockPanel.Dock="Top"
-                Mode="Standard">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                        <Button
-                            x:Name="MenuClose"
-                            Margin="0,0,0,0"
-                            Command="{Binding LeftContentSwitchCommand}"
-                            Content="{Binding LeftContentButtonIcon}" />
-                    </StackPanel>
-
-                    <TextBlock
-                        Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        AutomationProperties.Name="Material Design In XAML Toolkit"
-                        FontSize="22"
-                        Text="To Do List" />
-
-                    <StackPanel Grid.Column="2" Orientation="Horizontal">
-
-                        <Button
-                            x:Name="Minimized"
-                            Margin="2.5,0"
-                            Click="Minimized_OnClick"
-                            Content="—" />
-                        <Button
-                            x:Name="Maximized"
-                            Margin="2.5,0"
-                            Click="Maximized_OnClick"
-                            Content="☐" />
-                        <Button
-                            x:Name="Close"
-                            Margin="2.5,0"
-                            Click="Close_OnClick"
-                            Content="✕" />
-                    </StackPanel>
-                </Grid>
-            </materialDesign:ColorZone>
-
-            <TabControl
-                x:Name="TabMenus"
-                Grid.Row="1"
-                Margin="15,0,0,5"
-                HorizontalContentAlignment="Left"
-                ItemsSource="{Binding TabItems}"
-                SelectedIndex="{Binding TabItemSelectedIndex}">
-                <!--  设置item绑定事件  -->
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding TabItemChangeCommand}" CommandParameter="{Binding ElementName=TabMenus, Path=SelectedItem}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                                Width="25"
-                                Height="25"
-                                Margin="0,0,10,0"
-                                VerticalAlignment="Center"
-                                Kind="{Binding Path=Icon}" />
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Path=Title}" />
-                            <Button
-                                Height="{Binding Height, ElementName=TabItemHeader}"
-                                Margin="10,0,0,0"
-                                Padding="0"
-                                VerticalAlignment="Center"
-                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
-                                CommandParameter="{Binding}"
-                                Style="{StaticResource MaterialDesignFlatButton}"
-                                Visibility="{Binding TabItemInfo.CloseBtn}">
-                                <materialDesign:PackIcon
-                                    Width="22"
-                                    Height="22"
-                                    Kind="Close" />
-                            </Button>
-                        </StackPanel>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
-                    <!--  指定类型 DataType="models:MenuBar"  -->
-                    <DataTemplate DataType="models:MenuBar">
-                        <!--  ContentControl 的 DataContext 就是每一个 item 项  -->
-                        <ScrollViewer>
-                            <ContentControl
-                                x:Name="Region"
-                                Margin="0,0,5,0"
-                                Content="{Binding Path=TabItemInfo.Content}" />
-                        </ScrollViewer>
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-
-                <TabControl.Template>
-                    <!--  控件模板设置  -->
-                    <ControlTemplate TargetType="{x:Type TabControl}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <DockPanel LastChildFill="True">
-                                <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges">
-                                    <DockPanel>
-                                        <StackPanel
-                                            Margin="15,0"
-                                            HorizontalAlignment="Right"
-                                            DockPanel.Dock="Bottom"
-                                            Orientation="Horizontal">
-                                            <Button
-                                                Command="{Binding CloseAllTabItemCommand}"
-                                                Content="Close All"
-                                                Style="{StaticResource MaterialDesignRaisedLightButton}" />
-                                        </StackPanel>
-
-                                        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding TabItems}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel MaxWidth="600" />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
+                    <TabControl.Template>
+                        <!--  控件模板设置  -->
+                        <ControlTemplate TargetType="{x:Type TabControl}">
+                            <md:ColorZone>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <DockPanel LastChildFill="True">
+                                        <md:PopupBox
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            DockPanel.Dock="Right"
+                                            PlacementMode="BottomAndAlignRightEdges"
+                                            SnapsToDevicePixels="True">
+                                            <DockPanel>
+                                                <StackPanel
+                                                    Margin="15,25,15,0"
+                                                    HorizontalAlignment="Right"
+                                                    DockPanel.Dock="Bottom"
+                                                    Orientation="Horizontal">
                                                     <Button
-                                                        Margin="5,4"
-                                                        Padding="5,4"
-                                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemChangeCommand}"
-                                                        CommandParameter="{Binding}"
-                                                        Style="{StaticResource MaterialDesignFlatLightButton}">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <materialDesign:PackIcon
-                                                                Width="25"
-                                                                Height="25"
-                                                                Margin="0,0,5,0"
-                                                                Kind="{Binding Path=Icon}" />
-                                                            <TextBlock Text="{Binding Path=Title}" />
+                                                        Command="{Binding CloseAllTabItemCommand}"
+                                                        Content="Close All"
+                                                        Style="{StaticResource MaterialDesignRaisedButton}" />
+                                                </StackPanel>
 
+                                                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding TabItems}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel MaxWidth="600" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
                                                             <Button
-                                                                Margin="10,0,0,0"
-                                                                Padding="0"
-                                                                VerticalAlignment="Center"
-                                                                Click="PreventEventRaise_OnClick"
-                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
+                                                                Margin="5,4"
+                                                                Padding="5,4"
+                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemChangeCommand}"
                                                                 CommandParameter="{Binding}"
-                                                                Style="{StaticResource MaterialDesignFlatButton}"
-                                                                Visibility="{Binding TabItemInfo.CloseBtn}">
-                                                                <materialDesign:PackIcon
-                                                                    Width="22"
-                                                                    Height="22"
-                                                                    Kind="Close" />
+                                                                Style="{StaticResource MaterialDesignRaisedButton}">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <md:PackIcon
+                                                                        Width="25"
+                                                                        Height="25"
+                                                                        Margin="0,0,5,0"
+                                                                        Kind="{Binding Path=Icon}" />
+                                                                    <TextBlock Text="{Binding Path=Title}" />
+
+                                                                    <Button
+                                                                        Margin="10,0,0,0"
+                                                                        Padding="0"
+                                                                        VerticalAlignment="Center"
+                                                                        Click="PreventEventRaise_OnClick"
+                                                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
+                                                                        CommandParameter="{Binding}"
+                                                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                                                        Visibility="{Binding TabItemInfo.CloseBtn}">
+                                                                        <md:PackIcon
+                                                                            Width="22"
+                                                                            Height="22"
+                                                                            Kind="Close" />
+                                                                    </Button>
+                                                                </StackPanel>
                                                             </Button>
-                                                        </StackPanel>
-                                                    </Button>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </DockPanel>
+
+
+                                        </md:PopupBox>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />
+                                        </StackPanel>
                                     </DockPanel>
+                                    <ContentPresenter
+                                        x:Name="PART_SelectedContentHost"
+                                        Grid.Row="1"
+                                        Margin="4"
+                                        ContentSource="SelectedContent" />
+                                </Grid>
+                            </md:ColorZone>
+                        </ControlTemplate>
+                    </TabControl.Template>
+                </TabControl>
+            </Grid>
 
-
-                                </materialDesign:PopupBox>
-                                <StackPanel Orientation="Horizontal">
-                                    <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />
-                                </StackPanel>
-                            </DockPanel>
-                            <ContentPresenter
-                                x:Name="PART_SelectedContentHost"
-                                Grid.Row="1"
-                                Margin="4"
-                                ContentSource="SelectedContent" />
-                        </Grid>
-                    </ControlTemplate>
-                </TabControl.Template>
-            </TabControl>
         </Grid>
-
-    </Grid>
+    </md:DialogHost>
 </Window>

@@ -8,7 +8,8 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -41,9 +42,9 @@ namespace Practice.ViewModels
 
         //private readonly IRegionManager _regionManager;
         private readonly IContainerProvider _containerProvider;
-        private readonly SafetyUiDispatcher _safetyUiDispatcher;
+        private readonly SafetyUiAction _safetyUiAction;
 
-        public MainWindowViewModel(IContainerExtension containerProvider, SafetyUiDispatcher safetyUiDispatcher)
+        public MainWindowViewModel(IContainerExtension containerProvider, SafetyUiAction safetyUiAction)
         {
             MenuNavigateCommand = new DelegateCommand<MenuBar>(MenuNavigate);
             LeftContentSwitchCommand = new DelegateCommand(LeftContentSwitch);
@@ -52,7 +53,7 @@ namespace Practice.ViewModels
             CloseAllTabItemCommand = new DelegateCommand(CloseAllTabItem);
             //_regionManager = regionManager;
             _containerProvider = containerProvider;
-            _safetyUiDispatcher = safetyUiDispatcher;
+            _safetyUiAction = safetyUiAction;
             LoadMenu();
         }
 
@@ -299,7 +300,16 @@ namespace Practice.ViewModels
         /// </summary>
         public virtual void CloseAllTabItem()
         {
-            _safetyUiDispatcher.DelayWhen(() => TabItems.RemoveAll(x => x.TabItemInfo.CloseBtn == Visibility.Visible), 150);
+            _safetyUiAction.DelayWhen(() =>
+            {
+                var list = TabItems.Where(x => x.TabItemInfo.CloseBtn == Visibility.Visible)
+                    .Reverse()
+                    .ToList();
+                foreach (var menuBar in list)
+                {
+                    TabItemCloseLogic(menuBar);
+                }
+            }, 150);
         }
 
         /// <summary>
@@ -308,10 +318,19 @@ namespace Practice.ViewModels
         /// <param name="menu"></param>
         protected virtual void TabItemClose(MenuBar menu)
         {
+            TabItemCloseLogic(menu);
+            TabItemIndexReset();
+        }
+
+        /// <summary>
+        /// 菜单关闭具体逻辑
+        /// </summary>
+        /// <param name="menu"></param>
+        private void TabItemCloseLogic(MenuBar menu)
+        {
             menu.TabItemInfo.Index = -1;
             menu.TabItemInfo.Content = null;
             TabItems.Remove(menu);
-            TabItemIndexReset();
         }
 
         /// <summary>

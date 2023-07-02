@@ -2,6 +2,7 @@
 using MaterialDesignThemes.Wpf;
 using Practice.Services;
 using Practice.Services.Contract;
+using Practice.Services.interfaces;
 using Practice.ViewModels;
 using Practice.Views;
 using Prism.DryIoc;
@@ -10,7 +11,6 @@ using Serilog;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace Practice
 {
@@ -85,14 +85,15 @@ namespace Practice
 
             containerRegistry.RegisterSingleton<PaletteHelper>();
             containerRegistry.RegisterSingleton<SettingsManager>();
-            containerRegistry.RegisterInstance(new SafetyUiDispatcher(Dispatcher));
+            containerRegistry.RegisterInstance(new SafetyUiAction(Dispatcher));
+            containerRegistry.RegisterSingleton<IRootDialogService, RootDialogService>();
         }
 
         protected override Window CreateShell()
         {
             var settingsManager = Container.Resolve<SettingsManager>();
 
-            var theme = settingsManager.GetSetting<Theme>(SettingKeys.Theme);
+            var theme = settingsManager.GetSetting<Theme>(SystemSettingKeys.Theme);
             if (theme != null)
             {
                 var paletteHelper = Container.Resolve<PaletteHelper>();
