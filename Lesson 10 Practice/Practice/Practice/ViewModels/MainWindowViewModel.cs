@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Practice.Core.Contract;
 using Practice.Models;
 using Practice.Services;
 using Practice.Views;
@@ -269,25 +270,26 @@ namespace Practice.ViewModels
         /// <param name="menu"></param>
         protected virtual void MenuNavigate(MenuBar menu)
         {
-            var aa = _regionManager;
+            _regionManager.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, typeof(HomeView));
+            _regionManager.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, typeof(WorkingSoftwareView));
 
 
-            // 初次，tabItem需要被添加
-            if (menu.TabItemInfo.Index == -1)
-            {
-                MenuSelectIndex = menu.Index;
-                TabItems.Add(menu);
-                menu.TabItemInfo.Index = _tabItems.Count == 0 ? 0 : _tabItems.Count - 1;
-                TabItemSelectedIndex = menu.TabItemInfo.Index;
-                TabContentResolve(menu);
-                return;
-            }
+            //// 初次，tabItem需要被添加
+            //if (menu.TabItemInfo.Index == -1)
+            //{
+            //    MenuSelectIndex = menu.Index;
+            //    TabItems.Add(menu);
+            //    menu.TabItemInfo.Index = _tabItems.Count == 0 ? 0 : _tabItems.Count - 1;
+            //    TabItemSelectedIndex = menu.TabItemInfo.Index;
+            //    TabContentResolve(menu);
+            //    return;
+            //}
 
-            // 后续，菜单 或 tabItem 切换时
-            if (_tabItemSelectedIndex != menu.TabItemInfo.Index)
-            {
-                TabItemSelectedIndex = menu.TabItemInfo.Index;
-            }
+            //// 后续，菜单 或 tabItem 切换时
+            //if (_tabItemSelectedIndex != menu.TabItemInfo.Index)
+            //{
+            //    TabItemSelectedIndex = menu.TabItemInfo.Index;
+            //}
         }
 
         /// <summary>

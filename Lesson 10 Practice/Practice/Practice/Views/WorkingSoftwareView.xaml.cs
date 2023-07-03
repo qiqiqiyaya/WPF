@@ -23,10 +23,9 @@ namespace Practice.Views
     /// </summary>
     public partial class WorkingSoftwareView : UserControl
     {
-        public WorkingSoftwareView(WorkingSoftwareViewModel workingSoftwareViewModel)
+        public WorkingSoftwareView()
         {
             InitializeComponent();
-            DataContext = workingSoftwareViewModel;
         }
     }
 }

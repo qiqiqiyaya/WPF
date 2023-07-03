@@ -1,4 +1,6 @@
-﻿namespace Practice.Services.Contract
+﻿using System.Threading.Tasks;
+
+namespace Practice.Core.Contract
 {
     public class SystemSettingKeys
     {
@@ -12,5 +14,10 @@
         /// </summary>
 
         public static string RootDialogIdentity = "RootDialog";
+
+        /// <summary>
+        /// tab菜单区域名称
+        /// </summary>
+        public static string TabMenuRegion = nameof(TabMenuRegion);
     }
 }

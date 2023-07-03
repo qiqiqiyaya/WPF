@@ -3,11 +3,11 @@ using MaterialDesignColors;
 using MaterialDesignColors.ColorManipulation;
 using MaterialDesignThemes.Wpf;
 using Practice.Services;
-using Practice.Services.Contract;
 using Prism.Commands;
 using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
+using Practice.Core.Contract;
 
 namespace Practice.ViewModels
 {

@@ -1,7 +1,6 @@
 ﻿using DryIoc;
 using MaterialDesignThemes.Wpf;
 using Practice.Services;
-using Practice.Services.Contract;
 using Practice.Services.interfaces;
 using Practice.ViewModels;
 using Practice.Views;
@@ -11,6 +10,10 @@ using Serilog;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using Practice.Core.Contract;
+using Prism.Regions;
+using Practice.Core.RegionAdapterMappings;
 
 namespace Practice
 {
@@ -75,6 +78,8 @@ namespace Practice
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            //var regionManager = containerRegistry.Resolve<IRegionManager>();
+
             containerRegistry.RegisterForNavigation<MainWindow, MainWindowViewModel>();
             containerRegistry.RegisterForNavigation<HomeView, HomeViewModel>("Home");
             containerRegistry.RegisterForNavigation<WorkingSoftwareView, WorkingSoftwareViewModel>("WorkingSoftware");
@@ -101,6 +106,13 @@ namespace Practice
             }
 
             return Container.Resolve<MainWindow>();
+        }
+
+        protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
+        {
+            base.ConfigureRegionAdapterMappings(regionAdapterMappings);
+
+            regionAdapterMappings.RegisterMapping<TabControl, TabControlRegionAdapter>();
         }
     }
 }

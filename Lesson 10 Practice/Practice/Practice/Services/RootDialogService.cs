@@ -1,8 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Practice.CommonViews;
-using Practice.Services.Contract;
 using Practice.Services.interfaces;
 using System.Threading.Tasks;
+using Practice.Core.Contract;
 
 namespace Practice.Services
 {

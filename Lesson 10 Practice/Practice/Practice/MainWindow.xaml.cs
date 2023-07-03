@@ -1,7 +1,8 @@
-﻿using Practice.Services.Contract;
-using Practice.Services.interfaces;
+﻿using Practice.Services.interfaces;
 using System.Windows;
 using System.Windows.Input;
+using Practice.Core.Contract;
+using Prism.Mvvm;
 using Prism.Regions;
 
 namespace Practice
@@ -36,11 +37,15 @@ namespace Practice
             {
                 this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             };
-            var aa = regionManager.RegisterViewWithRegion("Region", "WorkingSoftware");
-            var vvv = aa;
 
-            var aacc = _regionViewRegistry.GetContents("Region");
-            var aaaaaa = regionManager.Regions["Region"];
+
+            //var aafdsafds= ViewModelLocationProvider.Register(viewType.ToString(), typeof(TViewModel));
+
+            //var aa = regionManager.RegisterViewWithRegion("Region", "WorkingSoftware");
+            //var vvv = aa;
+
+            //var aacc = _regionViewRegistry.GetContents("Region");
+            //var aaaaaa = regionManager.Regions["Region"];
 
             RootDialog.Identifier = SystemSettingKeys.RootDialogIdentity;
         }

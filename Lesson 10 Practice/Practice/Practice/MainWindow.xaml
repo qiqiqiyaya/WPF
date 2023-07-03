@@ -2,6 +2,7 @@
     x:Class="Practice.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:contract="clr-namespace:Practice.Core.Contract"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -185,30 +186,29 @@
                     </Grid>
                 </md:ColorZone>
 
+                <!--  ItemsSource="{Binding TabItems}"  -->
                 <TabControl
                     x:Name="TabMenus"
                     Grid.Row="1"
                     Margin="0,0,0,5"
                     HorizontalContentAlignment="Left"
-                    ItemsSource="{Binding TabItems}"
-                    SelectedIndex="{Binding TabItemSelectedIndex}"
-                    prism:RegionManager.RegionName="Region">
+                    prism:RegionManager.RegionName="{x:Static contract:SystemSettingKeys.TabMenuRegion}">
                     <!--  设置item绑定事件  -->
-                    <i:Interaction.Triggers>
+                    <!--<i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding TabItemChangeCommand}" CommandParameter="{Binding ElementName=TabMenus, Path=SelectedItem}" />
                         </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                    </i:Interaction.Triggers>-->
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
-                                <md:PackIcon
+                                <!--<md:PackIcon
                                     Width="25"
                                     Height="25"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Kind="{Binding Path=Icon}" />
-                                <TextBlock VerticalAlignment="Center" Text="{Binding Path=Title}" />
+                                    Kind="{Binding}" />-->
+                                <TextBlock VerticalAlignment="Center" Text="test" />
                                 <Button
                                     Height="{Binding Height, ElementName=TabItemHeader}"
                                     Margin="10,0,0,0"
@@ -216,8 +216,7 @@
                                     VerticalAlignment="Center"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
                                     CommandParameter="{Binding}"
-                                    Style="{StaticResource MaterialDesignFlatButton}"
-                                    Visibility="{Binding TabItemInfo.CloseBtn}">
+                                    Style="{StaticResource MaterialDesignFlatButton}">
                                     <md:PackIcon
                                         Width="22"
                                         Height="22"
@@ -234,7 +233,7 @@
                                 <ContentControl
                                     x:Name="Region"
                                     Margin="0,0,5,0"
-                                    Content="{Binding Path=TabItemInfo.Content}" />
+                                    Content="{Binding RelativeSource={RelativeSource AncestorType=TabItem}}" />
                             </ScrollViewer>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
@@ -319,8 +318,7 @@
                                     <ContentPresenter
                                         x:Name="PART_SelectedContentHost"
                                         Grid.Row="1"
-                                        Margin="4"
-                                        ContentSource="SelectedContent" />
+                                        Margin="4" />
                                 </Grid>
                             </md:ColorZone>
                         </ControlTemplate>
