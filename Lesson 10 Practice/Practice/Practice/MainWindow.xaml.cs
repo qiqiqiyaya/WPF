@@ -2,6 +2,7 @@
 using Practice.Services.interfaces;
 using System.Windows;
 using System.Windows.Input;
+using Prism.Regions;
 
 namespace Practice
 {
@@ -11,9 +12,15 @@ namespace Practice
     public partial class MainWindow : Window
     {
         private readonly IRootDialogService _rootDialogService;
+        private readonly IRegionManager _regionManager;
+        private readonly IRegionViewRegistry _regionViewRegistry;
 
-        public MainWindow(IRootDialogService rootDialogService)
+        public MainWindow(IRootDialogService rootDialogService, IRegionManager regionManager, IRegionViewRegistry regionViewRegistry)
         {
+            _regionViewRegistry = regionViewRegistry;
+            _regionManager = regionManager;
+
+            //regionManager.Regions[""].
             _rootDialogService = rootDialogService;
             InitializeComponent();
 
@@ -29,12 +36,20 @@ namespace Practice
             {
                 this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             };
+            var aa = regionManager.RegisterViewWithRegion("Region", "WorkingSoftware");
+            var vvv = aa;
+
+            var aacc = _regionViewRegistry.GetContents("Region");
+            var aaaaaa = regionManager.Regions["Region"];
 
             RootDialog.Identifier = SystemSettingKeys.RootDialogIdentity;
         }
 
         private void Minimized_OnClick(object sender, RoutedEventArgs e)
         {
+
+            //RegionManager.SetRegionName(this.Region,"test");
+
             this.WindowState = WindowState.Minimized;
         }
 

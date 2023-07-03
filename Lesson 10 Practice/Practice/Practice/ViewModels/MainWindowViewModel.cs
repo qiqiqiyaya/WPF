@@ -4,6 +4,7 @@ using Practice.Services;
 using Practice.Views;
 using Prism.Commands;
 using Prism.Ioc;
+using Prism.Regions;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -43,9 +44,13 @@ namespace Practice.ViewModels
         //private readonly IRegionManager _regionManager;
         private readonly IContainerProvider _containerProvider;
         private readonly SafetyUiAction _safetyUiAction;
+        private readonly IRegionManager _regionManager;
 
-        public MainWindowViewModel(IContainerExtension containerProvider, SafetyUiAction safetyUiAction)
+        public MainWindowViewModel(IContainerExtension containerProvider,
+            SafetyUiAction safetyUiAction,
+            IRegionManager regionManager)
         {
+            _regionManager = regionManager;
             MenuNavigateCommand = new DelegateCommand<MenuBar>(MenuNavigate);
             LeftContentSwitchCommand = new DelegateCommand(LeftContentSwitch);
             TabItemChangeCommand = new DelegateCommand<MenuBar>(TabItemChange);
@@ -264,6 +269,9 @@ namespace Practice.ViewModels
         /// <param name="menu"></param>
         protected virtual void MenuNavigate(MenuBar menu)
         {
+            var aa = _regionManager;
+
+
             // 初次，tabItem需要被添加
             if (menu.TabItemInfo.Index == -1)
             {

@@ -21,15 +21,6 @@ namespace Practice
     {
         public App()
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Information()
-                .Enrich.FromLogContext()
-                .WriteTo.Async(c => c.File($"Logs/logs.txt"))
-                .CreateLogger();
-
-            Log.Logger.Information("应用程序启动");
-
             Startup += App_Startup;
             Exit += App_Exit;
         }
@@ -65,6 +56,15 @@ namespace Practice
                     }
                 }
             };
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
+                .Enrich.FromLogContext()
+                .WriteTo.Async(c => c.File($"Logs/logs.txt"))
+                .CreateLogger();
+
+            Log.Logger.Information("应用程序启动");
         }
 
         private void App_Exit(object sender, ExitEventArgs e)

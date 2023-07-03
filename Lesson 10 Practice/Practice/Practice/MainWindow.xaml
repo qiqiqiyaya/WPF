@@ -191,7 +191,8 @@
                     Margin="0,0,0,5"
                     HorizontalContentAlignment="Left"
                     ItemsSource="{Binding TabItems}"
-                    SelectedIndex="{Binding TabItemSelectedIndex}">
+                    SelectedIndex="{Binding TabItemSelectedIndex}"
+                    prism:RegionManager.RegionName="Region">
                     <!--  设置item绑定事件  -->
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
