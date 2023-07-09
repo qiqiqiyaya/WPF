@@ -5,16 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Practice.Extensions;
+using Practice.Models;
+using Prism.Ioc;
 using Prism.Regions;
 
 namespace Practice.Core.RegionAdapterMappings
 {
     public class TabControlRegionAdapter : RegionAdapterBase<TabControl>
     {
+        private readonly IContainerExtension _containerProvider;
 
-        public TabControlRegionAdapter(IRegionBehaviorFactory regionBehaviorFactory) : base(regionBehaviorFactory)
+        public TabControlRegionAdapter(IRegionBehaviorFactory regionBehaviorFactory,
+            IContainerExtension containerProvider) : base(regionBehaviorFactory)
         {
-
+            _containerProvider = containerProvider;
         }
 
         protected override void Adapt(IRegion region, TabControl regionTarget)
@@ -23,17 +28,23 @@ namespace Practice.Core.RegionAdapterMappings
             {
                 if (e.Action == NotifyCollectionChangedAction.Add)
                 {
-                    foreach (UserControl item in e.NewItems)
+                    foreach (MenuBar item in e.NewItems!)
                     {
-                        regionTarget.Items.Add(new TabItem { Header = item.Name, Content = item });
+                        var userControl = _containerProvider.Resolve(item.TabItemInfo.ViewType) as UserControl;
+                        Check.NotNull(userControl, nameof(userControl));
+
+                        item.TabItemInfo.UserControl = userControl;
+                        regionTarget.Items.Add(item);
                     }
                 }
                 else if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
-                    foreach (UserControl item in e.OldItems)
+                    foreach (MenuBar item in e.OldItems!)
                     {
-                        var tabTodelete = regionTarget.Items.OfType<TabItem>().FirstOrDefault(n => n.Content == item);
-                        regionTarget.Items.Remove(tabTodelete);
+                        item.TabItemInfo.UserControl = null;
+                        regionTarget.Items.Remove(item);
+                        //var tabTodelete = regionTarget.Items.OfType<TabItem>().FirstOrDefault(n => n.Content == item);
+                        //regionTarget.Items.Remove(tabTodelete);
                     }
                 }
             };

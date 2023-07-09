@@ -192,6 +192,7 @@
                     Grid.Row="1"
                     Margin="0,0,0,5"
                     HorizontalContentAlignment="Left"
+                    d:DataContext="{d:DesignInstance models:MenuBar}"
                     prism:RegionManager.RegionName="{x:Static contract:SystemSettingKeys.TabMenuRegion}">
                     <!--  设置item绑定事件  -->
                     <!--<i:Interaction.Triggers>
@@ -202,13 +203,13 @@
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
-                                <!--<md:PackIcon
+                                <md:PackIcon
                                     Width="25"
                                     Height="25"
                                     Margin="0,0,10,0"
                                     VerticalAlignment="Center"
-                                    Kind="{Binding}" />-->
-                                <TextBlock VerticalAlignment="Center" Text="test" />
+                                    Kind="{Binding Path=Icon}" />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Path=Title}" />
                                 <Button
                                     Height="{Binding Height, ElementName=TabItemHeader}"
                                     Margin="10,0,0,0"
@@ -233,7 +234,7 @@
                                 <ContentControl
                                     x:Name="Region"
                                     Margin="0,0,5,0"
-                                    Content="{Binding RelativeSource={RelativeSource AncestorType=TabItem}}" />
+                                    Content="{Binding Path=TabItemInfo.UserControl}" />
                             </ScrollViewer>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
@@ -261,12 +262,12 @@
                                                     DockPanel.Dock="Bottom"
                                                     Orientation="Horizontal">
                                                     <Button
-                                                        Command="{Binding CloseAllTabItemCommand}"
+                                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.CloseAllTabItemCommand}"
                                                         Content="Close All"
                                                         Style="{StaticResource MaterialDesignRaisedButton}" />
                                                 </StackPanel>
 
-                                                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding TabItems}">
+                                                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItems}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel MaxWidth="600" />
@@ -309,14 +310,12 @@
                                                 </ItemsControl>
                                             </DockPanel>
 
-
                                         </md:PopupBox>
                                         <StackPanel Orientation="Horizontal">
                                             <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />
                                         </StackPanel>
                                     </DockPanel>
                                     <ContentPresenter
-                                        x:Name="PART_SelectedContentHost"
                                         Grid.Row="1"
                                         Margin="4" />
                                 </Grid>

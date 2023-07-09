@@ -8,7 +8,6 @@ using Prism.Ioc;
 using Prism.Regions;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
@@ -46,10 +45,14 @@ namespace Practice.ViewModels
         private readonly IContainerProvider _containerProvider;
         private readonly SafetyUiAction _safetyUiAction;
         private readonly IRegionManager _regionManager;
+        private readonly IRegionViewRegistry _regionViewRegistry;
+        private readonly MenuService _menuService;
 
         public MainWindowViewModel(IContainerExtension containerProvider,
             SafetyUiAction safetyUiAction,
-            IRegionManager regionManager)
+            IRegionManager regionManager,
+            IRegionViewRegistry regionViewRegistry,
+            MenuService menuService)
         {
             _regionManager = regionManager;
             MenuNavigateCommand = new DelegateCommand<MenuBar>(MenuNavigate);
@@ -60,6 +63,8 @@ namespace Practice.ViewModels
             //_regionManager = regionManager;
             _containerProvider = containerProvider;
             _safetyUiAction = safetyUiAction;
+            _regionViewRegistry = regionViewRegistry;
+            _menuService = menuService;
             LoadMenu();
         }
 
@@ -206,62 +211,22 @@ namespace Practice.ViewModels
 
         protected void LoadMenu()
         {
-            MenuItems = new ObservableCollection<MenuBar>();
-            var list = new List<MenuBar>()
+            _safetyUiAction.InvokeAsync(async () =>
             {
-                new MenuBar()
-                {
-                    Icon = "Home", NameSpace = "", Title = "Home",
-                    TabItemInfo = new TabItemInfo() { CloseBtn = Visibility.Collapsed, ViewType = typeof(HomeView) }
-                },
-                new MenuBar()
-                {
-                    Icon = "Apps", NameSpace = "", Title = "工作软件",
-                    TabItemInfo = new TabItemInfo()
-                        { CloseBtn = Visibility.Visible, ViewType = typeof(WorkingSoftwareView) }
-                },
-                new MenuBar()
-                {
-                    Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏",
-                    TabItemInfo = new TabItemInfo() { CloseBtn = Visibility.Visible, ViewType = typeof(GameView) }
-                },
-                new MenuBar()
-                {
-                    Icon = "Palette", NameSpace = "", Title = "主题切换",
-                    TabItemInfo = new TabItemInfo()
-                        { CloseBtn = Visibility.Visible, ViewType = typeof(ThemeChangeView) }
-                },
-                new MenuBar()
-                {
-                    Icon = "React", NameSpace = "", Title = "ReactiveUI",TabItemInfo =
-                        new TabItemInfo(){CloseBtn = Visibility.Visible,ViewType = typeof(ReactiveView)}
-                },
-                new MenuBar()
-                {
-                    Icon = "MicrosoftWindows", NameSpace = "", Title = "系统信息",
-                    TabItemInfo = new TabItemInfo(){CloseBtn = Visibility.Visible ,ViewType = typeof(SystemInformationView)}
-                },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-            };
+                var menus = await _menuService.GetAll();
+                MenuItems = new ObservableCollection<MenuBar>();
 
-            for (int i = 0; i < list.Count; i++)
-            {
-                list[i].Index = i;
-            }
-            MenuItems.AddRange(list);
+                for (int i = 0; i < menus.Count; i++)
+                {
+                    menus[i].Index = i;
+                }
 
-            MenuNavigate(MenuItems[0]);
+                MenuItems.AddRange(menus);
+                MenuNavigate(MenuItems[0]);
+                //_regionViewRegistry.RegisterViewWithRegion();
+
+                //_regionManager.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, typeof(HomeView));
+            });
         }
 
         /// <summary>
@@ -270,26 +235,22 @@ namespace Practice.ViewModels
         /// <param name="menu"></param>
         protected virtual void MenuNavigate(MenuBar menu)
         {
-            _regionManager.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, typeof(HomeView));
-            _regionManager.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, typeof(WorkingSoftwareView));
+            // 初次，tabItem需要被添加
+            if (menu.TabItemInfo.Index == -1)
+            {
+                MenuSelectIndex = menu.Index;
+                TabItems.Add(menu);
+                menu.TabItemInfo.Index = _tabItems.Count == 0 ? 0 : _tabItems.Count - 1;
+                TabItemSelectedIndex = menu.TabItemInfo.Index;
+                TabContentResolve(menu);
+                return;
+            }
 
-
-            //// 初次，tabItem需要被添加
-            //if (menu.TabItemInfo.Index == -1)
-            //{
-            //    MenuSelectIndex = menu.Index;
-            //    TabItems.Add(menu);
-            //    menu.TabItemInfo.Index = _tabItems.Count == 0 ? 0 : _tabItems.Count - 1;
-            //    TabItemSelectedIndex = menu.TabItemInfo.Index;
-            //    TabContentResolve(menu);
-            //    return;
-            //}
-
-            //// 后续，菜单 或 tabItem 切换时
-            //if (_tabItemSelectedIndex != menu.TabItemInfo.Index)
-            //{
-            //    TabItemSelectedIndex = menu.TabItemInfo.Index;
-            //}
+            // 后续，菜单 或 tabItem 切换时
+            if (_tabItemSelectedIndex != menu.TabItemInfo.Index)
+            {
+                TabItemSelectedIndex = menu.TabItemInfo.Index;
+            }
         }
 
         /// <summary>
@@ -339,7 +300,6 @@ namespace Practice.ViewModels
         private void TabItemCloseLogic(MenuBar menu)
         {
             menu.TabItemInfo.Index = -1;
-            menu.TabItemInfo.Content = null;
             TabItems.Remove(menu);
         }
 
@@ -349,12 +309,14 @@ namespace Practice.ViewModels
         /// <param name="menu"></param>
         private void TabContentResolve(MenuBar menu)
         {
-            if (menu.TabItemInfo.Content != null || menu.TabItemInfo.ViewType == null) return;
-            var userControl = _containerProvider.Resolve(menu.TabItemInfo.ViewType);
-            if (userControl is UserControl control)
-            {
-                menu.TabItemInfo.Content = control;
-            }
+            //if (menu.TabItemInfo.Content != null || menu.TabItemInfo.ViewType == null) return;
+
+            _regionViewRegistry.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, () => menu);
+            //var userControl = _containerProvider.Resolve(menu.TabItemInfo.ViewType);
+            //if (userControl is UserControl control)
+            //{
+            //    menu.TabItemInfo.Content = control;
+            //}
         }
 
         /// <summary>

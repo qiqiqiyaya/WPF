@@ -42,7 +42,6 @@ namespace Practice.Services
             });
         }
 
-
         /// <summary>
         /// 延迟指定时间后，执行操作
         /// </summary>
@@ -51,8 +50,17 @@ namespace Practice.Services
         {
             Task.Run(async () =>
             {
-                await UiDispatcher.Invoke(action);
+                await UiDispatcher.InvokeAsync(action);
             });
         }
+
+        //public void InvokeAsync(Func<Task<Action>> action)
+        //{
+        //    Task.Run(async () =>
+        //    {
+        //        var result = await action();
+        //        UiDispatcher.Invoke(result);
+        //    });
+        //}
     }
 }

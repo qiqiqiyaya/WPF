@@ -34,6 +34,11 @@ namespace Practice.Models
 
     public class TabItemInfo : BindableBase
     {
+        public TabItemInfo(Type viewType)
+        {
+            ViewType = viewType;
+        }
+
         /// <summary>
         /// tab 上的索引，仅用于存储信息
         /// </summary>
@@ -45,21 +50,24 @@ namespace Practice.Models
         /// <summary>
         /// 前台视图类型
         /// </summary>
-        public Type? ViewType { get; set; }
+        public Type ViewType { get; set; }
 
         /// <summary>
         /// 关闭按钮显示与否
         /// </summary>
-        public Visibility CloseBtn { get; set; }
+        public Visibility CloseBtn { get; set; } = Visibility.Visible;
 
-        private UserControl? _content;
-        /// <summary>
-        /// TabItem 对应的用户控件
-        /// </summary>
-        public UserControl? Content
+        private UserControl _userControl;
+
+        public UserControl UserControl
         {
-            get => _content;
-            set => SetProperty(ref _content, value);
+            get => _userControl;
+            set => SetProperty(ref _userControl, value);
+        }
+
+        public void ClearIndex()
+        {
+            Index = -1;
         }
     }
 }
