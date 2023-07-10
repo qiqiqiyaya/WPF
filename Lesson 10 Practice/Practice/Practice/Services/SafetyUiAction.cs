@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace Practice.Services
 {
@@ -37,7 +38,6 @@ namespace Practice.Services
             Task.Run(async () =>
             {
                 await Task.Delay(delay);
-
                 await UiDispatcher.InvokeAsync(action);
             });
         }
@@ -54,13 +54,13 @@ namespace Practice.Services
             });
         }
 
-        //public void InvokeAsync(Func<Task<Action>> action)
-        //{
-        //    Task.Run(async () =>
-        //    {
-        //        var result = await action();
-        //        UiDispatcher.Invoke(result);
-        //    });
-        //}
+        /// <summary>
+        /// 执行UI操作
+        /// </summary>
+        /// <param name="action"></param>
+        public void Invoke(Action action)
+        {
+            UiDispatcher.Invoke(action);
+        }
     }
 }

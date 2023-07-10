@@ -11,6 +11,8 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using Practice.Core.Contract;
 using Prism.Regions;
 using Practice.Core.RegionAdapterMappings;
@@ -30,6 +32,15 @@ namespace Practice
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
+                .Enrich.FromLogContext()
+                .WriteTo.Async(c => c.File($"Logs/logs.txt"))
+                .CreateLogger();
+
+            Log.Logger.Information("应用程序启动");
+
             // UI线程未捕获异常处理事件
             DispatcherUnhandledException += (o, args) =>
             {
@@ -60,14 +71,23 @@ namespace Practice
                 }
             };
 
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Information()
-                .Enrich.FromLogContext()
-                .WriteTo.Async(c => c.File($"Logs/logs.txt"))
-                .CreateLogger();
+            LiveCharts.Configure(config =>
+                    config
+                        // registers SkiaSharp as the library backend
+                        // REQUIRED unless you build your own
+                        .AddSkiaSharp()
 
-            Log.Logger.Information("应用程序启动");
+                        // adds the default supported types
+                        // OPTIONAL but highly recommend
+                        .AddDefaultMappers()
+
+                        // select a theme, default is Light
+                        // OPTIONAL
+                        //.AddDarkTheme()
+                        .AddLightTheme()
+            // .HasMap<Foo>( .... ) 
+            // .HasMap<Bar>( .... ) 
+            );
         }
 
         private void App_Exit(object sender, ExitEventArgs e)

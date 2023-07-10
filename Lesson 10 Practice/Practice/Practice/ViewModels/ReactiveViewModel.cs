@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using ReactiveUI;
 using System.Threading.Tasks;
 
@@ -8,9 +10,23 @@ namespace Practice.ViewModels
     {
         public ReactiveViewModel()
         {
-            Task.Run(async () =>
-            {
-                while (true)
+            //Task.Run(async () =>
+            //{
+            //    while (true)
+            //    {
+            //        if (Progress == 100)
+            //        {
+            //            Progress = 0;
+
+            //        }
+
+            //        Progress++;
+            //        await Task.Delay(Progress % 10 == 0 ? 2000 : 400);
+            //    }
+            //});
+
+            Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(10))
+                .Subscribe(_ =>
                 {
                     if (Progress == 100)
                     {
@@ -19,9 +35,7 @@ namespace Practice.ViewModels
                     }
 
                     Progress++;
-                    await Task.Delay(Progress % 10 == 0 ? 2000 : 400);
-                }
-            });
+                });
         }
 
         private int _progress;

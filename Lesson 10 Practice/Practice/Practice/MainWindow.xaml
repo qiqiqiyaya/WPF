@@ -186,7 +186,6 @@
                     </Grid>
                 </md:ColorZone>
 
-                <!--  ItemsSource="{Binding TabItems}"  -->
                 <TabControl
                     x:Name="TabMenus"
                     Grid.Row="1"
