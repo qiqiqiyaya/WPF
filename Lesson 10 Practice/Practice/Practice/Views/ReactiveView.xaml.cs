@@ -21,11 +21,9 @@ namespace Practice.Views
     /// </summary>
     public partial class ReactiveView : UserControl
     {
-        public ReactiveView(ReactiveViewModel reactiveViewModel)
+        public ReactiveView()
         {
             InitializeComponent();
-
-            DataContext = reactiveViewModel;
         }
     }
 }

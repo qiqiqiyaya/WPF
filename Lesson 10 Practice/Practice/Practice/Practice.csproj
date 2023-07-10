@@ -15,6 +15,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Core\TabItemRemoveBehavior.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Remove="Fonts\MiSans-Normal.ttf" />
 		<None Remove="Resources\201962717351564989.jpeg" />
 		<None Remove="Resources\R.gif" />

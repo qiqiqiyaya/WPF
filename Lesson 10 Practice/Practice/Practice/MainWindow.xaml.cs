@@ -1,9 +1,7 @@
-﻿using Practice.Services.interfaces;
+﻿using Practice.Core.Contract;
+using Prism.Regions;
 using System.Windows;
 using System.Windows.Input;
-using Practice.Core.Contract;
-using Prism.Mvvm;
-using Prism.Regions;
 
 namespace Practice
 {
@@ -12,17 +10,8 @@ namespace Practice
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IRootDialogService _rootDialogService;
-        private readonly IRegionManager _regionManager;
-        private readonly IRegionViewRegistry _regionViewRegistry;
-
-        public MainWindow(IRootDialogService rootDialogService, IRegionManager regionManager, IRegionViewRegistry regionViewRegistry)
+        public MainWindow(IRegionManager regionManager)
         {
-            _regionViewRegistry = regionViewRegistry;
-            _regionManager = regionManager;
-
-            //regionManager.Regions[""].
-            _rootDialogService = rootDialogService;
             InitializeComponent();
 
             this.Header.MouseDown += (sender, args) =>
@@ -38,23 +27,16 @@ namespace Practice
                 this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             };
 
+            // code-behind set region
+            RegionManager.SetRegionName(TabMenus, SystemSettingKeys.TabMenuRegion);
+            RegionManager.SetRegionManager(TabMenus, regionManager);
 
-            //var aafdsafds= ViewModelLocationProvider.Register(viewType.ToString(), typeof(TViewModel));
-
-            //var aa = regionManager.RegisterViewWithRegion("Region", "WorkingSoftware");
-            //var vvv = aa;
-
-            //var aacc = _regionViewRegistry.GetContents("Region");
-            //var aaaaaa = regionManager.Regions["Region"];
-
+            // root mdDialog Identifier set
             RootDialog.Identifier = SystemSettingKeys.RootDialogIdentity;
         }
 
         private void Minimized_OnClick(object sender, RoutedEventArgs e)
         {
-
-            //RegionManager.SetRegionName(this.Region,"test");
-
             this.WindowState = WindowState.Minimized;
         }
 

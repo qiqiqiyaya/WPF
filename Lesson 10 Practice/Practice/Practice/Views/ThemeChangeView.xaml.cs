@@ -1,5 +1,4 @@
-﻿using Practice.ViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Practice.Views
 {
@@ -8,10 +7,9 @@ namespace Practice.Views
     /// </summary>
     public partial class ThemeChangeView : UserControl
     {
-        public ThemeChangeView(ThemeChangeViewModel viewModel)
+        public ThemeChangeView()
         {
             InitializeComponent();
-            DataContext = viewModel;
         }
     }
 }

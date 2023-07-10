@@ -1,10 +1,9 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using ImTools;
+using MaterialDesignThemes.Wpf;
 using Practice.Core.Contract;
 using Practice.Models;
 using Practice.Services;
-using Practice.Views;
 using Prism.Commands;
-using Prism.Ioc;
 using Prism.Regions;
 using ReactiveUI;
 using System;
@@ -12,7 +11,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 // ReSharper disable ConvertToAutoProperty
 
@@ -41,17 +39,16 @@ namespace Practice.ViewModels
         /// </summary>
         public DelegateCommand CloseAllTabItemCommand { get; }
 
-        //private readonly IRegionManager _regionManager;
-        private readonly IContainerProvider _containerProvider;
         private readonly SafetyUiAction _safetyUiAction;
-        private readonly IRegionManager _regionManager;
         private readonly IRegionViewRegistry _regionViewRegistry;
         private readonly MenuService _menuService;
+        private readonly IRegionManager _regionManager;
+        private IRegion _region;
 
-        public MainWindowViewModel(IContainerExtension containerProvider,
+        public MainWindowViewModel(
             SafetyUiAction safetyUiAction,
-            IRegionManager regionManager,
             IRegionViewRegistry regionViewRegistry,
+            IRegionManager regionManager,
             MenuService menuService)
         {
             _regionManager = regionManager;
@@ -60,8 +57,6 @@ namespace Practice.ViewModels
             TabItemChangeCommand = new DelegateCommand<MenuBar>(TabItemChange);
             TabItemCloseCommand = new DelegateCommand<MenuBar>(TabItemClose);
             CloseAllTabItemCommand = new DelegateCommand(CloseAllTabItem);
-            //_regionManager = regionManager;
-            _containerProvider = containerProvider;
             _safetyUiAction = safetyUiAction;
             _regionViewRegistry = regionViewRegistry;
             _menuService = menuService;
@@ -198,15 +193,22 @@ namespace Practice.ViewModels
             set => this.RaiseAndSetIfChanged(ref _tabItemSelectedIndex, value);
         }
 
-
-        private ObservableCollection<MenuBar> _tabItems = new ObservableCollection<MenuBar>();
         /// <summary>
         /// tab项
         /// </summary>
-        public ObservableCollection<MenuBar> TabItems
+        public IViewsCollection TabItems
         {
-            get => _tabItems;
-            set => this.RaiseAndSetIfChanged(ref _tabItems, value);
+            get
+            {
+                // see
+                // MainWindow.xaml.cs
+                // RegionManager.SetRegionName(TabMenus, SystemSettingKeys.TabMenuRegion);
+                // RegionManager.SetRegionManager(TabMenus, regionManager);
+
+                // ReSharper disable once ConstantNullCoalescingCondition
+                _region ??= _regionManager.Regions[SystemSettingKeys.TabMenuRegion];
+                return _region.Views;
+            }
         }
 
         protected void LoadMenu()
@@ -222,10 +224,8 @@ namespace Practice.ViewModels
                 }
 
                 MenuItems.AddRange(menus);
-                MenuNavigate(MenuItems[0]);
-                //_regionViewRegistry.RegisterViewWithRegion();
-
-                //_regionManager.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, typeof(HomeView));
+                // select home
+                MenuSelectIndex = 0;
             });
         }
 
@@ -239,8 +239,7 @@ namespace Practice.ViewModels
             if (menu.TabItemInfo.Index == -1)
             {
                 MenuSelectIndex = menu.Index;
-                TabItems.Add(menu);
-                menu.TabItemInfo.Index = _tabItems.Count == 0 ? 0 : _tabItems.Count - 1;
+                menu.TabItemInfo.Index = !_region.Views.Any() ? 0 : _region.Views.Count();
                 TabItemSelectedIndex = menu.TabItemInfo.Index;
                 TabContentResolve(menu);
                 return;
@@ -273,7 +272,7 @@ namespace Practice.ViewModels
         {
             _safetyUiAction.DelayWhen(() =>
             {
-                var list = TabItems.Where(x => x.TabItemInfo.CloseBtn == Visibility.Visible)
+                var list = _region.Views.Cast<MenuBar>().Where(x => x.TabItemInfo.CloseBtn == Visibility.Visible)
                     .Reverse()
                     .ToList();
                 foreach (var menuBar in list)
@@ -289,8 +288,11 @@ namespace Practice.ViewModels
         /// <param name="menu"></param>
         protected virtual void TabItemClose(MenuBar menu)
         {
+            int index = menu.TabItemInfo.Index;
             TabItemCloseLogic(menu);
-            TabItemIndexReset();
+            RestTabItemIndexReset();
+
+            TabItemSelectedIndex = index;
         }
 
         /// <summary>
@@ -299,8 +301,7 @@ namespace Practice.ViewModels
         /// <param name="menu"></param>
         private void TabItemCloseLogic(MenuBar menu)
         {
-            menu.TabItemInfo.Index = -1;
-            TabItems.Remove(menu);
+            _region.Remove(menu);
         }
 
         /// <summary>
@@ -309,27 +310,24 @@ namespace Practice.ViewModels
         /// <param name="menu"></param>
         private void TabContentResolve(MenuBar menu)
         {
-            //if (menu.TabItemInfo.Content != null || menu.TabItemInfo.ViewType == null) return;
-
             _regionViewRegistry.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, () => menu);
-            //var userControl = _containerProvider.Resolve(menu.TabItemInfo.ViewType);
-            //if (userControl is UserControl control)
-            //{
-            //    menu.TabItemInfo.Content = control;
-            //}
         }
 
         /// <summary>
-        /// TabItem索引重置
+        /// 剩余TabItem索引重置
         /// </summary>
-        protected virtual void TabItemIndexReset()
+        protected virtual void RestTabItemIndexReset()
         {
-            for (int i = 0; i < TabItems.Count; i++)
+            int index = 0;
+            foreach (var view in _region.Views)
             {
-                if (TabItems[i].TabItemInfo.Index != i)
+                var menuBar = (MenuBar)view;
+                if (menuBar.TabItemInfo.Index != index)
                 {
-                    TabItems[i].TabItemInfo.Index = i;
+                    menuBar.TabItemInfo.Index = index;
                 }
+
+                index++;
             }
         }
     }

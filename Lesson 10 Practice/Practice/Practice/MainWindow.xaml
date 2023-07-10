@@ -193,13 +193,14 @@
                     Margin="0,0,0,5"
                     HorizontalContentAlignment="Left"
                     d:DataContext="{d:DesignInstance models:MenuBar}"
-                    prism:RegionManager.RegionName="{x:Static contract:SystemSettingKeys.TabMenuRegion}">
+                    prism:RegionManager.RegionName="{x:Static contract:SystemSettingKeys.TabMenuRegion}"
+                    SelectedIndex="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemSelectedIndex}">
                     <!--  设置item绑定事件  -->
-                    <!--<i:Interaction.Triggers>
+                    <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding TabItemChangeCommand}" CommandParameter="{Binding ElementName=TabMenus, Path=SelectedItem}" />
+                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemChangeCommand}" CommandParameter="{Binding ElementName=TabMenus, Path=SelectedItem}" />
                         </i:EventTrigger>
-                    </i:Interaction.Triggers>-->
+                    </i:Interaction.Triggers>
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel x:Name="TabItemHeader" Orientation="Horizontal">
@@ -217,7 +218,8 @@
                                     VerticalAlignment="Center"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
                                     CommandParameter="{Binding}"
-                                    Style="{StaticResource MaterialDesignFlatButton}">
+                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    Visibility="{Binding TabItemInfo.CloseBtn}">
                                     <md:PackIcon
                                         Width="22"
                                         Height="22"
@@ -274,7 +276,7 @@
                                                         </ItemsPanelTemplate>
                                                     </ItemsControl.ItemsPanel>
                                                     <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
+                                                        <DataTemplate DataType="{x:Type models:MenuBar}">
                                                             <Button
                                                                 Margin="5,4"
                                                                 Padding="5,4"
@@ -310,14 +312,17 @@
                                                 </ItemsControl>
                                             </DockPanel>
 
+
                                         </md:PopupBox>
                                         <StackPanel Orientation="Horizontal">
                                             <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />
                                         </StackPanel>
                                     </DockPanel>
                                     <ContentPresenter
+                                        x:Name="PART_SelectedContentHost"
                                         Grid.Row="1"
-                                        Margin="4" />
+                                        Margin="4"
+                                        ContentSource="SelectedContent" />
                                 </Grid>
                             </md:ColorZone>
                         </ControlTemplate>

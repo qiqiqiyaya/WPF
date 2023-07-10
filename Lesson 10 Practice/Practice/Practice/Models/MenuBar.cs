@@ -65,9 +65,10 @@ namespace Practice.Models
             set => SetProperty(ref _userControl, value);
         }
 
-        public void ClearIndex()
+        public void Reset()
         {
             Index = -1;
+            UserControl = null;
         }
     }
 }
