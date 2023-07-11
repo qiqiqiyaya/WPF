@@ -108,18 +108,21 @@ namespace Practice
             containerRegistry.RegisterForNavigation<ReactiveView, ReactiveViewModel>("Reactive");
             //regionManager
 
+            // Singleton
+            containerRegistry.RegisterSingleton<MenuManager>();
             containerRegistry.RegisterSingleton<PaletteHelper>();
-            containerRegistry.RegisterSingleton<SettingsManager>();
+            containerRegistry.RegisterSingleton<SystemSettingsManager>();
             containerRegistry.RegisterInstance(new SafetyUiAction(Dispatcher));
             containerRegistry.RegisterSingleton<IRootDialogService, RootDialogService>();
 
             // Transient
             containerRegistry.Register<IMenuService, MenuService>();
+
         }
 
         protected override Window CreateShell()
         {
-            var settingsManager = Container.Resolve<SettingsManager>();
+            var settingsManager = Container.Resolve<SystemSettingsManager>();
 
             var theme = settingsManager.GetSetting<Theme>(SystemSettingKeys.Theme);
             if (theme != null)

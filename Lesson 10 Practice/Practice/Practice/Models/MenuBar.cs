@@ -21,26 +21,27 @@ namespace Practice.Models
 
         public string NameSpace { get; set; }
 
-        private TabItemInfo _tabItemInfo;
+        private TabItemMenu _tabItemMenu;
         /// <summary>
         /// tab项目信息内容
         /// </summary>
-        public TabItemInfo TabItemInfo
+        public TabItemMenu TabItemMenu
         {
-            get => _tabItemInfo;
-            set => SetProperty(ref _tabItemInfo, value);
+            get => _tabItemMenu;
+            set => SetProperty(ref _tabItemMenu, value);
         }
     }
 
-    public class TabItemInfo : BindableBase
+    public class TabItemMenu : BindableBase
     {
-        public TabItemInfo(Type viewType)
+        public TabItemMenu(Type viewType, Visibility closeBtn = Visibility.Visible)
         {
             ViewType = viewType;
+            CloseBtn = closeBtn;
         }
 
         /// <summary>
-        /// tab 上的索引，仅用于存储信息
+        /// tab 上的索引
         /// </summary>
         /// <remarks>
         /// 默认值 -1
@@ -50,12 +51,12 @@ namespace Practice.Models
         /// <summary>
         /// 前台视图类型
         /// </summary>
-        public Type ViewType { get; set; }
+        public Type ViewType { get; }
 
         /// <summary>
         /// 关闭按钮显示与否
         /// </summary>
-        public Visibility CloseBtn { get; set; } = Visibility.Visible;
+        public Visibility CloseBtn { get; }
 
         private UserControl _userControl;
 

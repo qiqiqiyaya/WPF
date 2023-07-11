@@ -14,14 +14,14 @@ namespace Practice.ViewModels
     public class ThemeChangeViewModel : ReactiveObject
     {
         private readonly PaletteHelper _paletteHelper;
-        private readonly SettingsManager _settingsManager;
+        private readonly SystemSettingsManager _systemSettingsManager;
         public DelegateCommand<object> ChangeHueCommand { get; }
         public DelegateCommand<ISwatch> MainColorButtonCommand { get; }
 
-        public ThemeChangeViewModel(PaletteHelper paletteHelper, SettingsManager settingsManager, SafetyUiAction safetyUiAction)
+        public ThemeChangeViewModel(PaletteHelper paletteHelper, SystemSettingsManager systemSettingsManager, SafetyUiAction safetyUiAction)
         {
             _paletteHelper = paletteHelper;
-            _settingsManager = settingsManager;
+            _systemSettingsManager = systemSettingsManager;
             ChangeHueCommand = new DelegateCommand<object>(ChangeHue);
             MainColorButtonCommand = new DelegateCommand<ISwatch>(swatch =>
             {
@@ -66,7 +66,7 @@ namespace Practice.ViewModels
             ITheme theme = _paletteHelper.GetTheme();
             theme.SetBaseTheme(baseTheme);
             _paletteHelper.SetTheme(theme);
-            _settingsManager.SetSetting(SystemSettingKeys.Theme, theme);
+            _systemSettingsManager.SetSetting(SystemSettingKeys.Theme, theme);
         }
 
         private void ChangeHue(object obj)
@@ -77,7 +77,7 @@ namespace Practice.ViewModels
             theme.PrimaryMid = new ColorPair(hue);
             theme.PrimaryDark = new ColorPair(hue.Darken());
             _paletteHelper.SetTheme(theme);
-            _settingsManager.SetSetting(SystemSettingKeys.Theme, theme);
+            _systemSettingsManager.SetSetting(SystemSettingKeys.Theme, theme);
         }
     }
 }

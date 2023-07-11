@@ -6,9 +6,9 @@ using Practice.Extensions;
 
 namespace Practice.Services
 {
-    public class SettingsManager
+    public class SystemSettingsManager
     {
-        public SettingsManager()
+        public SystemSettingsManager()
         {
 
         }

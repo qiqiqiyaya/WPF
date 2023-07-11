@@ -6,6 +6,6 @@ namespace Practice.Services.interfaces
 {
     public interface IMenuService
     {
-        Task<List<MenuBar>> GetAll();
+        Task<List<MenuBar>> GetAllAsync();
     }
 }

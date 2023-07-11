@@ -3,6 +3,7 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.VisualElements;
+using Practice.Core;
 using Practice.Helpers;
 using Practice.Models;
 using Practice.Services;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Practice.ViewModels
 {
-    public sealed class HomeViewModel : ReactiveObject
+    public sealed class HomeViewModel : ReactiveObject, ITabItemMenuChangeAction
     {
         private static readonly SKColor Blue = new(25, 118, 210);
 
@@ -63,6 +64,7 @@ namespace Practice.ViewModels
                 }
             };
 
+            // 交给线程池中线程运行
             Task.Run(function: async () =>
             {
                 while (true)
@@ -70,6 +72,7 @@ namespace Practice.ViewModels
                     var usage = await GetCpuUsageForProcess();
                     var memory = GetMemoryUsageForProcess();
 
+                    // 计算结果操作交给UI线程操作
                     safetyUiAction.Invoke(() =>
                     {
                         cupValues.Enqueue(new ObservableValue(usage));
@@ -166,6 +169,16 @@ namespace Practice.ViewModels
                 Version = Environment.Version.ToString()
             };
             return system;
+        }
+
+        public void OnInit()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnDestroy()
+        {
+            throw new NotImplementedException();
         }
     }
 }

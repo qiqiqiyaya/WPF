@@ -107,8 +107,8 @@
                     Grid.Row="2"
                     md:ScrollViewerAssist.IsAutoHideEnabled="True"
                     ItemContainerStyle="{DynamicResource MenuListBoxItemStyle}"
-                    ItemsSource="{Binding MenuItems}"
-                    SelectedIndex="{Binding MenuSelectIndex}">
+                    ItemsSource="{Binding MenuManager.MenuItems}"
+                    SelectedIndex="{Binding MenuManager.MenuSelectIndex}">
                     <!--  设置item绑定事件  -->
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
@@ -193,11 +193,11 @@
                     HorizontalContentAlignment="Left"
                     d:DataContext="{d:DesignInstance models:MenuBar}"
                     prism:RegionManager.RegionName="{x:Static contract:SystemSettingKeys.TabMenuRegion}"
-                    SelectedIndex="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemSelectedIndex}">
+                    SelectedIndex="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.MenuManager.TabItemMenuSelectedIndex}">
                     <!--  设置item绑定事件  -->
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemChangeCommand}" CommandParameter="{Binding ElementName=TabMenus, Path=SelectedItem}" />
+                            <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuChangeCommand}" CommandParameter="{Binding ElementName=TabMenus, Path=SelectedItem}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <TabControl.ItemTemplate>
@@ -215,10 +215,10 @@
                                     Margin="10,0,0,0"
                                     Padding="0"
                                     VerticalAlignment="Center"
-                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuCloseCommand}"
                                     CommandParameter="{Binding}"
                                     Style="{StaticResource MaterialDesignFlatButton}"
-                                    Visibility="{Binding TabItemInfo.CloseBtn}">
+                                    Visibility="{Binding TabItemMenu.CloseBtn}">
                                     <md:PackIcon
                                         Width="22"
                                         Height="22"
@@ -236,7 +236,7 @@
                                     Margin="0,3"
                                     Background="{DynamicResource PrimaryHueMidForegroundBrush}"
                                     CornerRadius="5">
-                                    <ContentControl x:Name="Region" Content="{Binding Path=TabItemInfo.UserControl}" />
+                                    <ContentControl x:Name="Region" Content="{Binding Path=TabItemMenu.UserControl}" />
                                 </Border>
                             </ScrollViewer>
                         </DataTemplate>
@@ -265,12 +265,12 @@
                                                     DockPanel.Dock="Bottom"
                                                     Orientation="Horizontal">
                                                     <Button
-                                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.CloseAllTabItemCommand}"
+                                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuCloseAllCommand}"
                                                         Content="Close All"
                                                         Style="{StaticResource MaterialDesignRaisedButton}" />
                                                 </StackPanel>
 
-                                                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItems}">
+                                                <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.MenuManager.TabItemMenus}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel MaxWidth="600" />
@@ -281,7 +281,7 @@
                                                             <Button
                                                                 Margin="5,4"
                                                                 Padding="5,4"
-                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemChangeCommand}"
+                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuChangeCommand}"
                                                                 CommandParameter="{Binding}"
                                                                 Style="{StaticResource MaterialDesignRaisedButton}">
                                                                 <StackPanel Orientation="Horizontal">
@@ -297,10 +297,10 @@
                                                                         Padding="0"
                                                                         VerticalAlignment="Center"
                                                                         Click="PreventEventRaise_OnClick"
-                                                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemCloseCommand}"
+                                                                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuCloseCommand}"
                                                                         CommandParameter="{Binding}"
                                                                         Style="{StaticResource MaterialDesignFlatButton}"
-                                                                        Visibility="{Binding TabItemInfo.CloseBtn}">
+                                                                        Visibility="{Binding TabItemMenu.CloseBtn}">
                                                                         <md:PackIcon
                                                                             Width="22"
                                                                             Height="22"

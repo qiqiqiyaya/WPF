@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace Practice.Services
 {
@@ -15,7 +14,7 @@ namespace Practice.Services
         }
 
         /// <summary>
-        /// 延迟指定时间后，执行操作
+        /// 延迟指定时间(秒)后，执行操作
         /// </summary>
         /// <param name="action"></param>
         /// <param name="delay"></param>
@@ -43,14 +42,15 @@ namespace Practice.Services
         }
 
         /// <summary>
-        /// 延迟指定时间后，执行操作
+        /// 异步执行操作，然后再执行UI操作
         /// </summary>
-        /// <param name="action"></param>
-        public void InvokeAsync(Func<Task> action)
+        /// <param name="function"></param>
+        public void AsyncInvokeThenUiAction(Func<Task<Action>> function)
         {
             Task.Run(async () =>
             {
-                await UiDispatcher.InvokeAsync(action);
+                var uiAction = await function();
+                UiDispatcher.Invoke(uiAction);
             });
         }
 

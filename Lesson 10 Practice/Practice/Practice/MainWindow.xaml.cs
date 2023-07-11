@@ -1,4 +1,5 @@
 ﻿using Practice.Core.Contract;
+using Practice.Services;
 using Prism.Regions;
 using System.Windows;
 using System.Windows.Input;
@@ -10,9 +11,16 @@ namespace Practice
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(IRegionManager regionManager)
+        public MainWindow(IRegionManager regionManager, MenuManager menuManager)
         {
             InitializeComponent();
+
+            // code-behind set region
+            RegionManager.SetRegionName(TabMenus, SystemSettingKeys.TabMenuRegion);
+            RegionManager.SetRegionManager(TabMenus, regionManager);
+
+            menuManager.SetContentRegion(regionManager.Regions[SystemSettingKeys.TabMenuRegion]);
+            menuManager.MenuLoad();
 
             this.Header.MouseDown += (sender, args) =>
             {
@@ -27,12 +35,9 @@ namespace Practice
                 this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             };
 
-            // code-behind set region
-            RegionManager.SetRegionName(TabMenus, SystemSettingKeys.TabMenuRegion);
-            RegionManager.SetRegionManager(TabMenus, regionManager);
-
             // root mdDialog Identifier set
             RootDialog.Identifier = SystemSettingKeys.RootDialogIdentity;
+
         }
 
         private void Minimized_OnClick(object sender, RoutedEventArgs e)

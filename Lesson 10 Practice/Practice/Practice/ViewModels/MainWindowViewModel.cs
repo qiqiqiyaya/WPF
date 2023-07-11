@@ -1,16 +1,9 @@
-﻿using ImTools;
-using MaterialDesignThemes.Wpf;
-using Practice.Core.Contract;
+﻿using MaterialDesignThemes.Wpf;
 using Practice.Models;
 using Practice.Services;
-using Practice.Services.interfaces;
 using Prism.Commands;
-using Prism.Regions;
 using ReactiveUI;
 using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive.Linq;
 using System.Windows;
 
 // ReSharper disable ConvertToAutoProperty
@@ -30,38 +23,25 @@ namespace Practice.ViewModels
         /// <summary>
         /// tabItem 发生切换
         /// </summary>
-        public DelegateCommand<MenuBar> TabItemChangeCommand { get; }
+        public DelegateCommand<MenuBar> TabItemMenuChangeCommand { get; }
         /// <summary>
         /// 关闭指定 tab 菜单命令
         /// </summary>
-        public DelegateCommand<MenuBar> TabItemCloseCommand { get; }
+        public DelegateCommand<MenuBar> TabItemMenuCloseCommand { get; }
         /// <summary>
         /// 关闭所有菜单命令，除 Home 外
         /// </summary>
-        public DelegateCommand CloseAllTabItemCommand { get; }
-
-        private readonly SafetyUiAction _safetyUiAction;
-        private readonly IRegionViewRegistry _regionViewRegistry;
-        private readonly IMenuService _menuService;
-        private readonly IRegionManager _regionManager;
-        private IRegion _region;
+        public DelegateCommand TabItemMenuCloseAllCommand { get; }
 
         public MainWindowViewModel(
-            SafetyUiAction safetyUiAction,
-            IRegionViewRegistry regionViewRegistry,
-            IRegionManager regionManager,
-            IMenuService menuService)
+            MenuManager menuManager)
         {
-            _regionManager = regionManager;
-            MenuNavigateCommand = new DelegateCommand<MenuBar>(MenuNavigate);
+            MenuManager = menuManager;
+            MenuNavigateCommand = new DelegateCommand<MenuBar>(menuManager.MenuNavigate);
             LeftContentSwitchCommand = new DelegateCommand(LeftContentSwitch);
-            TabItemChangeCommand = new DelegateCommand<MenuBar>(TabItemChange);
-            TabItemCloseCommand = new DelegateCommand<MenuBar>(TabItemClose);
-            CloseAllTabItemCommand = new DelegateCommand(CloseAllTabItem);
-            _safetyUiAction = safetyUiAction;
-            _regionViewRegistry = regionViewRegistry;
-            _menuService = menuService;
-            LoadMenu();
+            TabItemMenuChangeCommand = new DelegateCommand<MenuBar>(menuManager.TabItemMenuChange);
+            TabItemMenuCloseCommand = new DelegateCommand<MenuBar>(menuManager.TabItemMenuClose);
+            TabItemMenuCloseAllCommand = new DelegateCommand(menuManager.TabItemMenuCloseAll);
         }
 
         private double _leftMenuMenuContentWidth = 200;
@@ -163,173 +143,6 @@ namespace Practice.ViewModels
             }
         }
 
-        private ObservableCollection<MenuBar> _menuItems;
-
-        /// <summary>
-        /// 菜单
-        /// </summary>
-        public ObservableCollection<MenuBar> MenuItems
-        {
-            get => _menuItems;
-            set => this.RaiseAndSetIfChanged(ref _menuItems, value);
-        }
-
-        private int _menuSelectIndex = -1;
-        /// <summary>
-        /// 菜单选中索引
-        /// </summary>
-        public int MenuSelectIndex
-        {
-            get => _menuSelectIndex;
-            set => this.RaiseAndSetIfChanged(ref _menuSelectIndex, value);
-        }
-
-        private int _tabItemSelectedIndex = -1;
-        /// <summary>
-        /// tabItem选中项
-        /// </summary>
-        public int TabItemSelectedIndex
-        {
-            get => _tabItemSelectedIndex;
-            set => this.RaiseAndSetIfChanged(ref _tabItemSelectedIndex, value);
-        }
-
-        /// <summary>
-        /// tab项
-        /// </summary>
-        public IViewsCollection TabItems
-        {
-            get
-            {
-                // see
-                // MainWindow.xaml.cs
-                // RegionManager.SetRegionName(TabMenus, SystemSettingKeys.TabMenuRegion);
-                // RegionManager.SetRegionManager(TabMenus, regionManager);
-
-                // ReSharper disable once ConstantNullCoalescingCondition
-                _region ??= _regionManager.Regions[SystemSettingKeys.TabMenuRegion];
-                return _region.Views;
-            }
-        }
-
-        protected void LoadMenu()
-        {
-            _safetyUiAction.InvokeAsync(async () =>
-            {
-                var menus = await _menuService.GetAll();
-                MenuItems = new ObservableCollection<MenuBar>();
-
-                for (int i = 0; i < menus.Count; i++)
-                {
-                    menus[i].Index = i;
-                }
-
-                MenuItems.AddRange(menus);
-                // select home
-                MenuSelectIndex = 0;
-            });
-        }
-
-        /// <summary>
-        /// 菜单导航
-        /// </summary>
-        /// <param name="menu"></param>
-        protected virtual void MenuNavigate(MenuBar menu)
-        {
-            // 初次，tabItem需要被添加
-            if (menu.TabItemInfo.Index == -1)
-            {
-                MenuSelectIndex = menu.Index;
-                menu.TabItemInfo.Index = !_region.Views.Any() ? 0 : _region.Views.Count();
-                TabItemSelectedIndex = menu.TabItemInfo.Index;
-                TabContentResolve(menu);
-                return;
-            }
-
-            // 后续，菜单 或 tabItem 切换时
-            if (_tabItemSelectedIndex != menu.TabItemInfo.Index)
-            {
-                TabItemSelectedIndex = menu.TabItemInfo.Index;
-            }
-        }
-
-        /// <summary>
-        /// tabItem 发生切换
-        /// </summary>
-        /// <param name="menu"></param>
-        protected virtual void TabItemChange(MenuBar? menu)
-        {
-            if (menu == null) return;
-            if (_menuSelectIndex != menu.Index)
-            {
-                MenuSelectIndex = menu.Index;
-            }
-        }
-
-        /// <summary>
-        /// 关闭所有菜单，除 Home 外
-        /// </summary>
-        public virtual void CloseAllTabItem()
-        {
-            _safetyUiAction.DelayWhen(() =>
-            {
-                var list = _region.Views.Cast<MenuBar>().Where(x => x.TabItemInfo.CloseBtn == Visibility.Visible)
-                    .Reverse()
-                    .ToList();
-                foreach (var menuBar in list)
-                {
-                    TabItemCloseLogic(menuBar);
-                }
-            }, 150);
-        }
-
-        /// <summary>
-        /// 关闭指定 tab 菜单
-        /// </summary>
-        /// <param name="menu"></param>
-        protected virtual void TabItemClose(MenuBar menu)
-        {
-            int index = menu.TabItemInfo.Index;
-            TabItemCloseLogic(menu);
-            RestTabItemIndexReset();
-
-            TabItemSelectedIndex = index;
-        }
-
-        /// <summary>
-        /// 菜单关闭具体逻辑
-        /// </summary>
-        /// <param name="menu"></param>
-        private void TabItemCloseLogic(MenuBar menu)
-        {
-            _region.Remove(menu);
-        }
-
-        /// <summary>
-        /// tab内容区域动态解析
-        /// </summary>
-        /// <param name="menu"></param>
-        private void TabContentResolve(MenuBar menu)
-        {
-            _regionViewRegistry.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, () => menu);
-        }
-
-        /// <summary>
-        /// 剩余TabItem索引重置
-        /// </summary>
-        protected virtual void RestTabItemIndexReset()
-        {
-            int index = 0;
-            foreach (var view in _region.Views)
-            {
-                var menuBar = (MenuBar)view;
-                if (menuBar.TabItemInfo.Index != index)
-                {
-                    menuBar.TabItemInfo.Index = index;
-                }
-
-                index++;
-            }
-        }
+        public MenuManager MenuManager { get; }
     }
 }

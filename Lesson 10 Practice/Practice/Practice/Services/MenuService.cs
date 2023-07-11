@@ -9,39 +9,39 @@ namespace Practice.Services
 {
     public class MenuService : IMenuService
     {
-        public Task<List<MenuBar>> GetAll()
+        public Task<List<MenuBar>> GetAllAsync()
         {
             var list = new List<MenuBar>()
             {
                 new MenuBar()
                 {
                     Icon = "Home", NameSpace = "", Title = "Home",
-                    TabItemInfo = new TabItemInfo(typeof(HomeView)){ CloseBtn =Visibility.Collapsed }
+                    TabItemMenu = new TabItemMenu(typeof(HomeView),Visibility.Collapsed)
                 },
                 new MenuBar()
                 {
                     Icon = "Apps", NameSpace = "", Title = "工作软件",
-                    TabItemInfo = new TabItemInfo(typeof(WorkingSoftwareView))
+                    TabItemMenu = new TabItemMenu(typeof(WorkingSoftwareView))
                 },
                 new MenuBar()
                 {
                     Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏",
-                    TabItemInfo = new TabItemInfo(typeof(GameView))
+                    TabItemMenu = new TabItemMenu(typeof(GameView))
                 },
                 new MenuBar()
                 {
                     Icon = "Palette", NameSpace = "", Title = "主题切换",
-                    TabItemInfo = new TabItemInfo(typeof(ThemeChangeView))
+                    TabItemMenu = new TabItemMenu(typeof(ThemeChangeView))
                 },
                 new MenuBar()
                 {
-                    Icon = "React", NameSpace = "", Title = "ReactiveUI",TabItemInfo =
-                        new TabItemInfo(typeof(ReactiveView))
+                    Icon = "React", NameSpace = "", Title = "ReactiveUI",TabItemMenu =
+                        new TabItemMenu(typeof(ReactiveView))
                 },
                 new MenuBar()
                 {
                     Icon = "MicrosoftWindows", NameSpace = "", Title = "系统信息",
-                    TabItemInfo = new TabItemInfo(typeof(SystemInformationView))
+                    TabItemMenu = new TabItemMenu(typeof(SystemInformationView))
                 },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
