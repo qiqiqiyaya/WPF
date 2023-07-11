@@ -1,21 +1,21 @@
 ﻿using DryIoc;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using MaterialDesignThemes.Wpf;
+using Practice.Core.Contract;
+using Practice.Core.RegionAdapterMappings;
 using Practice.Services;
 using Practice.Services.interfaces;
 using Practice.ViewModels;
 using Practice.Views;
 using Prism.DryIoc;
 using Prism.Ioc;
+using Prism.Regions;
 using Serilog;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using Practice.Core.Contract;
-using Prism.Regions;
-using Practice.Core.RegionAdapterMappings;
 
 namespace Practice
 {
@@ -112,6 +112,9 @@ namespace Practice
             containerRegistry.RegisterSingleton<SettingsManager>();
             containerRegistry.RegisterInstance(new SafetyUiAction(Dispatcher));
             containerRegistry.RegisterSingleton<IRootDialogService, RootDialogService>();
+
+            // Transient
+            containerRegistry.Register<IMenuService, MenuService>();
         }
 
         protected override Window CreateShell()

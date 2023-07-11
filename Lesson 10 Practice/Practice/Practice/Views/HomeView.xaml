@@ -82,10 +82,6 @@
                     <TextBlock
                         Height="32"
                         Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                        Text="处理器核数" />
-                    <TextBlock
-                        Height="32"
-                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                         Text="系统盘" />
                     <TextBlock
                         Height="32"
@@ -120,10 +116,6 @@
                         Height="32"
                         Style="{StaticResource MaterialDesignBody1TextBlock}"
                         Text="{Binding SystemInformation.ProcessorModel}" />
-                    <TextBlock
-                        Height="32"
-                        Style="{StaticResource MaterialDesignBody1TextBlock}"
-                        Text="{Binding SystemInformation.ProcessorLevel}" />
                     <TextBlock
                         Height="32"
                         Style="{StaticResource MaterialDesignBody1TextBlock}"

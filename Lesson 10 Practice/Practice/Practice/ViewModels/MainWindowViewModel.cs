@@ -3,6 +3,7 @@ using MaterialDesignThemes.Wpf;
 using Practice.Core.Contract;
 using Practice.Models;
 using Practice.Services;
+using Practice.Services.interfaces;
 using Prism.Commands;
 using Prism.Regions;
 using ReactiveUI;
@@ -41,7 +42,7 @@ namespace Practice.ViewModels
 
         private readonly SafetyUiAction _safetyUiAction;
         private readonly IRegionViewRegistry _regionViewRegistry;
-        private readonly MenuService _menuService;
+        private readonly IMenuService _menuService;
         private readonly IRegionManager _regionManager;
         private IRegion _region;
 
@@ -49,7 +50,7 @@ namespace Practice.ViewModels
             SafetyUiAction safetyUiAction,
             IRegionViewRegistry regionViewRegistry,
             IRegionManager regionManager,
-            MenuService menuService)
+            IMenuService menuService)
         {
             _regionManager = regionManager;
             MenuNavigateCommand = new DelegateCommand<MenuBar>(MenuNavigate);

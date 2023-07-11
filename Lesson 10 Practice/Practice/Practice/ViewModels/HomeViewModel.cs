@@ -17,7 +17,7 @@ namespace Practice.ViewModels
 {
     public sealed class HomeViewModel : ReactiveObject
     {
-        private static readonly SKColor s_blue = new(25, 118, 210);
+        private static readonly SKColor Blue = new(25, 118, 210);
 
         public HomeViewModel(SafetyUiAction safetyUiAction)
         {
@@ -29,9 +29,9 @@ namespace Practice.ViewModels
                     Values = cupValues,
                     Fill =   new SolidColorPaint(SKColors.CornflowerBlue),
                     Name = "CPU",
-                    Stroke = new SolidColorPaint(s_blue, 1),
+                    Stroke = new SolidColorPaint(Blue, 1),
                     GeometrySize = 5,
-                    GeometryStroke = new SolidColorPaint(s_blue, 1),
+                    GeometryStroke = new SolidColorPaint(Blue, 1),
                 }
             };
 
@@ -43,9 +43,9 @@ namespace Practice.ViewModels
                     Values = physicalMemory,
                     Fill =  null,
                     Name = "Physical Memory",
-                    Stroke = new SolidColorPaint(s_blue, 1),
+                    Stroke = new SolidColorPaint(Blue, 1),
                     GeometrySize = 5,
-                    GeometryStroke = new SolidColorPaint(s_blue, 1),
+                    GeometryStroke = new SolidColorPaint(Blue, 1),
                 }
             };
 
@@ -57,9 +57,9 @@ namespace Practice.ViewModels
                     Values = privateMemory,
                     Fill =  null,
                     Name = "Private Memory",
-                    Stroke = new SolidColorPaint(s_blue, 1),
+                    Stroke = new SolidColorPaint(Blue, 1),
                     GeometrySize = 5,
-                    GeometryStroke = new SolidColorPaint(s_blue, 1),
+                    GeometryStroke = new SolidColorPaint(Blue, 1),
                 }
             };
 
@@ -159,7 +159,6 @@ namespace Practice.ViewModels
                 OperationSystem = Environment.OSVersion.ToString(),
                 ProcessorArchitecture = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE"),
                 ProcessorModel = Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER"),
-                ProcessorLevel = Environment.GetEnvironmentVariable("PROCESSOR_LEVEL"),
                 SystemDirectory = Environment.SystemDirectory,
                 ProcessorCount = Environment.ProcessorCount,
                 UserDomainName = Environment.UserDomainName,

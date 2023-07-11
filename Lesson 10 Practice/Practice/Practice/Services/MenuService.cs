@@ -1,4 +1,5 @@
 ﻿using Practice.Models;
+using Practice.Services.interfaces;
 using Practice.Views;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,7 +7,7 @@ using System.Windows;
 
 namespace Practice.Services
 {
-    public class MenuService
+    public class MenuService : IMenuService
     {
         public Task<List<MenuBar>> GetAll()
         {

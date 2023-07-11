@@ -8,8 +8,6 @@
 
         public string? ProcessorModel { get; set; }
 
-        public string? ProcessorLevel { get; set; }
-
         public string SystemDirectory { get; set; }
 
         public int ProcessorCount { get; set; }
