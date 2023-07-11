@@ -140,7 +140,7 @@
                 </Grid.RowDefinitions>
                 <md:ColorZone
                     x:Name="Header"
-                    Padding="0,16,16,16"
+                    Padding="5,16,16,16"
                     DockPanel.Dock="Top"
                     Mode="Standard">
                     <Grid>
@@ -189,7 +189,7 @@
                 <TabControl
                     x:Name="TabMenus"
                     Grid.Row="1"
-                    Margin="0,0,0,5"
+                    Margin="5,0,5,0"
                     HorizontalContentAlignment="Left"
                     d:DataContext="{d:DesignInstance models:MenuBar}"
                     prism:RegionManager.RegionName="{x:Static contract:SystemSettingKeys.TabMenuRegion}"
@@ -232,10 +232,12 @@
                         <DataTemplate DataType="models:MenuBar">
                             <!--  ContentControl 的 DataContext 就是每一个 item 项  -->
                             <ScrollViewer>
-                                <ContentControl
-                                    x:Name="Region"
-                                    Margin="0,0,5,0"
-                                    Content="{Binding Path=TabItemInfo.UserControl}" />
+                                <Border
+                                    Margin="0,3"
+                                    Background="{DynamicResource PrimaryHueMidForegroundBrush}"
+                                    CornerRadius="5">
+                                    <ContentControl x:Name="Region" Content="{Binding Path=TabItemInfo.UserControl}" />
+                                </Border>
                             </ScrollViewer>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
@@ -317,11 +319,7 @@
                                             <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />
                                         </StackPanel>
                                     </DockPanel>
-                                    <ContentPresenter
-                                        x:Name="PART_SelectedContentHost"
-                                        Grid.Row="1"
-                                        Margin="4"
-                                        ContentSource="SelectedContent" />
+                                    <ContentPresenter Grid.Row="1" ContentSource="SelectedContent" />
                                 </Grid>
                             </md:ColorZone>
                         </ControlTemplate>

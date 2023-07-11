@@ -11,15 +11,133 @@
     d:DataContext="{d:DesignInstance viewModels:HomeViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    Background="AntiqueWhite"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="500" />
+            <RowDefinition Height="300" />
+            <RowDefinition Height="300" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <lvc:CartesianChart Title="{Binding CpuTitle}" Series="{Binding CpuSeries}" />
-        <TextBlock Grid.Row="1" Text="fdsafds" />
+        <Border
+            Margin="5"
+            Background="{DynamicResource MaterialDesignPaper}"
+            CornerRadius="5">
+            <lvc:CartesianChart Title="{Binding CpuTitle}" Series="{Binding CpuSeries}" />
+        </Border>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Border
+                Margin="5"
+                Background="{DynamicResource MaterialDesignPaper}"
+                CornerRadius="5">
+                <lvc:CartesianChart Title="{Binding PhysicalMemoryTitle}" Series="{Binding PhysicalMemorySeries}" />
+            </Border>
+            <Border
+                Grid.Column="1"
+                Margin="5"
+                Background="{DynamicResource MaterialDesignPaper}"
+                CornerRadius="5">
+                <lvc:CartesianChart Title="{Binding PrivateMemoryTitle}" Series="{Binding PrivateMemorySeries}" />
+            </Border>
+        </Grid>
+
+        <Border
+            Grid.Row="2"
+            Margin="5"
+            Background="{DynamicResource MaterialDesignPaper}"
+            CornerRadius="5" />
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="300" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Border Padding="25,25,0,25">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="用户名" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="主机名" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="操作系统" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="处理器架构" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="处理器模型" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="处理器核数" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="系统盘" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="处理器核数" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="版本" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Padding="0,25,25,25">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="{Binding SystemInformation.UserName}" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="{Binding SystemInformation.UserDomainName}" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="{Binding SystemInformation.OperationSystem}" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="{Binding SystemInformation.ProcessorArchitecture}" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="{Binding SystemInformation.ProcessorModel}" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="{Binding SystemInformation.ProcessorLevel}" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="{Binding SystemInformation.SystemDirectory}" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="{Binding SystemInformation.ProcessorCount}" />
+                    <TextBlock
+                        Height="32"
+                        Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="{Binding SystemInformation.Version}" />
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>
