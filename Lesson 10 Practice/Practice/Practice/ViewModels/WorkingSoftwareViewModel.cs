@@ -5,6 +5,7 @@ using Practice.Services.interfaces;
 using Prism.Services.Dialogs;
 using System.Windows.Input;
 using Practice.Core.Contract;
+using Practice.Services;
 
 namespace Practice.ViewModels
 {
@@ -22,9 +23,10 @@ namespace Practice.ViewModels
             OpenCommand = new RelayCommand(OnShowDialog);
         }
 
-        private async void OnShowDialog()
+        private void OnShowDialog()
         {
-            var aa = await DialogHost.Show(new LoadingView(), SystemSettingKeys.RootDialogIdentity);
+            _rootDialogService.LoadingShow();
+            //var aa = await DialogHost.Show(new LoadingView(), SystemSettingKeys.RootDialogIdentity);
         }
 
         public ICommand OpenCommand { get; }

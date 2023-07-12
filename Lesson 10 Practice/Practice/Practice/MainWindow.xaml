@@ -28,7 +28,7 @@
         <viewModels:MainWindowViewModel />
     </Window.DataContext>-->
 
-    <md:DialogHost x:Name="RootDialog" Identifier="RootDialog">
+    <md:DialogHost x:Name="RootDialog">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftContent" Width="{Binding LeftMenuContentWidth}" />

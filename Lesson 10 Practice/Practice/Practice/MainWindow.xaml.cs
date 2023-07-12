@@ -1,5 +1,7 @@
-﻿using Practice.Core.Contract;
+﻿using Practice.CommonViews;
+using Practice.Core.Contract;
 using Practice.Services;
+using Practice.Services.interfaces;
 using Prism.Regions;
 using System.Windows;
 using System.Windows.Input;
@@ -11,9 +13,13 @@ namespace Practice
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(IRegionManager regionManager, MenuManager menuManager)
+        public MainWindow(IRegionManager regionManager, MenuManager menuManager, IRootDialogService rootDialogService)
         {
             InitializeComponent();
+
+            // root mdDialog Identifier set
+            RootDialog.Identifier = SystemSettingKeys.RootDialogIdentity;
+            rootDialogService.Init(RootDialog);
 
             // code-behind set region
             RegionManager.SetRegionName(TabMenus, SystemSettingKeys.TabMenuRegion);
@@ -34,10 +40,6 @@ namespace Practice
             {
                 this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             };
-
-            // root mdDialog Identifier set
-            RootDialog.Identifier = SystemSettingKeys.RootDialogIdentity;
-
         }
 
         private void Minimized_OnClick(object sender, RoutedEventArgs e)

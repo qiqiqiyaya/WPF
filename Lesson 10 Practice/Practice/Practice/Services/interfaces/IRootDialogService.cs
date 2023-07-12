@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using MaterialDesignThemes.Wpf;
+using System.Threading.Tasks;
 
 namespace Practice.Services.interfaces
 {
     public interface IRootDialogService
     {
-        Task LoadingShow();
+        void Init(DialogHost rooDialogHost);
+
+        void LoadingShow();
 
         void LoadingClose();
     }

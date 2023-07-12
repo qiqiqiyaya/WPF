@@ -9,20 +9,30 @@ namespace Practice.Services
     public class RootDialogService : IRootDialogService
     {
         private readonly SafetyUiAction _safetyUiAction;
+        private DialogHost _rooDialogHost;
 
         public RootDialogService(SafetyUiAction safetyUiAction)
         {
             _safetyUiAction = safetyUiAction;
         }
 
-        public async Task LoadingShow()
+        public void Init(DialogHost rooDialogHost)
         {
-            await DialogHost.Show(new LoadingView(), SystemSettingKeys.RootDialogIdentity);
+            _rooDialogHost = rooDialogHost;
+        }
+
+        public void LoadingShow()
+        {
+            _rooDialogHost.Content = new LoadingView();
+            _rooDialogHost.IsOpen = true;
+            //DialogHost.Show(new LoadingView(), SystemSettingKeys.RootDialogIdentity);
         }
 
         public void LoadingClose()
         {
-            DialogHost.Close(SystemSettingKeys.RootDialogIdentity);
+            _rooDialogHost.Content = null;
+            _rooDialogHost.IsOpen = false;
+            //DialogHost.Close(SystemSettingKeys.RootDialogIdentity);
         }
     }
 }

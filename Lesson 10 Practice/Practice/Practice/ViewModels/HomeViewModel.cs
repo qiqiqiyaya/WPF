@@ -12,16 +12,23 @@ using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Practice.ViewModels
 {
-    public sealed class HomeViewModel : ReactiveObject, ITabItemMenuChangeAction
+    public sealed class HomeViewModel : ReactiveObject, ITabItemMenuChangeAction, IDisposable
     {
         private static readonly SKColor Blue = new(25, 118, 210);
 
+        private readonly PauseTokenSource _pauseTokenSource = new PauseTokenSource();
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
         public HomeViewModel(SafetyUiAction safetyUiAction)
         {
+            var pauseToken = _pauseTokenSource.Token;
+            var cancellationToken = _cancellationTokenSource.Token;
+
             var cupValues = new ObservableLimitedLengthQueue<ObservableValue>(15);
             CpuSeries = new ObservableCollection<ISeries>
             {
@@ -67,7 +74,7 @@ namespace Practice.ViewModels
             // 交给线程池中线程运行
             Task.Run(function: async () =>
             {
-                while (true)
+                while (!cancellationToken.IsCancellationRequested)
                 {
                     var usage = await GetCpuUsageForProcess();
                     var memory = GetMemoryUsageForProcess();
@@ -80,10 +87,21 @@ namespace Practice.ViewModels
                         privateMemory.Enqueue(new ObservableValue(memory.Item2));
                     });
                     await Task.Delay(2000);
+                    if (pauseToken.IsPaused) await pauseToken.WaitAsync();
                 }
             });
 
             SystemInformation = GetSystemInformation();
+        }
+
+        public void OnInit()
+        {
+            _pauseTokenSource.Resume();
+        }
+
+        public void OnDestroy()
+        {
+            _pauseTokenSource.Pause();
         }
 
         public ObservableCollection<ISeries> CpuSeries { get; set; }
@@ -171,14 +189,11 @@ namespace Practice.ViewModels
             return system;
         }
 
-        public void OnInit()
+        public void Dispose()
         {
-            throw new NotImplementedException();
-        }
-
-        public void OnDestroy()
-        {
-            throw new NotImplementedException();
+            _cancellationTokenSource.Dispose();
+            _pauseTokenSource.Dispose();
+            _currentProcess.Dispose();
         }
     }
 }

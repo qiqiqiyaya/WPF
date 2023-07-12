@@ -58,9 +58,9 @@ namespace Practice.Models
         /// </summary>
         public Visibility CloseBtn { get; }
 
-        private UserControl _userControl;
+        private object _userControl;
 
-        public UserControl UserControl
+        public object UserControl
         {
             get => _userControl;
             set => SetProperty(ref _userControl, value);

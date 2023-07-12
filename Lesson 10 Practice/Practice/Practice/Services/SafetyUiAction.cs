@@ -28,20 +28,6 @@ namespace Practice.Services
         }
 
         /// <summary>
-        /// 延迟指定时间后，执行操作
-        /// </summary>
-        /// <param name="action"></param>
-        /// <param name="delay"></param>
-        public void DelayWhen(Func<Task> action, int delay)
-        {
-            Task.Run(async () =>
-            {
-                await Task.Delay(delay);
-                await UiDispatcher.InvokeAsync(action);
-            });
-        }
-
-        /// <summary>
         /// 异步执行操作，然后再执行UI操作
         /// </summary>
         /// <param name="function"></param>

@@ -31,15 +31,6 @@ namespace Practice.Core.RegionAdapterMappings
 
                         foreach (MenuBar item in e.NewItems!)
                         {
-                            var userControl = _containerProvider.Resolve(item.TabItemMenu.ViewType) as UserControl;
-
-                            Check.NotNull(userControl, nameof(userControl));
-                            if (userControl is FrameworkElement view && view.DataContext is null && ViewModelLocator.GetAutoWireViewModel(view) is null)
-                            {
-                                ViewModelLocator.SetAutoWireViewModel(view, true);
-                            }
-
-                            item.TabItemMenu.UserControl = userControl;
                             regionTarget.Items.Add(item);
                         }
                         break;
@@ -47,7 +38,6 @@ namespace Practice.Core.RegionAdapterMappings
 
                         foreach (MenuBar item in e.OldItems!)
                         {
-                            item.TabItemMenu.Reset();
                             regionTarget.Items.Remove(item);
                         }
                         break;

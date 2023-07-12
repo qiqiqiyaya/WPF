@@ -1,14 +1,20 @@
-﻿using Practice.Core.Contract;
+﻿using Practice.Core;
+using Practice.Core.Contract;
+using Practice.Extensions;
 using Practice.Models;
 using Practice.Services.interfaces;
+using Prism.Ioc;
+using Prism.Mvvm;
 using Prism.Regions;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Practice.Services
 {
@@ -17,6 +23,8 @@ namespace Practice.Services
         private readonly IMenuService _menuService;
         private readonly IRegionViewRegistry _regionViewRegistry;
         private readonly SafetyUiAction _safetyUiAction;
+        private readonly IRootDialogService _rootDialogService;
+        private readonly IContainerExtension _containerProvider;
         /// <summary>
         /// 内容显示区域
         /// </summary>
@@ -24,11 +32,15 @@ namespace Practice.Services
 
         public MenuManager(IMenuService menuService,
             IRegionViewRegistry regionViewRegistry,
-            SafetyUiAction safetyUiAction)
+            SafetyUiAction safetyUiAction,
+            IRootDialogService rootDialogService,
+            IContainerExtension containerProvider)
         {
+            _rootDialogService = rootDialogService;
             _menuService = menuService;
             _regionViewRegistry = regionViewRegistry;
             _safetyUiAction = safetyUiAction;
+            _containerProvider = containerProvider;
 
             _menuItems = new ObservableCollection<MenuBar>();
         }
@@ -73,7 +85,7 @@ namespace Practice.Services
             _safetyUiAction.AsyncInvokeThenUiAction(async () =>
             {
                 var menus = await _menuService.GetAllAsync();
-                await Task.Delay(3000);
+                //await Task.Delay(3000);
                 return () =>
                 {
                     MenuInitialSettings(menus);
@@ -100,7 +112,7 @@ namespace Practice.Services
 
         private int _tabItemMenuSelectedIndex;
         /// <summary>
-        /// tabItem-menu 选中项
+        /// tabItem-newMenu 选中项
         /// </summary>
         public int TabItemMenuSelectedIndex
         {
@@ -114,6 +126,11 @@ namespace Practice.Services
         public IViewsCollection TabItemMenus => Region.Views;
 
         /// <summary>
+        /// 上一次被选中的菜单
+        /// </summary>
+        private int _lastMenuSelectIndex = -1;
+
+        /// <summary>
         /// 菜单导航
         /// </summary>
         /// <param name="menu"></param>
@@ -125,16 +142,29 @@ namespace Practice.Services
             if (menu.TabItemMenu.Index == -1)
             {
                 MenuSelectIndex = menu.Index;
-                menu.TabItemMenu.Index = !Region.Views.Any() ? 0 : Region.Views.Count();
+                var count = Region.Views.Count();
+                menu.TabItemMenu.Index = Region.Views.Any() ? count : 0;
+
                 TabItemMenuSelectedIndex = menu.TabItemMenu.Index;
                 TabContentResolve(menu);
+                if (count >= 1 && _lastMenuSelectIndex != -1)
+                {
+                    var oldMenu = MenuItems[_lastMenuSelectIndex];
+                    TabItemMenuChangeAction(oldMenu, null);
+                }
+
+                _lastMenuSelectIndex = MenuSelectIndex;
                 return;
             }
 
             // 后续，菜单 或 tabItem 切换时
             if (_tabItemMenuSelectedIndex != menu.TabItemMenu.Index)
             {
+                var oldMenu = MenuItems[_lastMenuSelectIndex];
+                TabItemMenuChangeAction(oldMenu, menu);
+
                 TabItemMenuSelectedIndex = menu.TabItemMenu.Index;
+                _lastMenuSelectIndex = MenuSelectIndex;
             }
         }
 
@@ -144,19 +174,31 @@ namespace Practice.Services
         /// <param name="menu"></param>
         private void TabContentResolve(MenuBar menu)
         {
+            var userControl = _containerProvider.Resolve(menu.TabItemMenu.ViewType) as UserControl;
+
+            Check.NotNull(userControl, nameof(userControl));
+            if (userControl is FrameworkElement view && view.DataContext is null && ViewModelLocator.GetAutoWireViewModel(view) is null)
+            {
+                ViewModelLocator.SetAutoWireViewModel(view, true);
+            }
+
+            menu.TabItemMenu.UserControl = userControl;
             _regionViewRegistry.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, () => menu);
         }
 
         /// <summary>
         /// tabItem 发生切换
         /// </summary>
-        /// <param name="menu"></param>
-        public virtual void TabItemMenuChange(MenuBar? menu)
+        /// <param name="newMenu"></param>
+        public virtual void TabItemMenuChange(MenuBar? newMenu)
         {
-            if (menu == null) return;
-            if (_menuSelectIndex != menu.Index)
+            if (newMenu == null) return;
+            if (_menuSelectIndex != newMenu.Index)
             {
-                MenuSelectIndex = menu.Index;
+                TabItemMenuChangeAction(MenuItems[_lastMenuSelectIndex], newMenu);
+
+                MenuSelectIndex = newMenu.Index;
+                _lastMenuSelectIndex = newMenu.Index;
             }
         }
 
@@ -184,6 +226,9 @@ namespace Practice.Services
         private void ToCloseTabItemMenu(MenuBar menu)
         {
             Region.Remove(menu);
+            ViewDispose(menu);
+            menu.TabItemMenu.Reset();
+
         }
 
         /// <summary>
@@ -214,6 +259,45 @@ namespace Practice.Services
                 }
 
                 index++;
+            }
+        }
+
+        /// <summary>
+        /// tab切换item时，触发的相关操作
+        /// </summary>
+        /// <param name="oldMenu">上一个菜单</param>
+        /// <param name="newMenu">当前菜单</param>
+        protected virtual void TabItemMenuChangeAction(MenuBar? oldMenu, MenuBar? newMenu)
+        {
+            if (oldMenu != null && oldMenu.TabItemMenu.UserControl is UserControl oldControl)
+            {
+                if (oldControl.DataContext is ITabItemMenuChangeAction oldAction)
+                {
+                    oldAction.OnDestroy();
+                }
+            }
+
+            if (newMenu != null && newMenu.TabItemMenu.UserControl is UserControl newControl)
+            {
+                if (newControl.DataContext is ITabItemMenuChangeAction newAction)
+                {
+                    newAction.OnInit();
+                }
+            }
+        }
+
+        /// <summary>
+        /// View、ViewModel相关对象释放
+        /// </summary>
+        /// <param name="oldMenu"></param>
+        protected virtual void ViewDispose(MenuBar oldMenu)
+        {
+            if (oldMenu.TabItemMenu.UserControl is UserControl oldControl)
+            {
+                if (oldControl.DataContext is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
             }
         }
     }

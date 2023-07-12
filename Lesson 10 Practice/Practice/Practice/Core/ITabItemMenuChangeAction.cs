@@ -11,7 +11,7 @@
         void OnInit();
 
         /// <summary>
-        /// 退出当前View时，假的销毁操作
+        /// 退出当前View时
         /// </summary>
         void OnDestroy();
     }
