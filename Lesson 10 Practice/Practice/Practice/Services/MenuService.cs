@@ -16,8 +16,7 @@ namespace Practice.Services
                 new MenuBar()
                 {
                     Icon = "Home", NameSpace = "", Title = "Home",
-                    //TabItemMenu = new TabItemMenu(typeof(HomeView),Visibility.Collapsed)
-                    TabItemMenu = new TabItemMenu(typeof(HomeView))
+                    TabItemMenu = new TabItemMenu(typeof(HomeView),Visibility.Collapsed)
                 },
                 new MenuBar()
                 {

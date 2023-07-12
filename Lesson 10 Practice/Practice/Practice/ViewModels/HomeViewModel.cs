@@ -4,6 +4,7 @@ using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 using Practice.Core;
+using Practice.Extensions;
 using Practice.Helpers;
 using Practice.Models;
 using Practice.Services;
@@ -21,90 +22,46 @@ namespace Practice.ViewModels
     {
         private static readonly SKColor Blue = new(25, 118, 210);
 
-        private readonly PauseTokenSource _pauseTokenSource = new PauseTokenSource();
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private CancellationToken _cancellationToken;
+        private readonly SafetyUiAction _safetyUiAction;
 
         public HomeViewModel(SafetyUiAction safetyUiAction)
         {
-            var pauseToken = _pauseTokenSource.Token;
-            var cancellationToken = _cancellationTokenSource.Token;
+            _safetyUiAction = safetyUiAction;
+            _cancellationToken = _cancellationTokenSource.Token;
 
-            var cupValues = new ObservableLimitedLengthQueue<ObservableValue>(15);
-            CpuSeries = new ObservableCollection<ISeries>
-            {
-                new LineSeries<ObservableValue>
-                {
-                    Values = cupValues,
-                    Fill =   new SolidColorPaint(SKColors.CornflowerBlue),
-                    Name = "CPU",
-                    Stroke = new SolidColorPaint(Blue, 1),
-                    GeometrySize = 5,
-                    GeometryStroke = new SolidColorPaint(Blue, 1),
-                }
-            };
-
-            var physicalMemory = new ObservableLimitedLengthQueue<ObservableValue>(15);
-            PhysicalMemorySeries = new ObservableCollection<ISeries>
-            {
-                new LineSeries<ObservableValue>
-                {
-                    Values = physicalMemory,
-                    Fill =  null,
-                    Name = "Physical Memory",
-                    Stroke = new SolidColorPaint(Blue, 1),
-                    GeometrySize = 5,
-                    GeometryStroke = new SolidColorPaint(Blue, 1),
-                }
-            };
-
-            var privateMemory = new ObservableLimitedLengthQueue<ObservableValue>(15);
-            PrivateMemorySeries = new ObservableCollection<ISeries>
-            {
-                new LineSeries<ObservableValue>
-                {
-                    Values = privateMemory,
-                    Fill =  null,
-                    Name = "Private Memory",
-                    Stroke = new SolidColorPaint(Blue, 1),
-                    GeometrySize = 5,
-                    GeometryStroke = new SolidColorPaint(Blue, 1),
-                }
-            };
-
-            // 交给线程池中线程运行
-            Task.Run(function: async () =>
-            {
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    var usage = await GetCpuUsageForProcess();
-                    var memory = GetMemoryUsageForProcess();
-
-                    // 计算结果操作交给UI线程操作
-                    safetyUiAction.Invoke(() =>
-                    {
-                        cupValues.Enqueue(new ObservableValue(usage));
-                        physicalMemory.Enqueue(new ObservableValue(memory.Item1));
-                        privateMemory.Enqueue(new ObservableValue(memory.Item2));
-                    });
-                    await Task.Delay(2000);
-                    if (pauseToken.IsPaused) await pauseToken.WaitAsync();
-                }
-            });
-
+            IntervalAction();
             SystemInformation = GetSystemInformation();
         }
 
-        public void OnInit()
+        public void OnEnter()
         {
-            _pauseTokenSource.Resume();
+            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationToken = _cancellationTokenSource.Token;
+            IntervalAction();
         }
 
-        public void OnDestroy()
+        public void OnLeave()
         {
-            _pauseTokenSource.Pause();
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
         }
 
-        public ObservableCollection<ISeries> CpuSeries { get; set; }
+        private readonly ObservableLimitedLengthQueue<ObservableValue> _cupValues = new ObservableLimitedLengthQueue<ObservableValue>(15);
+
+        public ObservableCollection<ISeries> CpuSeries => new ObservableCollection<ISeries>
+        {
+            new LineSeries<ObservableValue>
+            {
+                Values = _cupValues,
+                Fill = new SolidColorPaint(SKColors.CornflowerBlue),
+                Name = "CPU",
+                Stroke = new SolidColorPaint(Blue, 1),
+                GeometrySize = 5,
+                GeometryStroke = new SolidColorPaint(Blue, 1),
+            }
+        };
 
         public LabelVisual CpuTitle { get; set; } =
             new LabelVisual
@@ -117,7 +74,20 @@ namespace Practice.ViewModels
                 }
             };
 
-        public ObservableCollection<ISeries> PhysicalMemorySeries { get; set; }
+        private readonly ObservableLimitedLengthQueue<ObservableValue> _physicalMemory = new ObservableLimitedLengthQueue<ObservableValue>(15);
+
+        public ObservableCollection<ISeries> PhysicalMemorySeries => new ObservableCollection<ISeries>
+        {
+            new LineSeries<ObservableValue>
+            {
+                Values = _physicalMemory,
+                Fill = null,
+                Name = "Physical Memory",
+                Stroke = new SolidColorPaint(Blue, 1),
+                GeometrySize = 5,
+                GeometryStroke = new SolidColorPaint(Blue, 1),
+            }
+        };
 
         public LabelVisual PhysicalMemoryTitle { get; set; } =
             new LabelVisual
@@ -130,7 +100,20 @@ namespace Practice.ViewModels
                 }
             };
 
-        public ObservableCollection<ISeries> PrivateMemorySeries { get; set; }
+        private readonly ObservableLimitedLengthQueue<ObservableValue> _privateMemory = new ObservableLimitedLengthQueue<ObservableValue>(15);
+
+        public ObservableCollection<ISeries> PrivateMemorySeries => new ObservableCollection<ISeries>
+        {
+            new LineSeries<ObservableValue>
+            {
+                Values = _privateMemory,
+                Fill = null,
+                Name = "Private Memory",
+                Stroke = new SolidColorPaint(Blue, 1),
+                GeometrySize = 5,
+                GeometryStroke = new SolidColorPaint(Blue, 1),
+            }
+        };
 
         public LabelVisual PrivateMemoryTitle { get; set; } =
             new LabelVisual
@@ -145,15 +128,23 @@ namespace Practice.ViewModels
 
         public SystemInformation SystemInformation { get; }
 
+        /// <summary>
+        /// 当前进程
+        /// </summary>
         private readonly Process _currentProcess = Process.GetCurrentProcess();
 
-        private async Task<double> GetCpuUsageForProcess()
+        /// <summary>
+        /// 获取当前进程cpu使用率
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private async Task<double> GetCpuUsageForProcess(CancellationToken token)
         {
 
             var startTime = DateTime.UtcNow;
             var startCpuUsage = _currentProcess.TotalProcessorTime;
 
-            await Task.Delay(500);
+            await Task.Delay(500, token);
 
             var endTime = DateTime.UtcNow;
             var endCpuUsage = _currentProcess.TotalProcessorTime;
@@ -165,6 +156,10 @@ namespace Practice.ViewModels
             return cpuUsageTotal;
         }
 
+        /// <summary>
+        /// 获取当前进程内存使用率
+        /// </summary>
+        /// <returns></returns>
         private (double, double) GetMemoryUsageForProcess()
         {
             // 大概算出一个数值
@@ -173,6 +168,10 @@ namespace Practice.ViewModels
             return (physicalMemory, privateMemory);
         }
 
+        /// <summary>
+        /// 获取宿主主机系统信息
+        /// </summary>
+        /// <returns></returns>
         private SystemInformation GetSystemInformation()
         {
             SystemInformation system = new SystemInformation
@@ -189,10 +188,35 @@ namespace Practice.ViewModels
             return system;
         }
 
+        /// <summary>
+        /// 定时执行操作
+        /// </summary>
+        private void IntervalAction()
+        {
+            // 交给线程池中线程运行
+            Task.Run(function: async () =>
+            {
+                while (!_cancellationToken.IsCancellationRequested)
+                {
+                    var usage = await GetCpuUsageForProcess(_cancellationToken);
+                    var memory = GetMemoryUsageForProcess();
+
+                    // 计算结果操作交给UI线程操作
+                    _safetyUiAction.Invoke(() =>
+                    {
+                        _cupValues.Enqueue(new ObservableValue(usage));
+                        _physicalMemory.Enqueue(new ObservableValue(memory.Item1));
+                        _privateMemory.Enqueue(new ObservableValue(memory.Item2));
+                    });
+                    await Task.Delay(2000, _cancellationToken);
+                }
+            }, _cancellationToken).FireAndForget();
+        }
+
         public void Dispose()
         {
+            if (!_cancellationTokenSource.IsCancellationRequested) _cancellationTokenSource.Cancel();
             _cancellationTokenSource.Dispose();
-            _pauseTokenSource.Dispose();
             _currentProcess.Dispose();
         }
     }

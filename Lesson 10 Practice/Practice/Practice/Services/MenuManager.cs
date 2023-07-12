@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,7 +22,6 @@ namespace Practice.Services
         private readonly IMenuService _menuService;
         private readonly IRegionViewRegistry _regionViewRegistry;
         private readonly SafetyUiAction _safetyUiAction;
-        private readonly IRootDialogService _rootDialogService;
         private readonly IContainerExtension _containerProvider;
         /// <summary>
         /// 内容显示区域
@@ -33,10 +31,8 @@ namespace Practice.Services
         public MenuManager(IMenuService menuService,
             IRegionViewRegistry regionViewRegistry,
             SafetyUiAction safetyUiAction,
-            IRootDialogService rootDialogService,
             IContainerExtension containerProvider)
         {
-            _rootDialogService = rootDialogService;
             _menuService = menuService;
             _regionViewRegistry = regionViewRegistry;
             _safetyUiAction = safetyUiAction;
@@ -85,7 +81,7 @@ namespace Practice.Services
             _safetyUiAction.AsyncInvokeThenUiAction(async () =>
             {
                 var menus = await _menuService.GetAllAsync();
-                //await Task.Delay(3000);
+                await Task.Delay(1500);
                 return () =>
                 {
                     MenuInitialSettings(menus);
@@ -126,9 +122,19 @@ namespace Practice.Services
         public IViewsCollection TabItemMenus => Region.Views;
 
         /// <summary>
-        /// 上一次被选中的菜单
+        /// 上一次被选中的菜单对象
         /// </summary>
-        private int _lastMenuSelectIndex = -1;
+        private MenuBar? _lastSelectedMenuBar;
+
+        /// <summary>
+        /// 是否正在执行关闭指定TabItem项操作
+        /// </summary>
+        private bool _doingRemoveAction;
+
+        /// <summary>
+        /// 是否正在执行关闭所有TabItem项操作
+        /// </summary>
+        private bool _doingRemoveAllAction;
 
         /// <summary>
         /// 菜单导航
@@ -136,7 +142,7 @@ namespace Practice.Services
         /// <param name="menu"></param>
         public void MenuNavigate(MenuBar? menu)
         {
-            if (menu == null) return;
+            if (menu == null || _doingRemoveAction || _doingRemoveAllAction) return;
 
             // 初次，tabItem需要被添加
             if (menu.TabItemMenu.Index == -1)
@@ -147,24 +153,21 @@ namespace Practice.Services
 
                 TabItemMenuSelectedIndex = menu.TabItemMenu.Index;
                 TabContentResolve(menu);
-                if (count >= 1 && _lastMenuSelectIndex != -1)
+                if (count >= 1 && _lastSelectedMenuBar != null)
                 {
-                    var oldMenu = MenuItems[_lastMenuSelectIndex];
-                    TabItemMenuChangeAction(oldMenu, null);
+                    TabItemMenuChangeAction(_lastSelectedMenuBar, null);
                 }
 
-                _lastMenuSelectIndex = MenuSelectIndex;
+                _lastSelectedMenuBar = menu;
                 return;
             }
 
             // 后续，菜单 或 tabItem 切换时
             if (_tabItemMenuSelectedIndex != menu.TabItemMenu.Index)
             {
-                var oldMenu = MenuItems[_lastMenuSelectIndex];
-                TabItemMenuChangeAction(oldMenu, menu);
-
+                TabItemMenuChangeAction(_lastSelectedMenuBar, menu);
                 TabItemMenuSelectedIndex = menu.TabItemMenu.Index;
-                _lastMenuSelectIndex = MenuSelectIndex;
+                _lastSelectedMenuBar = menu;
             }
         }
 
@@ -179,6 +182,7 @@ namespace Practice.Services
             Check.NotNull(userControl, nameof(userControl));
             if (userControl is FrameworkElement view && view.DataContext is null && ViewModelLocator.GetAutoWireViewModel(view) is null)
             {
+                // view与viewModel连接
                 ViewModelLocator.SetAutoWireViewModel(view, true);
             }
 
@@ -192,13 +196,12 @@ namespace Practice.Services
         /// <param name="newMenu"></param>
         public virtual void TabItemMenuChange(MenuBar? newMenu)
         {
-            if (newMenu == null) return;
+            if (newMenu == null || _doingRemoveAction || _doingRemoveAllAction) return;
             if (_menuSelectIndex != newMenu.Index)
             {
-                TabItemMenuChangeAction(MenuItems[_lastMenuSelectIndex], newMenu);
-
+                TabItemMenuChangeAction(_lastSelectedMenuBar, newMenu);
                 MenuSelectIndex = newMenu.Index;
-                _lastMenuSelectIndex = newMenu.Index;
+                _lastSelectedMenuBar = newMenu;
             }
         }
 
@@ -207,8 +210,14 @@ namespace Practice.Services
         /// </summary>
         public virtual void TabItemMenuCloseAll()
         {
+            _doingRemoveAllAction = true;
             _safetyUiAction.DelayWhen(() =>
             {
+                MenuSelectIndex = 0;
+                TabItemMenuSelectedIndex = 0;
+                _lastSelectedMenuBar = MenuItems[0];
+                TabItemMenuChangeAction(null, _lastSelectedMenuBar);
+
                 var list = Region.Views.Cast<MenuBar>().Where(x => x.TabItemMenu.CloseBtn == Visibility.Visible)
                     .Reverse()
                     .ToList();
@@ -216,7 +225,48 @@ namespace Practice.Services
                 {
                     ToCloseTabItemMenu(menuBar);
                 }
+
+                _doingRemoveAllAction = false;
             }, 150);
+        }
+
+        /// <summary>
+        /// 关闭指定 tab 菜单
+        /// </summary>
+        /// <param name="menu"></param>
+        public virtual void TabItemMenuClose(MenuBar menu)
+        {
+            _doingRemoveAction = true;
+
+            // 当前项是否是被选中
+            if (TabItemMenuSelectedIndex == menu.TabItemMenu.Index)
+            {
+                var count = TabItemMenus.Count();
+                // 当前项是否是最后一项
+                if (count - 1 == TabItemMenuSelectedIndex)
+                {
+                    // tabItem项向前移设置，选中项
+                    TabItemMenuSelectedIndex -= 1;
+                    // 设置菜单选中项
+                    var prev = (MenuBar)TabItemMenus.First(x => ((MenuBar)x).TabItemMenu.Index == TabItemMenuSelectedIndex);
+                    MenuSelectIndex = prev.Index;
+                    TabItemMenuChangeAction(null, prev);
+                    _lastSelectedMenuBar = prev;
+                }
+                else
+                {
+                    // tabItem项向后移设置，选中项
+                    var nextIndex = TabItemMenuSelectedIndex + 1;
+                    var next = (MenuBar)TabItemMenus.First(x => ((MenuBar)x).TabItemMenu.Index == nextIndex);
+                    MenuSelectIndex = next.Index;
+                    TabItemMenuChangeAction(null, next);
+                    _lastSelectedMenuBar = next;
+                }
+            }
+
+            ToCloseTabItemMenu(menu);
+            RestTabItemMenuIndexReset();
+            _doingRemoveAction = false;
         }
 
         /// <summary>
@@ -228,20 +278,6 @@ namespace Practice.Services
             Region.Remove(menu);
             ViewDispose(menu);
             menu.TabItemMenu.Reset();
-
-        }
-
-        /// <summary>
-        /// 关闭指定 tab 菜单
-        /// </summary>
-        /// <param name="menu"></param>
-        public virtual void TabItemMenuClose(MenuBar menu)
-        {
-            int index = menu.TabItemMenu.Index;
-            ToCloseTabItemMenu(menu);
-            RestTabItemMenuIndexReset();
-
-            TabItemMenuSelectedIndex = index;
         }
 
         /// <summary>
@@ -273,7 +309,7 @@ namespace Practice.Services
             {
                 if (oldControl.DataContext is ITabItemMenuChangeAction oldAction)
                 {
-                    oldAction.OnDestroy();
+                    oldAction.OnLeave();
                 }
             }
 
@@ -281,7 +317,7 @@ namespace Practice.Services
             {
                 if (newControl.DataContext is ITabItemMenuChangeAction newAction)
                 {
-                    newAction.OnInit();
+                    newAction.OnEnter();
                 }
             }
         }

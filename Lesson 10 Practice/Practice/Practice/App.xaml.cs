@@ -52,6 +52,11 @@ namespace Practice
             // task 任务调度器中 task 执行发生异常
             TaskScheduler.UnobservedTaskException += (o, args) =>
             {
+                //if (args.Exception is OperationCanceledException canceled)
+                //{
+
+                //}
+
                 Log.Logger.Error(args.Exception, $"{nameof(Task)}执行出现异常");
             };
 
@@ -114,6 +119,7 @@ namespace Practice
             containerRegistry.RegisterSingleton<SystemSettingsManager>();
             containerRegistry.RegisterInstance(new SafetyUiAction(Dispatcher));
             containerRegistry.RegisterSingleton<IRootDialogService, RootDialogService>();
+            containerRegistry.RegisterSingleton<ILogger>(() => Log.Logger);
 
             // Transient
             containerRegistry.Register<IMenuService, MenuService>();

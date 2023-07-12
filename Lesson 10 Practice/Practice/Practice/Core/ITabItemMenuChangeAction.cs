@@ -1,18 +1,18 @@
 ﻿namespace Practice.Core
 {
     /// <summary>
-    /// tab切换item时，触发的相关操作
+    /// tab菜单切换时，触发的相关操作
     /// </summary>
     public interface ITabItemMenuChangeAction
     {
         /// <summary>
-        /// 进入到当前View时，假的初始操作
+        /// 菜单Tab上已显示，且从其他View进入到当前View时的操作
         /// </summary>
-        void OnInit();
+        void OnEnter();
 
         /// <summary>
-        /// 退出当前View时
+        /// 菜单Tab上已显示，且从当前View进入到其他View时的操作
         /// </summary>
-        void OnDestroy();
+        void OnLeave();
     }
 }
