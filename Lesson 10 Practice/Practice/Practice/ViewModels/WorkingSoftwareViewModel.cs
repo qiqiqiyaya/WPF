@@ -1,11 +1,7 @@
-﻿using MaterialDesignThemes.Wpf;
-using Practice.CommonViews;
-using Practice.Helpers;
+﻿using Practice.Helpers;
 using Practice.Services.interfaces;
 using Prism.Services.Dialogs;
 using System.Windows.Input;
-using Practice.Core.Contract;
-using Practice.Services;
 
 namespace Practice.ViewModels
 {

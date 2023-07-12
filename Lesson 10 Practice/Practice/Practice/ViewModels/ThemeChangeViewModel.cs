@@ -7,7 +7,7 @@ using Prism.Commands;
 using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
-using Practice.Core.Contract;
+using Practice.Core;
 
 namespace Practice.ViewModels
 {

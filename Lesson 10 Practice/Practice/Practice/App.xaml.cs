@@ -2,7 +2,7 @@
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using MaterialDesignThemes.Wpf;
-using Practice.Core.Contract;
+using Practice.Core;
 using Practice.Core.RegionAdapterMappings;
 using Practice.Services;
 using Practice.Services.interfaces;

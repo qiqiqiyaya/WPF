@@ -26,7 +26,6 @@
 
 	<ItemGroup>
 		<Resource Include="Fonts\MiSans-Normal.ttf" />
-		<Resource Include="Resources\201962717351564989.jpeg" />
 		<Resource Include="Resources\R.gif" />
 	</ItemGroup>
 

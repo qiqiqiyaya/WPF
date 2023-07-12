@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Practice.Core.Contract
+﻿namespace Practice.Core
 {
     public class SystemSettingKeys
     {

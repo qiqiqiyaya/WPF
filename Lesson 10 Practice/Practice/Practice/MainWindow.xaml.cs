@@ -1,5 +1,5 @@
 ﻿using Practice.CommonViews;
-using Practice.Core.Contract;
+using Practice.Core;
 using Practice.Services;
 using Practice.Services.interfaces;
 using Prism.Regions;

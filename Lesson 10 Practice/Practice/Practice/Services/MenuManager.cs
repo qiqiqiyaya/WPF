@@ -1,5 +1,4 @@
 ﻿using Practice.Core;
-using Practice.Core.Contract;
 using Practice.Extensions;
 using Practice.Models;
 using Practice.Services.interfaces;
