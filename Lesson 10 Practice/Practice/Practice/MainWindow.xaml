@@ -122,7 +122,8 @@
                                     Width="25"
                                     Height="25"
                                     Margin="17,0"
-                                    Kind="{Binding Path=Icon}" />
+                                    Kind="{Binding Path=Icon}"
+                                    ToolTip="{Binding Title}" />
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Text="{Binding Title}"
@@ -234,6 +235,7 @@
                             <ScrollViewer>
                                 <Border
                                     Margin="0,3"
+                                    Padding="10,10,10,5"
                                     Background="{DynamicResource PrimaryHueMidForegroundBrush}"
                                     CornerRadius="5">
                                     <ContentControl x:Name="Region" Content="{Binding Path=TabItemMenu.UserControl}" />

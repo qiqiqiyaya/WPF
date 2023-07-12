@@ -163,7 +163,7 @@ namespace Practice.ViewModels
         private (double, double) GetMemoryUsageForProcess()
         {
             // 大概算出一个数值
-            var physicalMemory = _currentProcess.WorkingSet64 / (1024 * 1024);
+            var physicalMemory = _currentProcess.PeakWorkingSet64 / (1024 * 1024);
             var privateMemory = _currentProcess.PrivateMemorySize64 / (1024 * 1024);
             return (physicalMemory, privateMemory);
         }
