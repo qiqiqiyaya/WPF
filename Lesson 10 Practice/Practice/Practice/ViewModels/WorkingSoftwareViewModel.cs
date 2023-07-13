@@ -1,30 +1,69 @@
-﻿using Practice.Helpers;
+﻿using System.Collections.Generic;
+using Microsoft.Win32;
+using Practice.Extensions;
+using Practice.Models;
 using Practice.Services.interfaces;
 using Prism.Services.Dialogs;
+using ReactiveUI;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Practice.Services;
 
 namespace Practice.ViewModels
 {
-    public class WorkingSoftwareViewModel
+    public class WorkingSoftwareViewModel : ReactiveObject
     {
-        private readonly IRootDialogService _rootDialogService;
-        private readonly IDialogService _dialogService;
+        private const string AppsPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall";
 
+        private readonly SafetyUiAction _safetyUiAction;
 
-        public WorkingSoftwareViewModel(IRootDialogService rootDialogService,
-            IDialogService dialogService)
+        public WorkingSoftwareViewModel(SafetyUiAction safetyUiAction)
         {
-            _rootDialogService = rootDialogService;
-            _dialogService = dialogService;
-            OpenCommand = new RelayCommand(OnShowDialog);
+            _safetyUiAction = safetyUiAction;
+            LoadApps();
         }
 
-        private void OnShowDialog()
+        private ObservableCollection<AppInfo> _apps = new ObservableCollection<AppInfo>();
+        public ObservableCollection<AppInfo> Apps => _apps;
+
+
+        public void LoadApps()
         {
-            _rootDialogService.LoadingShow();
-            //var aa = await DialogHost.Show(new LoadingView(), SystemSettingKeys.RootDialogIdentity);
+            Task.Run(() =>
+            {
+                RegistryKey? appsRegistryKey = Registry.LocalMachine.OpenSubKey(AppsPath);
+                if (appsRegistryKey == null) return;
+
+                var subKeyNames = appsRegistryKey.GetSubKeyNames();
+                var data = new List<AppInfo>();
+                foreach (var key in subKeyNames)
+                {
+                    RegistryKey? subRegistryKey = appsRegistryKey.OpenSubKey(key);
+                    if (subRegistryKey == null) return;
+
+                    using (subRegistryKey)
+                    {
+                        var app = new AppInfo();
+
+                        app.DisplayName = subRegistryKey.GetString("DisplayName");
+                        app.Publisher = subRegistryKey.GetString("Publisher");
+                        app.InstallLocation = subRegistryKey.GetString("InstallLocation");
+                        app.HelpLink = subRegistryKey.GetString("HelpLink");
+                        app.DisplayIcon = subRegistryKey.GetString("DisplayIcon");
+                        data.Add(app);
+                    }
+                }
+
+                var aa = data.FirstOrDefault(x => x.DisplayName.Contains("WeChat"));
+                _safetyUiAction.Invoke(() => _apps.AddRange(data));
+            });
         }
 
-        public ICommand OpenCommand { get; }
+        private void GetApp(string subKeyName)
+        {
+
+        }
     }
 }

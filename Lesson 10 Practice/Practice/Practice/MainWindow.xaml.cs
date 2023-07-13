@@ -26,7 +26,7 @@ namespace Practice
             RegionManager.SetRegionManager(TabMenus, regionManager);
 
             menuManager.SetContentRegion(regionManager.Regions[SystemSettingKeys.TabMenuRegion]);
-            menuManager.MenuLoad();
+            menuManager.LoadMenus();
 
             this.Header.MouseDown += (sender, args) =>
             {

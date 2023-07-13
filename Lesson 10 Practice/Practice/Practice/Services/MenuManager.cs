@@ -75,7 +75,7 @@ namespace Practice.Services
         /// 菜单异步加载，然后ui线程更新元素
         /// </summary>
         /// <returns></returns>
-        public void MenuLoad()
+        public void LoadMenus()
         {
             _safetyUiAction.AsyncInvokeThenUiAction(async () =>
             {
