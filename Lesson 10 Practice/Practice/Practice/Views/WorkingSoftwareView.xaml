@@ -10,28 +10,34 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
-        <ItemsControl ItemsSource="{Binding Apps}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <materialDesign:Card Width="150">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Image
-                                Height="140"
-                                Source="{Binding DisplayIcon}"
-                                Stretch="UniformToFill" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
-                                Text="{Binding DisplayName}" />
-                        </Grid>
-                    </materialDesign:Card>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </Grid>
+
+    <ItemsControl ItemsSource="{Binding Apps}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <materialDesign:Card Width="150">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Image
+                            Height="140"
+                            Source="{Binding DisplayIcon}"
+                            Stretch="UniformToFill" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                            Text="{Binding DisplayName}" />
+                    </Grid>
+                </materialDesign:Card>
+
+
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 </UserControl>

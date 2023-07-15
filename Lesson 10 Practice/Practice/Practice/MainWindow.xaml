@@ -283,6 +283,7 @@
                                                             <Button
                                                                 Margin="5,4"
                                                                 Padding="5,4"
+                                                                VerticalContentAlignment="Center"
                                                                 Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuChangeCommand}"
                                                                 CommandParameter="{Binding}"
                                                                 Style="{StaticResource MaterialDesignRaisedButton}">
@@ -301,8 +302,7 @@
                                                                         Click="PreventEventRaise_OnClick"
                                                                         Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuCloseCommand}"
                                                                         CommandParameter="{Binding}"
-                                                                        Style="{StaticResource MaterialDesignFlatButton}"
-                                                                        Visibility="{Binding TabItemMenu.CloseBtn}">
+                                                                        Style="{StaticResource MaterialDesignFlatButton}">
                                                                         <md:PackIcon
                                                                             Width="22"
                                                                             Height="22"
@@ -314,7 +314,6 @@
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
                                             </DockPanel>
-
 
                                         </md:PopupBox>
                                         <StackPanel Orientation="Horizontal">

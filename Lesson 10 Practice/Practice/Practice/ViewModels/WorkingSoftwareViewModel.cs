@@ -45,9 +45,15 @@ namespace Practice.ViewModels
 
                     using (subRegistryKey)
                     {
+                        var name = subRegistryKey.GetString("Publisher");
+
+                        if (!string.IsNullOrWhiteSpace(name) && name.Contains("Microsoft"))
+                        {
+                            continue;
+                        }
                         var app = new AppInfo();
 
-                        app.DisplayName = subRegistryKey.GetString("DisplayName");
+                        app.DisplayName = name;
                         app.Publisher = subRegistryKey.GetString("Publisher");
                         app.InstallLocation = subRegistryKey.GetString("InstallLocation");
                         app.HelpLink = subRegistryKey.GetString("HelpLink");
@@ -56,8 +62,7 @@ namespace Practice.ViewModels
                     }
                 }
 
-                var aa = data.FirstOrDefault(x => x.DisplayName.Contains("WeChat"));
-                _safetyUiAction.Invoke(() => _apps.AddRange(data));
+                _safetyUiAction.Invoke(() => Apps.AddRange(data));
             });
         }
 
