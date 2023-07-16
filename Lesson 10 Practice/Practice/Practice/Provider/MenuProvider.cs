@@ -1,13 +1,13 @@
 ﻿using Practice.Models;
-using Practice.Services.interfaces;
+using Practice.Provider.interfaces;
 using Practice.Views;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Practice.Services
+namespace Practice.Provider
 {
-    public class MenuService : IMenuService
+    public class MenuProvider : IMenuProvider
     {
         public Task<List<MenuBar>> GetAllAsync()
         {

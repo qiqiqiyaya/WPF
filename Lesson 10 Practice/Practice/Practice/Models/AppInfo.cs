@@ -11,5 +11,7 @@
         public string HelpLink { get; set; }
 
         public string DisplayIcon { get; set; }
+
+
     }
 }

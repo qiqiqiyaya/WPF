@@ -18,10 +18,14 @@ namespace Practice.ViewModels
         private const string AppsPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall";
 
         private readonly SafetyUiAction _safetyUiAction;
+        private readonly IAppInfoManager _appInfoManager;
 
-        public WorkingSoftwareViewModel(SafetyUiAction safetyUiAction)
+
+        public WorkingSoftwareViewModel(SafetyUiAction safetyUiAction,
+            IAppInfoManager appInfoManager)
         {
             _safetyUiAction = safetyUiAction;
+            _appInfoManager = appInfoManager;
             LoadApps();
         }
 
@@ -33,36 +37,38 @@ namespace Practice.ViewModels
         {
             Task.Run(() =>
             {
-                RegistryKey? appsRegistryKey = Registry.LocalMachine.OpenSubKey(AppsPath);
-                if (appsRegistryKey == null) return;
+                var aaa = _appInfoManager.GetWorkingSoftware();
 
-                var subKeyNames = appsRegistryKey.GetSubKeyNames();
-                var data = new List<AppInfo>();
-                foreach (var key in subKeyNames)
-                {
-                    RegistryKey? subRegistryKey = appsRegistryKey.OpenSubKey(key);
-                    if (subRegistryKey == null) return;
+                //RegistryKey? appsRegistryKey = Registry.LocalMachine.OpenSubKey(AppsPath);
+                //if (appsRegistryKey == null) return;
 
-                    using (subRegistryKey)
-                    {
-                        var name = subRegistryKey.GetString("Publisher");
+                //var subKeyNames = appsRegistryKey.GetSubKeyNames();
+                //var data = new List<AppInfo>();
+                //foreach (var key in subKeyNames)
+                //{
+                //    RegistryKey? subRegistryKey = appsRegistryKey.OpenSubKey(key);
+                //    if (subRegistryKey == null) return;
 
-                        if (!string.IsNullOrWhiteSpace(name) && name.Contains("Microsoft"))
-                        {
-                            continue;
-                        }
-                        var app = new AppInfo();
+                //    using (subRegistryKey)
+                //    {
+                //        var name = subRegistryKey.GetString("Publisher");
 
-                        app.DisplayName = name;
-                        app.Publisher = subRegistryKey.GetString("Publisher");
-                        app.InstallLocation = subRegistryKey.GetString("InstallLocation");
-                        app.HelpLink = subRegistryKey.GetString("HelpLink");
-                        app.DisplayIcon = subRegistryKey.GetString("DisplayIcon");
-                        data.Add(app);
-                    }
-                }
+                //        if (!string.IsNullOrWhiteSpace(name) && name.Contains("Microsoft"))
+                //        {
+                //            continue;
+                //        }
+                //        var app = new AppInfo();
 
-                _safetyUiAction.Invoke(() => Apps.AddRange(data));
+                //        app.DisplayName = name;
+                //        app.Publisher = subRegistryKey.GetString("Publisher");
+                //        app.InstallLocation = subRegistryKey.GetString("InstallLocation");
+                //        app.HelpLink = subRegistryKey.GetString("HelpLink");
+                //        app.DisplayIcon = subRegistryKey.GetString("DisplayIcon");
+                //        data.Add(app);
+                //    }
+                //}
+
+                //_safetyUiAction.Invoke(() => Apps.AddRange(data));
             });
         }
 

@@ -1,11 +1,12 @@
 ﻿using Practice.Models;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Practice.Services.interfaces
 {
-    public interface IMenuService
+    public interface IAppInfoManager
     {
-        Task<List<MenuBar>> GetAllAsync();
+        List<AppInfo> GetAll();
+
+        List<AppInfo> GetWorkingSoftware();
     }
 }
