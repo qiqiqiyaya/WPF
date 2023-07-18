@@ -13,8 +13,6 @@ namespace Practice
     /// </summary>
     public partial class MainWindow : Window
     {
-        NotifyIcon notifyIcon;
-
         public MainWindow(IRegionManager regionManager, MenuManager menuManager, IRootDialogService rootDialogService)
         {
             InitializeComponent();
