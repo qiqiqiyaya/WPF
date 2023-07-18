@@ -10,8 +10,9 @@
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:models="clr-namespace:Practice.Models"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:viewModels="clr-namespace:Practice.ViewModels"
-    Title="MainWindow"
+    Title="WPF演示项目"
     Width="1300"
     Height="750"
     MinWidth="1000"
@@ -33,6 +34,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftContent" Width="{Binding LeftMenuContentWidth}" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="0" />
             </Grid.ColumnDefinitions>
 
             <Grid x:Name="NavRail" Grid.Column="0">
@@ -329,6 +331,13 @@
                 </TabControl>
             </Grid>
 
+
+            <StackPanel Grid.Column="2">
+                <tb:TaskbarIcon
+                    x:Name="MyNotifyIcon"
+                    IconSource="/Resources/demonstrate.ico"
+                    ToolTipText="hello world" />
+            </StackPanel>
         </Grid>
     </md:DialogHost>
 </Window>
