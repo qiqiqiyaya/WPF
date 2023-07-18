@@ -6,6 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Practice.Models;
 using Practice.Services.interfaces;
+using System.Drawing;
+using System.IO;
+using Practice.Helpers.IconExtractor;
+using System.Reflection;
 
 namespace Practice.Services
 {
@@ -26,13 +30,36 @@ namespace Practice.Services
 
         public List<AppInfo> GetWorkingSoftware()
         {
-            var list = new List<string>() { "Visual Studio Code", "Visual Studio 2022", "StarUML", "Microsoft Edge",
-                "Google Chrome", "Adobe Photoshop 2022","Oracle VM VirtualBox","Docker Desktop","Postman","Microsoft SQL Server Management Studio 18",
-                "Navicat Premium 12"
+            var list = new List<string>() { "visual studio code", "visual studio", "starUML", "microsoft edge",
+                "google chrome", "photoshop","oracle vm virtualbox","docker desktop","postman","sql server management",
+                "navicat"
             };
 
-            var aaa = _appInfoProvider.GetList(x => list.Any(se => se.Equals(x.DisplayName)));
+            var aaa = _appInfoProvider.GetList(x =>
+            {
+                var name = x.DisplayName.ToLower();
+
+                if (list.Any(se => name.Contains(se)))
+                {
+                    return true;
+                }
+
+                return false;
+            });
+
+            //FillIcon
             return aaa;
         }
+
+        //public Icon ConvertToIcon(string fileName)
+        //{
+        //    if (Path.GetExtension(fileName).ToLower() == ".ico")
+        //    {
+        //        return new Icon(fileName);
+        //    }
+
+        //    var extractor = new IconExtractor(fileName);
+        //    //icon = extractor.GetIcon(index);
+        //}
     }
 }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Practice.Services;
+using System.Drawing;
 
 namespace Practice.ViewModels
 {
@@ -37,7 +38,9 @@ namespace Practice.ViewModels
         {
             Task.Run(() =>
             {
-                var aaa = _appInfoManager.GetWorkingSoftware();
+                //Icon icon = new Icon()
+
+                var data = _appInfoManager.GetWorkingSoftware();
 
                 //RegistryKey? appsRegistryKey = Registry.LocalMachine.OpenSubKey(AppsPath);
                 //if (appsRegistryKey == null) return;
@@ -68,7 +71,7 @@ namespace Practice.ViewModels
                 //    }
                 //}
 
-                //_safetyUiAction.Invoke(() => Apps.AddRange(data));
+                _safetyUiAction.Invoke(() => Apps.AddRange(data));
             });
         }
 

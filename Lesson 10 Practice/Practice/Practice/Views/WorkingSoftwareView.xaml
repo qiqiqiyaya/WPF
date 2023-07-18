@@ -26,16 +26,19 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Image
-                            Height="140"
-                            Source="{Binding DisplayIcon}"
-                            Stretch="UniformToFill" />
+                            Width="32"
+                            Height="32"
+                            Stretch="Uniform">
+                            <Image.Source>
+                                <BitmapImage UriSource="E:\PS2022\Adobe Photoshop 2022 SP\resources\content\images\appIcon.png" />
+                            </Image.Source>
+                        </Image>
                         <TextBlock
                             Grid.Row="1"
                             Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
                             Text="{Binding DisplayName}" />
                     </Grid>
                 </materialDesign:Card>
-
 
             </DataTemplate>
         </ItemsControl.ItemTemplate>

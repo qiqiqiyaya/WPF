@@ -126,6 +126,7 @@ namespace Practice
             // Transient
             containerRegistry.Register<IMenuProvider, MenuProvider>();
             containerRegistry.Register<IAppInfoProvider, AppInfoProvider>();
+            containerRegistry.Register<IAppInfoManager, AppInfoManager>();
 
         }
 

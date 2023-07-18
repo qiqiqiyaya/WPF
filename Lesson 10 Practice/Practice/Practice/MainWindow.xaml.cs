@@ -13,6 +13,8 @@ namespace Practice
     /// </summary>
     public partial class MainWindow : Window
     {
+        NotifyIcon notifyIcon;
+
         public MainWindow(IRegionManager regionManager, MenuManager menuManager, IRootDialogService rootDialogService)
         {
             InitializeComponent();
@@ -45,6 +47,10 @@ namespace Practice
         private void Minimized_OnClick(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+
+            //隐藏任务栏区图标 
+            this.ShowInTaskbar = false;
+            this.notifyIcon.Visible = true;
         }
 
         private void Maximized_OnClick(object sender, RoutedEventArgs e)

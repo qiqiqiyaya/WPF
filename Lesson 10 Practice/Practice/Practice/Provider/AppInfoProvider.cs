@@ -72,14 +72,17 @@ namespace Practice.Provider
                         appInfo.HelpLink = sk.GetString("HelpLink");
                         appInfo.DisplayIcon = sk.GetString("DisplayIcon");
 
-                        if (filter != null && filter(appInfo))
+                        if (filter != null)
                         {
-                            data.Add(appInfo);
+                            if (filter(appInfo))
+                            {
+                                data.Add(appInfo);
+                            }
+
+                            continue;
                         }
-                        else
-                        {
-                            data.Add(appInfo);
-                        }
+
+                        data.Add(appInfo);
                     }
                 }
             }
