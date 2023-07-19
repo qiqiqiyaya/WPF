@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Practice.Services.interfaces
+namespace Practice.Provider.Interfaces
 {
-    public interface IMenuService
+    public interface IMenuProvider
     {
         Task<List<MenuBar>> GetAllAsync();
     }

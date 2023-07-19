@@ -4,8 +4,10 @@ using LiveChartsCore.SkiaSharpView;
 using MaterialDesignThemes.Wpf;
 using Practice.Core;
 using Practice.Core.RegionAdapterMappings;
+using Practice.Provider;
+using Practice.Provider.Interfaces;
 using Practice.Services;
-using Practice.Services.interfaces;
+using Practice.Services.Interfaces;
 using Practice.ViewModels;
 using Practice.Views;
 using Prism.DryIoc;
@@ -122,7 +124,9 @@ namespace Practice
             containerRegistry.RegisterSingleton<ILogger>(() => Log.Logger);
 
             // Transient
-            containerRegistry.Register<IMenuService, MenuService>();
+            containerRegistry.Register<IMenuProvider, MenuProvider>();
+            containerRegistry.Register<IAppInfoProvider, AppInfoProvider>();
+            containerRegistry.Register<IAppInfoManager, AppInfoManager>();
 
         }
 

@@ -208,7 +208,7 @@ namespace Practice.ViewModels
                         _physicalMemory.Enqueue(new ObservableValue(memory.Item1));
                         _privateMemory.Enqueue(new ObservableValue(memory.Item2));
                     });
-                    await Task.Delay(2000, _cancellationToken);
+                    await Task.Delay(2500, _cancellationToken);
                 }
             }, _cancellationToken).FireAndForget();
         }

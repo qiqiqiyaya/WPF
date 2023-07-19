@@ -1,7 +1,7 @@
 ﻿using Practice.CommonViews;
 using Practice.Core;
 using Practice.Services;
-using Practice.Services.interfaces;
+using Practice.Services.Interfaces;
 using Prism.Regions;
 using System.Windows;
 using System.Windows.Input;
@@ -27,7 +27,7 @@ namespace Practice
             RegionManager.SetRegionManager(TabMenus, regionManager);
 
             menuManager.SetContentRegion(regionManager.Regions[SystemSettingKeys.TabMenuRegion]);
-            menuManager.MenuLoad();
+            menuManager.LoadMenus();
 
             this.Header.MouseDown += (sender, args) =>
             {

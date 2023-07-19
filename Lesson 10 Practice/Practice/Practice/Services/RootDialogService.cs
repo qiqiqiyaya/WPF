@@ -1,6 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Practice.CommonViews;
-using Practice.Services.interfaces;
+using Practice.Services.Interfaces;
 
 namespace Practice.Services
 {

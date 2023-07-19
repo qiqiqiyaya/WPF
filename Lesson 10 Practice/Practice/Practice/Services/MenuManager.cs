@@ -1,7 +1,7 @@
 ﻿using Practice.Core;
 using Practice.Extensions;
 using Practice.Models;
-using Practice.Services.interfaces;
+using Practice.Provider.Interfaces;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -18,7 +17,7 @@ namespace Practice.Services
 {
     public class MenuManager : ReactiveObject
     {
-        private readonly IMenuService _menuService;
+        private readonly IMenuProvider _menuProvider;
         private readonly IRegionViewRegistry _regionViewRegistry;
         private readonly SafetyUiAction _safetyUiAction;
         private readonly IContainerExtension _containerProvider;
@@ -27,12 +26,12 @@ namespace Practice.Services
         /// </summary>
         protected IRegion Region;
 
-        public MenuManager(IMenuService menuService,
+        public MenuManager(IMenuProvider menuProvider,
             IRegionViewRegistry regionViewRegistry,
             SafetyUiAction safetyUiAction,
             IContainerExtension containerProvider)
         {
-            _menuService = menuService;
+            _menuProvider = menuProvider;
             _regionViewRegistry = regionViewRegistry;
             _safetyUiAction = safetyUiAction;
             _containerProvider = containerProvider;
@@ -52,7 +51,10 @@ namespace Practice.Services
             set => this.RaiseAndSetIfChanged(ref _menuItems, value);
         }
 
-        private int _menuSelectIndex;
+        /// <summary>
+        /// 默认 -1 , 延迟加载菜单，避免ui阻塞
+        /// </summary>
+        private int _menuSelectIndex = -1;
         /// <summary>
         /// 菜单选中索引
         /// </summary>
@@ -75,20 +77,23 @@ namespace Practice.Services
         /// 菜单异步加载，然后ui线程更新元素
         /// </summary>
         /// <returns></returns>
-        public void MenuLoad()
+        public void LoadMenus()
         {
             _safetyUiAction.AsyncInvokeThenUiAction(async () =>
             {
-                var menus = await _menuService.GetAllAsync();
-                await Task.Delay(1500);
+                var menus = await _menuProvider.GetAllAsync();
+                //await Task.Delay(1500);
                 return () =>
                 {
                     MenuInitialSettings(menus);
                     MenuItems.AddRange(menus);
                     // 默认选中第一个
-                    MenuSelectIndex = 0;
+                    //MenuSelectIndex = 0;
                 };
             });
+
+            // 延迟1.5秒后，再选择第一个菜单
+            _safetyUiAction.DelayWhen(() => MenuSelectIndex = 0, 1000);
         }
 
         /// <summary>

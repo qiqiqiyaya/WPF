@@ -24,5 +24,17 @@ namespace Practice.Extensions
                 }
             }, TaskContinuationOptions.OnlyOnFaulted);
         }
+
+        //public static void RunAndForget(this Task task)
+        //{
+        //    task.ContinueWith(t =>
+        //    {
+        //        if (t.IsFaulted && t.Exception != null)
+        //        {
+        //            var ex = t.Exception.GetBaseException();
+        //            Log.Information(ex, "The exception occurrences in task.");
+        //        }
+        //    }, TaskContinuationOptions.OnlyOnFaulted);
+        //}
     }
 }

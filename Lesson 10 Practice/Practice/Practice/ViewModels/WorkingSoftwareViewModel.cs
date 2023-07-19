@@ -1,30 +1,65 @@
-﻿using Practice.Helpers;
-using Practice.Services.interfaces;
-using Prism.Services.Dialogs;
-using System.Windows.Input;
+﻿using Practice.Models;
+using Practice.Services;
+using Practice.Services.Interfaces;
+using ReactiveUI;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Practice.ViewModels
 {
-    public class WorkingSoftwareViewModel
+    public class WorkingSoftwareViewModel : ReactiveObject
     {
-        private readonly IRootDialogService _rootDialogService;
-        private readonly IDialogService _dialogService;
+        private readonly SafetyUiAction _safetyUiAction;
+        private readonly IAppInfoManager _appInfoManager;
 
 
-        public WorkingSoftwareViewModel(IRootDialogService rootDialogService,
-            IDialogService dialogService)
+        public WorkingSoftwareViewModel(SafetyUiAction safetyUiAction,
+            IAppInfoManager appInfoManager)
         {
-            _rootDialogService = rootDialogService;
-            _dialogService = dialogService;
-            OpenCommand = new RelayCommand(OnShowDialog);
+            _safetyUiAction = safetyUiAction;
+            _appInfoManager = appInfoManager;
+            LoadApps();
         }
 
-        private void OnShowDialog()
+        private ObservableCollection<AppIcon> _apps = new ObservableCollection<AppIcon>();
+
+        public ObservableCollection<AppIcon> Apps
         {
-            _rootDialogService.LoadingShow();
-            //var aa = await DialogHost.Show(new LoadingView(), SystemSettingKeys.RootDialogIdentity);
+            get => _apps;
+            set => this.RaiseAndSetIfChanged(ref value, _apps);
         }
 
-        public ICommand OpenCommand { get; }
+        public void LoadApps()
+        {
+            // 参考 https://stackoverflow.com/questions/2969821/display-icon-in-wpf-image
+
+            Task.Run(async () =>
+            {
+                await foreach (var icon in _appInfoManager.GetAllIcons())
+                {
+                    _safetyUiAction.Invoke(() => Apps.Add(icon));
+                }
+
+                //if (result.HasException)
+                //{
+
+                //}
+                //else
+                //{
+                //    //if (result.Data.Count > 20)
+                //    //{
+                //    //    foreach (var item in result.Data)
+                //    //    {
+                //    //        if (result.Data.Count % 20 == 0)
+                //    //        {
+                //    //            await Task.Delay(1000);
+                //    //        }
+                //    //        //_safetyUiAction.Invoke(() => Apps.Add(item));
+                //    //    }
+                //    //}
+                //}
+            });
+        }
+
     }
 }
