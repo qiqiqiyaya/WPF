@@ -1,7 +1,7 @@
 ﻿using Practice.CommonViews;
 using Practice.Core;
 using Practice.Services;
-using Practice.Services.interfaces;
+using Practice.Services.Interfaces;
 using Prism.Regions;
 using System.Windows;
 using System.Windows.Input;
@@ -45,10 +45,6 @@ namespace Practice
         private void Minimized_OnClick(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
-
-            //隐藏任务栏区图标 
-            this.ShowInTaskbar = false;
-            this.notifyIcon.Visible = true;
         }
 
         private void Maximized_OnClick(object sender, RoutedEventArgs e)

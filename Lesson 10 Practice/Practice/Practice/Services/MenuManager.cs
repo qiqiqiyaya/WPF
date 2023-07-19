@@ -1,7 +1,7 @@
 ﻿using Practice.Core;
 using Practice.Extensions;
 using Practice.Models;
-using Practice.Provider.interfaces;
+using Practice.Provider.Interfaces;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;

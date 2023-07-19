@@ -1,5 +1,5 @@
 ﻿using Practice.Models;
-using Practice.Provider.interfaces;
+using Practice.Provider.Interfaces;
 using Practice.Views;
 using System.Collections.Generic;
 using System.Threading.Tasks;

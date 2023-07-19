@@ -1,7 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using System.Threading.Tasks;
 
-namespace Practice.Services.interfaces
+namespace Practice.Services.Interfaces
 {
     public interface IRootDialogService
     {

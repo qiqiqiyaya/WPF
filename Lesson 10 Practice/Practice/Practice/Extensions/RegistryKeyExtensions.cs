@@ -6,7 +6,7 @@ namespace Practice.Extensions
     {
         public static string GetString(this RegistryKey registryKey, string? name)
         {
-            var obj = registryKey.GetValue(name);
+            var obj = registryKey.GetValue(name, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
             if (obj == null) return "";
             var value = obj.ToString();
 

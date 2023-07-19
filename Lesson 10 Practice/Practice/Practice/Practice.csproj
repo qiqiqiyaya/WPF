@@ -8,13 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove="Common\**" />
-		<EmbeddedResource Remove="Common\**" />
-		<None Remove="Common\**" />
-		<Page Remove="Common\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Compile Remove="Core\TabItemRemoveBehavior.cs" />
 	</ItemGroup>
 
@@ -64,6 +57,11 @@
 	    <Generator>SettingsSingleFileGenerator</Generator>
 	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
 	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="CommonViews\" />
+	  <Folder Include="Services\Models\" />
 	</ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Practice.Provider.interfaces
+namespace Practice.Provider.Interfaces
 {
     public interface IAppInfoProvider
     {
