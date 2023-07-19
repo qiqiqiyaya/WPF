@@ -331,12 +331,9 @@
                 </TabControl>
             </Grid>
 
-
+            <!--  不占用任何可是界面空间  -->
             <StackPanel Grid.Column="2">
-                <tb:TaskbarIcon
-                    x:Name="MyNotifyIcon"
-                    IconSource="/Resources/demonstrate.ico"
-                    ToolTipText="hello world" />
+                <tb:TaskbarIcon x:Name="NotifyIcon" IconSource="/Resources/demonstrate.ico" />
             </StackPanel>
         </Grid>
     </md:DialogHost>

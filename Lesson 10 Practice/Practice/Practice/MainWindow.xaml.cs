@@ -5,6 +5,7 @@ using Practice.Services.interfaces;
 using Prism.Regions;
 using System.Windows;
 using System.Windows.Input;
+using Prism.Commands;
 
 namespace Practice
 {
@@ -40,11 +41,23 @@ namespace Practice
             {
                 this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             };
+
+            NotifyIcon.DoubleClickCommand = new DelegateCommand(() =>
+            {
+                this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Maximized : WindowState.Normal;
+                // 程序任务栏 展示
+                this.ShowInTaskbar = true;
+                // 程序窗口置顶
+                this.Activate();
+            });
         }
 
         private void Minimized_OnClick(object sender, RoutedEventArgs e)
         {
+            // 最小化
             this.WindowState = WindowState.Minimized;
+            // 程序任务栏 隐藏
+            this.ShowInTaskbar = false;
         }
 
         private void Maximized_OnClick(object sender, RoutedEventArgs e)
