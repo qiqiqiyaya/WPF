@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:models="clr-namespace:Practice.Models"
+    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:viewModels="clr-namespace:Practice.ViewModels"
@@ -257,50 +258,72 @@
                                     </Grid.RowDefinitions>
                                     <DockPanel LastChildFill="True">
                                         <md:PopupBox
+                                            Padding="0"
                                             HorizontalAlignment="Left"
-                                            VerticalAlignment="Top"
+                                            VerticalAlignment="Center"
                                             DockPanel.Dock="Right"
-                                            PlacementMode="BottomAndAlignRightEdges"
-                                            SnapsToDevicePixels="True">
-                                            <DockPanel>
+                                            PlacementMode="BottomAndAlignRightEdges">
+                                            <DockPanel Width="600">
                                                 <StackPanel
-                                                    Margin="15,25,15,0"
+                                                    Margin="0,30,0,0"
                                                     HorizontalAlignment="Right"
                                                     DockPanel.Dock="Bottom"
                                                     Orientation="Horizontal">
                                                     <Button
                                                         Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuCloseAllCommand}"
                                                         Content="Close All"
-                                                        Style="{StaticResource MaterialDesignRaisedButton}" />
+                                                        Style="{StaticResource MaterialDesignFlatLightButton}" />
                                                 </StackPanel>
 
                                                 <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.MenuManager.TabItemMenus}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
-                                                            <WrapPanel MaxWidth="600" />
+                                                            <WrapPanel />
                                                         </ItemsPanelTemplate>
                                                     </ItemsControl.ItemsPanel>
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate DataType="{x:Type models:MenuBar}">
-                                                            <Button
-                                                                Margin="5,4"
-                                                                Padding="5,4"
-                                                                VerticalContentAlignment="Center"
-                                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuChangeCommand}"
-                                                                CommandParameter="{Binding}"
-                                                                Style="{StaticResource MaterialDesignRaisedButton}">
+                                                            <Border
+                                                                Margin="5"
+                                                                Padding="5,5"
+                                                                Background="{DynamicResource MaterialDesignPaper}"
+                                                                BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                                                                BorderThickness="1"
+                                                                CornerRadius="2">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <!--  给周围加阴影  -->
+                                                                        <Setter Property="Effect">
+                                                                            <Setter.Value>
+                                                                                <DropShadowEffect
+                                                                                    po:Freeze="True"
+                                                                                    BlurRadius="7"
+                                                                                    Direction="270"
+                                                                                    Opacity="0.45"
+                                                                                    RenderingBias="Performance"
+                                                                                    ShadowDepth="2"
+                                                                                    Color="{StaticResource MaterialDesignShadow}" />
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                                <!--  绑定点击事件  -->
+                                                                <i:Interaction.Triggers>
+                                                                    <i:EventTrigger EventName="MouseDown">
+                                                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuChangeCommand}" CommandParameter="{Binding}" />
+                                                                    </i:EventTrigger>
+                                                                </i:Interaction.Triggers>
+
                                                                 <StackPanel Orientation="Horizontal">
                                                                     <md:PackIcon
                                                                         Width="25"
                                                                         Height="25"
-                                                                        Margin="0,0,5,0"
                                                                         Kind="{Binding Path=Icon}" />
-                                                                    <TextBlock Text="{Binding Path=Title}" />
-
+                                                                    <TextBlock Padding="5,0" Text="{Binding Path=Title}" />
                                                                     <Button
-                                                                        Margin="10,0,0,0"
+                                                                        Width="25"
+                                                                        Height="25"
                                                                         Padding="0"
-                                                                        VerticalAlignment="Center"
                                                                         Click="PreventEventRaise_OnClick"
                                                                         Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuCloseCommand}"
                                                                         CommandParameter="{Binding}"
@@ -310,15 +333,16 @@
                                                                             Height="22"
                                                                             Kind="Close" />
                                                                     </Button>
+
                                                                 </StackPanel>
-                                                            </Button>
+                                                            </Border>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
                                             </DockPanel>
 
                                         </md:PopupBox>
-                                        <StackPanel Orientation="Horizontal">
+                                        <StackPanel CanHorizontallyScroll="True" Orientation="Horizontal">
                                             <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />
                                         </StackPanel>
                                     </DockPanel>

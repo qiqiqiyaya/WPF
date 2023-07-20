@@ -43,8 +43,14 @@ namespace Practice.Provider
                     Icon = "MicrosoftWindows", NameSpace = "", Title = "系统信息",
                     TabItemMenu = new TabItemMenu(typeof(SystemInformationView))
                 },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
-                new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
+                new MenuBar() { Icon = "Power", NameSpace = "", Title = "开启自启" ,
+                    TabItemMenu = new TabItemMenu(typeof(AutoStartupView))
+                },
+                new MenuBar()
+                {
+                    Icon = "GestureTap", NameSpace = "", Title = "最大小化",
+                    TabItemMenu = new TabItemMenu(typeof(MinimizedView))
+                },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
                 new MenuBar() { Icon = "NintendoGameBoy", NameSpace = "", Title = "游戏" },
