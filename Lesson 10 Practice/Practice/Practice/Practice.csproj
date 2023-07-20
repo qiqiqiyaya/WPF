@@ -6,13 +6,22 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<ApplicationIcon>Resources\demonstrate.ico</ApplicationIcon>
+		<Authors>郑琪</Authors>
+		<Product>WPF学习演示项目</Product>
+		<Copyright></Copyright>
+		<RepositoryType>https://github.com/qiqiqiyaya/WPF.git</RepositoryType>
+		<ApplicationManifest>Properties\app.manifest</ApplicationManifest>
 	</PropertyGroup>
 
 	<ItemGroup>
 	  <Compile Remove="CommonViews\**" />
+	  <Compile Remove="obj\**" />
 	  <EmbeddedResource Remove="CommonViews\**" />
+	  <EmbeddedResource Remove="obj\**" />
 	  <None Remove="CommonViews\**" />
+	  <None Remove="obj\**" />
 	  <Page Remove="CommonViews\**" />
+	  <Page Remove="obj\**" />
 	</ItemGroup>
 
 	<ItemGroup>

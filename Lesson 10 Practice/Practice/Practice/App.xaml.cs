@@ -1,5 +1,4 @@
-﻿using DryIoc;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using MaterialDesignThemes.Wpf;
 using Practice.Core;
@@ -15,6 +14,8 @@ using Prism.Ioc;
 using Prism.Regions;
 using Serilog;
 using System;
+using System.Reflection;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,14 +27,25 @@ namespace Practice
     /// </summary>
     public partial class App : PrismApplication
     {
+        //[STAThread]
+        //public static void Main(string[] args)
+        //{
+        //    if (args != null && args.Length > 0)
+        //    {
+        //        // ...
+        //    }
+        //    else
+        //    {
+        //        var app = new App();
+        //        app.InitializeComponent();
+        //        app.Run();
+        //    }
+        //}
+
+
         public App()
         {
-            Startup += App_Startup;
-            Exit += App_Exit;
-        }
-
-        private void App_Startup(object sender, StartupEventArgs e)
-        {
+            App.Main();
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Information()
@@ -42,6 +54,17 @@ namespace Practice
                 .CreateLogger();
 
             Log.Logger.Information("应用程序启动");
+
+            Startup += App_Startup;
+            Exit += App_Exit;
+
+            //WindowsIdentity current = WindowsIdentity.GetCurrent();
+            //WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
+            //var aa = windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        private void App_Startup(object sender, StartupEventArgs e)
+        {
 
             // UI线程未捕获异常处理事件
             DispatcherUnhandledException += (o, args) =>

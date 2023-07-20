@@ -33,7 +33,7 @@
 
         <TextBlock
             Grid.Row="2"
-            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+            Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
             Text="设定为所有用户开机自启动" />
         <StackPanel
             Grid.Row="3"
@@ -42,8 +42,8 @@
             <TextBlock Text="开启" />
             <ToggleButton
                 Margin="8,0,16,0"
-                Command="{Binding CheckChangeCommand}"
-                IsChecked="{Binding Path=IsCheck}" />
+                Command="{Binding CheckForAllUsersChangeCommand}"
+                IsChecked="{Binding Path=IsCheckForAllUsers}" />
             <TextBlock Text="关闭" />
         </StackPanel>
     </Grid>

@@ -2,12 +2,16 @@
 using Practice.Services.Interfaces;
 using System;
 using System.IO;
+using System.Security.AccessControl;
 
 namespace Practice.Services
 {
     public class AutoStartupService : IAutoStartupService
     {
+        // 程序自启动
         // 代码参考源 https://stackoverflow.com/questions/11065139/launch-window-on-windows-startup
+        // 管理员权限启动程序
+        // https://www.cnblogs.com/flamegreat/p/14620625.html
 
         // start it for all users
         private const string RegistryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
@@ -16,6 +20,7 @@ namespace Practice.Services
         public AutoStartupService()
         {
             _applicationName = AppDomain.CurrentDomain.FriendlyName;
+            //_applicationName = AppDomain.CurrentDomain.FriendlyName;
         }
 
         /// <summary>

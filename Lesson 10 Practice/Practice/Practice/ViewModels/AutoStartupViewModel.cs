@@ -57,7 +57,7 @@ namespace Practice.ViewModels
 
         public bool IsCheckForAllUsers
         {
-            get => _isCheck;
+            get => _isCheckForAllUsers;
             set => this.RaiseAndSetIfChanged(ref _isCheckForAllUsers, value);
         }
     }

@@ -131,7 +131,7 @@ namespace Practice.Provider
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
             string? root = Path.GetPathRoot(path);
 
-            if (!root.IsNullOrWhiteSpace())
+            if (!root!.IsNullOrWhiteSpace())
             {
                 var directory = Path.GetDirectoryName(path);
 

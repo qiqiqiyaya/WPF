@@ -338,6 +338,8 @@ namespace Practice.Services
                 {
                     disposable.Dispose();
                 }
+
+                oldControl.DataContext = null;
             }
         }
     }
