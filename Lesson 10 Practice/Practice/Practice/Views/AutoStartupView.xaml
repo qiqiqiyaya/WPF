@@ -5,10 +5,46 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Practice.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Practice.ViewModels"
+    d:DataContext="{d:DesignInstance viewModels:AutoStartupViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <TextBlock Text="AutoStartupView work!" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="设定为开机自启动" />
+        <StackPanel
+            Grid.Row="1"
+            Margin="0,10"
+            Orientation="Horizontal">
+            <TextBlock Text="开启" />
+            <ToggleButton
+                Margin="8,0,16,0"
+                Command="{Binding CheckChangeCommand}"
+                IsChecked="{Binding Path=IsCheck}" />
+            <TextBlock Text="关闭" />
+        </StackPanel>
+
+        <TextBlock
+            Grid.Row="2"
+            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+            Text="设定为所有用户开机自启动" />
+        <StackPanel
+            Grid.Row="3"
+            Margin="0,10"
+            Orientation="Horizontal">
+            <TextBlock Text="开启" />
+            <ToggleButton
+                Margin="8,0,16,0"
+                Command="{Binding CheckChangeCommand}"
+                IsChecked="{Binding Path=IsCheck}" />
+            <TextBlock Text="关闭" />
+        </StackPanel>
     </Grid>
 </UserControl>

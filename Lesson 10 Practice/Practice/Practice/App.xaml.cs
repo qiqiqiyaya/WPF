@@ -127,6 +127,7 @@ namespace Practice
             containerRegistry.Register<IMenuProvider, MenuProvider>();
             containerRegistry.Register<IAppInfoProvider, AppInfoProvider>();
             containerRegistry.Register<IAppInfoManager, AppInfoManager>();
+            containerRegistry.Register<IAutoStartupService, AutoStartupService>();
 
         }
 

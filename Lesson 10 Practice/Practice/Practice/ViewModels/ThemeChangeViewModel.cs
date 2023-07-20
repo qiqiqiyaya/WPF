@@ -1,5 +1,4 @@
-﻿using DynamicData;
-using MaterialDesignColors;
+﻿using MaterialDesignColors;
 using MaterialDesignColors.ColorManipulation;
 using MaterialDesignThemes.Wpf;
 using Practice.Services;

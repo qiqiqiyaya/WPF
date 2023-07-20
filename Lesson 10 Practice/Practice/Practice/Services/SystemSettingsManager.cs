@@ -2,15 +2,16 @@
 using Practice.Properties;
 using System.Collections.Generic;
 using Practice.Extensions;
-
+using Serilog;
 
 namespace Practice.Services
 {
     public class SystemSettingsManager
     {
-        public SystemSettingsManager()
+        private readonly ILogger _logger;
+        public SystemSettingsManager(ILogger logger)
         {
-
+            _logger = logger;
         }
 
         public T? GetSetting<T>(string key)
@@ -24,7 +25,9 @@ namespace Practice.Services
                 return result;
             }
 
-            throw new KeyNotFoundException($"The {nameof(key)} can't find from {nameof(Settings)}");
+            var ex = new KeyNotFoundException($"The {nameof(key)} can't find from {nameof(Settings)}");
+            _logger.ErrorDetail(ex);
+            throw ex;
         }
 
         public void SetSetting<T>(string key, T value)
