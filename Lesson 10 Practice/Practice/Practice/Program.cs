@@ -8,11 +8,16 @@ namespace Practice
         [STAThread]
         static void Main()
         {
+            // serilog 设置参考 https://mbarkt3sto.hashnode.dev/logging-to-a-file-using-serilog#heading-configuration
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Information()
                 .Enrich.FromLogContext()
-                .WriteTo.Async(c => c.File($"Logs/logs.txt"))
+                // 滚动日志，按天，最多保存最近15天内的日志
+                .WriteTo.Async(c => c.File($"Logs/logs.txt",
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 15))
                 .CreateLogger();
 
             Log.Logger.Information("应用程序启动");

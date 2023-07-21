@@ -2,6 +2,7 @@
 using LiveChartsCore.SkiaSharpView;
 using MaterialDesignThemes.Wpf;
 using Practice.Core;
+using Practice.Core.Configuration;
 using Practice.Core.RegionAdapterMappings;
 using Practice.Provider;
 using Practice.Provider.Interfaces;
@@ -10,6 +11,7 @@ using Practice.Services.Interfaces;
 using Practice.ViewModels;
 using Practice.Views;
 using Prism.DryIoc;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
 using Serilog;
@@ -95,12 +97,18 @@ namespace Practice
             //regionManager
 
             // Singleton
-            containerRegistry.RegisterSingleton<MenuManager>();
+            containerRegistry.RegisterSingleton<IMenuManager, MenuManager>();
             containerRegistry.RegisterSingleton<PaletteHelper>();
             containerRegistry.RegisterSingleton<SystemSettingsManager>();
-            containerRegistry.RegisterInstance(new SafetyUiAction(Dispatcher));
+            containerRegistry.RegisterInstance(new SafetyUiActionService(Dispatcher));
             containerRegistry.RegisterSingleton<IRootDialogService, RootDialogService>();
             containerRegistry.RegisterSingleton<ILogger>(() => Log.Logger);
+            containerRegistry.RegisterSingleton<RootConfiguration>(provider =>
+            {
+                var systemSettingsManager = provider.Resolve<SystemSettingsManager>();
+                return systemSettingsManager.GetSetting<RootConfiguration>(SystemSettingKeys.RootConfiguration) ?? new RootConfiguration();
+            });
+            containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
 
             // Transient
             containerRegistry.Register<IMenuProvider, MenuProvider>();

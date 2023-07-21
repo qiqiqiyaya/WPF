@@ -9,14 +9,14 @@ namespace Practice.ViewModels
 {
     public class WorkingSoftwareViewModel : ReactiveObject
     {
-        private readonly SafetyUiAction _safetyUiAction;
+        private readonly SafetyUiActionService _safetyUiActionService;
         private readonly IAppInfoManager _appInfoManager;
 
 
-        public WorkingSoftwareViewModel(SafetyUiAction safetyUiAction,
+        public WorkingSoftwareViewModel(SafetyUiActionService safetyUiActionService,
             IAppInfoManager appInfoManager)
         {
-            _safetyUiAction = safetyUiAction;
+            _safetyUiActionService = safetyUiActionService;
             _appInfoManager = appInfoManager;
             LoadApps();
         }
@@ -37,7 +37,7 @@ namespace Practice.ViewModels
             {
                 await foreach (var icon in _appInfoManager.GetAllIcons())
                 {
-                    _safetyUiAction.Invoke(() => Apps.Add(icon));
+                    _safetyUiActionService.Invoke(() => Apps.Add(icon));
                 }
 
                 //if (result.HasException)
@@ -54,7 +54,7 @@ namespace Practice.ViewModels
                 //    //        {
                 //    //            await Task.Delay(1000);
                 //    //        }
-                //    //        //_safetyUiAction.Invoke(() => Apps.Add(item));
+                //    //        //_safetyUiActionService.Invoke(() => Apps.Add(item));
                 //    //    }
                 //    //}
                 //}

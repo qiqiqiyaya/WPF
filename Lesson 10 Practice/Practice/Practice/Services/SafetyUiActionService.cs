@@ -5,11 +5,11 @@ using Serilog;
 
 namespace Practice.Services
 {
-    public class SafetyUiAction
+    public class SafetyUiActionService
     {
         public Dispatcher UiDispatcher { get; protected set; }
 
-        public SafetyUiAction(Dispatcher uiDispatcher)
+        public SafetyUiActionService(Dispatcher uiDispatcher)
         {
             UiDispatcher = uiDispatcher;
         }

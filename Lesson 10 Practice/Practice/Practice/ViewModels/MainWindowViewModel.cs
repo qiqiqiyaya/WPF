@@ -1,10 +1,10 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Practice.Models;
-using Practice.Services;
 using Prism.Commands;
 using ReactiveUI;
 using System;
 using System.Windows;
+using Practice.Services.Interfaces;
 
 // ReSharper disable ConvertToAutoProperty
 
@@ -33,8 +33,7 @@ namespace Practice.ViewModels
         /// </summary>
         public DelegateCommand TabItemMenuCloseAllCommand { get; }
 
-        public MainWindowViewModel(
-            MenuManager menuManager)
+        public MainWindowViewModel(IMenuManager menuManager)
         {
             MenuManager = menuManager;
             MenuNavigateCommand = new DelegateCommand<MenuBar>(menuManager.MenuNavigate);
@@ -143,6 +142,6 @@ namespace Practice.ViewModels
             }
         }
 
-        public MenuManager MenuManager { get; }
+        public IMenuManager MenuManager { get; }
     }
 }

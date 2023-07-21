@@ -2,6 +2,7 @@
 using Practice.Extensions;
 using Practice.Models;
 using Practice.Provider.Interfaces;
+using Practice.Services.Interfaces;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -12,15 +13,18 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+#pragma warning disable CS8618
 
 namespace Practice.Services
 {
-    public class MenuManager : ReactiveObject
+    public class MenuManager : ReactiveObject, IMenuManager
     {
         private readonly IMenuProvider _menuProvider;
         private readonly IRegionViewRegistry _regionViewRegistry;
-        private readonly SafetyUiAction _safetyUiAction;
+        private readonly SafetyUiActionService _safetyUiActionService;
         private readonly IContainerExtension _containerProvider;
+        private readonly IAutoSubscribeNotifyIconEventHandler _notifyIconEventHandler;
+
         /// <summary>
         /// 内容显示区域
         /// </summary>
@@ -28,13 +32,15 @@ namespace Practice.Services
 
         public MenuManager(IMenuProvider menuProvider,
             IRegionViewRegistry regionViewRegistry,
-            SafetyUiAction safetyUiAction,
-            IContainerExtension containerProvider)
+            SafetyUiActionService safetyUiActionService,
+            IContainerExtension containerProvider,
+            IAutoSubscribeNotifyIconEventHandler notifyIconEventHandler)
         {
             _menuProvider = menuProvider;
             _regionViewRegistry = regionViewRegistry;
-            _safetyUiAction = safetyUiAction;
+            _safetyUiActionService = safetyUiActionService;
             _containerProvider = containerProvider;
+            _notifyIconEventHandler = notifyIconEventHandler;
 
             _menuItems = new ObservableCollection<MenuBar>();
         }
@@ -77,9 +83,9 @@ namespace Practice.Services
         /// 菜单异步加载，然后ui线程更新元素
         /// </summary>
         /// <returns></returns>
-        public void LoadMenus()
+        public virtual void LoadMenus()
         {
-            _safetyUiAction.AsyncInvokeThenUiAction(async () =>
+            _safetyUiActionService.AsyncInvokeThenUiAction(async () =>
             {
                 var menus = await _menuProvider.GetAllAsync();
                 //await Task.Delay(1500);
@@ -93,7 +99,7 @@ namespace Practice.Services
             });
 
             // 延迟1.5秒后，再选择第一个菜单
-            _safetyUiAction.DelayWhen(() => MenuSelectIndex = 0, 1000);
+            _safetyUiActionService.DelayWhen(() => MenuSelectIndex = 0, 1000);
         }
 
         /// <summary>
@@ -144,7 +150,7 @@ namespace Practice.Services
         /// 菜单导航
         /// </summary>
         /// <param name="menu"></param>
-        public void MenuNavigate(MenuBar? menu)
+        public virtual void MenuNavigate(MenuBar? menu)
         {
             if (menu == null || _doingRemoveAction || _doingRemoveAllAction) return;
 
@@ -153,7 +159,7 @@ namespace Practice.Services
             {
                 MenuSelectIndex = menu.Index;
                 var count = Region.Views.Count();
-                menu.TabItemMenu.Index = Region.Views.Any() ? count : 0;
+                menu.TabItemMenu.SetIndex(Region.Views.Any() ? count : 0);
 
                 TabItemMenuSelectedIndex = menu.TabItemMenu.Index;
                 TabContentResolve(menu);
@@ -184,18 +190,25 @@ namespace Practice.Services
             var userControl = _containerProvider.Resolve(menu.TabItemMenu.ViewType) as UserControl;
 
             Check.NotNull(userControl, nameof(userControl));
+            // 自动绑定 ViewModel
             if (userControl is FrameworkElement view && view.DataContext is null && ViewModelLocator.GetAutoWireViewModel(view) is null)
             {
                 // view与viewModel连接
                 ViewModelLocator.SetAutoWireViewModel(view, true);
             }
 
-            menu.TabItemMenu.UserControl = userControl;
+            // 自动订阅 NotifyIconEvent 事件
+            if (userControl?.DataContext is IAutoSubscribeNotifyIconEvent model)
+            {
+                _notifyIconEventHandler.Subscribe(model);
+            }
+
+            menu.TabItemMenu.UserControl = userControl!;
             _regionViewRegistry.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, () => menu);
         }
 
         /// <summary>
-        /// tabItem 发生切换
+        /// tabItem 菜单切换
         /// </summary>
         /// <param name="newMenu"></param>
         public virtual void TabItemMenuChange(MenuBar? newMenu)
@@ -215,7 +228,7 @@ namespace Practice.Services
         public virtual void TabItemMenuCloseAll()
         {
             _doingRemoveAllAction = true;
-            _safetyUiAction.DelayWhen(() =>
+            _safetyUiActionService.DelayWhen(() =>
             {
                 MenuSelectIndex = 0;
                 TabItemMenuSelectedIndex = 0;
@@ -295,7 +308,7 @@ namespace Practice.Services
                 var menuBar = (MenuBar)view;
                 if (menuBar.TabItemMenu.Index != index)
                 {
-                    menuBar.TabItemMenu.Index = index;
+                    menuBar.TabItemMenu.SetIndex(index);
                 }
 
                 index++;
@@ -337,6 +350,11 @@ namespace Practice.Services
                 if (oldControl.DataContext is IDisposable disposable)
                 {
                     disposable.Dispose();
+                }
+
+                if (oldControl.DataContext is IAutoSubscribeNotifyIconEvent model)
+                {
+                    _notifyIconEventHandler.Unsubscribe(model);
                 }
 
                 oldControl.DataContext = null;

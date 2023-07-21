@@ -24,11 +24,11 @@ namespace Practice.ViewModels
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private CancellationToken _cancellationToken;
-        private readonly SafetyUiAction _safetyUiAction;
+        private readonly SafetyUiActionService _safetyUiActionService;
 
-        public HomeViewModel(SafetyUiAction safetyUiAction)
+        public HomeViewModel(SafetyUiActionService safetyUiActionService)
         {
-            _safetyUiAction = safetyUiAction;
+            _safetyUiActionService = safetyUiActionService;
             _cancellationToken = _cancellationTokenSource.Token;
 
             IntervalAction();
@@ -202,7 +202,7 @@ namespace Practice.ViewModels
                     var memory = GetMemoryUsageForProcess();
 
                     // 计算结果操作交给UI线程操作
-                    _safetyUiAction.Invoke(() =>
+                    _safetyUiActionService.Invoke(() =>
                     {
                         _cupValues.Enqueue(new ObservableValue(usage));
                         _physicalMemory.Enqueue(new ObservableValue(memory.Item1));

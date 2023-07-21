@@ -2,13 +2,25 @@
     x:Class="Practice.Views.MinimizedView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:Practice.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Practice.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Practice.ViewModels"
+    d:DataContext="{d:DesignInstance viewModels:MinimizedViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
-        <TextBlock Text="Minimized work!" />
-    </Grid>
+    <common:Blockquote Title="重置最小化到系统托盘设置">
+        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" Text="重置按钮：" />
+            <Button
+                materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                materialDesign:ButtonProgressAssist.Value="{Binding ButtonProgressValue}"
+                materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=EmoticonHappy}"
+                Command="{Binding ResetCommand}"
+                Content="{Binding ResetIcon}"
+                Style="{StaticResource MaterialDesignFloatingActionButton}" />
+        </StackPanel>
+    </common:Blockquote>
 </UserControl>

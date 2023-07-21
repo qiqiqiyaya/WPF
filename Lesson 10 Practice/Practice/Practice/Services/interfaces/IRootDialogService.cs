@@ -1,5 +1,4 @@
 ﻿using MaterialDesignThemes.Wpf;
-using System.Threading.Tasks;
 
 namespace Practice.Services.Interfaces
 {
@@ -7,8 +6,12 @@ namespace Practice.Services.Interfaces
     {
         void Init(DialogHost rooDialogHost);
 
-        void LoadingShow();
+        void Show(object content);
 
-        void LoadingClose();
+        void Close();
+
+        void LoadingStateShow();
+
+        void LoadingStateClose();
     }
 }

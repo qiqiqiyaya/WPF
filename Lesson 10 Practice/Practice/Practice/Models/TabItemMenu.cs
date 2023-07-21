@@ -18,7 +18,7 @@ namespace Practice.Models
         /// <remarks>
         /// 默认值 -1
         /// </remarks>
-        public int Index { get; set; } = -1;
+        public int Index { get; private set; } = -1;
 
         /// <summary>
         /// 前台视图类型
@@ -38,10 +38,15 @@ namespace Practice.Models
             set => SetProperty(ref _userControl, value);
         }
 
+        public void SetIndex(int index)
+        {
+            Index = index;
+        }
+
         public void Reset()
         {
             Index = -1;
-            UserControl = null;
+            UserControl = null!;
         }
     }
 }

@@ -327,7 +327,8 @@
                                                                         Click="PreventEventRaise_OnClick"
                                                                         Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=DataContext.TabItemMenuCloseCommand}"
                                                                         CommandParameter="{Binding}"
-                                                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                                                        Visibility="{Binding Path=TabItemMenu.CloseBtn}">
                                                                         <md:PackIcon
                                                                             Width="22"
                                                                             Height="22"

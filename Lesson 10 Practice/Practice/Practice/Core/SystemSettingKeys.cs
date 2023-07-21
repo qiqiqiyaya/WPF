@@ -25,5 +25,8 @@
         /// 开机是否自启动
         /// </summary>
         public static string AutoStartup = nameof(AutoStartup);
+
+
+        public static string RootConfiguration = nameof(RootConfiguration);
     }
 }
