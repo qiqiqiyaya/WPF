@@ -14,18 +14,23 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="CommonViews\**" />
-	  <Compile Remove="obj\**" />
-	  <EmbeddedResource Remove="CommonViews\**" />
-	  <EmbeddedResource Remove="obj\**" />
-	  <None Remove="CommonViews\**" />
-	  <None Remove="obj\**" />
-	  <Page Remove="CommonViews\**" />
-	  <Page Remove="obj\**" />
+		<ApplicationDefinition Remove="App.xaml" />
+		<Page Include="App.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Core\TabItemRemoveBehavior.cs" />
+		<Compile Remove="CommonViews\**" />
+		<Compile Remove="obj\**" />
+		<EmbeddedResource Remove="CommonViews\**" />
+		<EmbeddedResource Remove="obj\**" />
+		<None Remove="CommonViews\**" />
+		<None Remove="obj\**" />
+		<Page Remove="CommonViews\**" />
+		<Page Remove="obj\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="Core\TabItemRemoveBehavior.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -39,10 +44,10 @@
 	<ItemGroup>
 		<Resource Include="Fonts\MiSans-Normal.ttf" />
 		<Resource Include="Resources\demonstrate.ico">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Resource>
 		<Resource Include="Resources\R.gif">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Resource>
 	</ItemGroup>
 
@@ -57,35 +62,37 @@
 		<PackageReference Include="Serilog" Version="3.0.1" />
 		<PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="ShowMeTheXAML" Version="2.0.0" />
+		<PackageReference Include="ShowMeTheXAML.MSBuild" Version="2.0.0" />
 		<PackageReference Include="XamlAnimatedGif" Version="2.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Properties\Settings.Designer.cs">
-	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Settings.settings</DependentUpon>
-	  </Compile>
-	  <Compile Update="Settings.Designer.cs">
-	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Settings.settings</DependentUpon>
-	  </Compile>
+		<Compile Update="Properties\Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+		<Compile Update="Settings.Designer.cs">
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="Properties\Settings.settings">
-	    <Generator>SettingsSingleFileGenerator</Generator>
-	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-	  </None>
-	  <None Update="Settings.settings">
-	    <Generator>SettingsSingleFileGenerator</Generator>
-	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-	  </None>
+		<None Update="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+		<None Update="Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Services\Models\" />
+		<Folder Include="Services\Models\" />
 	</ItemGroup>
 
 </Project>

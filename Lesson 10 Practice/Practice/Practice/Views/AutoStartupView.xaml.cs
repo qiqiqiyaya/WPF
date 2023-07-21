@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Practice.Helpers;
+using Practice.ViewModels;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Practice.Views
 {
@@ -23,6 +15,32 @@ namespace Practice.Views
         public AutoStartupView()
         {
             InitializeComponent();
+            Loaded += AutoStartupView_Loaded;
+        }
+
+        private void AutoStartupView_Loaded(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (DataContext as AutoStartupViewModel)!;
+
+            // 是否是管理员角色
+            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(identity);
+            principal.IsInRole(WindowsBuiltInRole.Administrator);
+            if (principal.IsInRole(WindowsBuiltInRole.Administrator))
+            {
+                CheckForAllUsers.IsEnabled = true;
+                viewModel.ResetIsCheckForAllUsers();
+                IsAdmin.Text = "当前用户是管理员";
+            }
+            else
+            {
+                IsAdmin.Text = "当前用户不是管理员";
+            }
+        }
+
+        private void Hyperlink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            FieldMethodHelper.OpenInBrowser(e.Uri?.AbsoluteUri);
         }
     }
 }

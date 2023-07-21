@@ -28,6 +28,8 @@ namespace Practice.ViewModels
                     _autoStartupService.Disable();
                 }
             });
+
+            // 需要管理员权限
             CheckForAllUsersChangeCommand = new DelegateCommand(() =>
             {
                 if (IsCheckForAllUsers)
@@ -41,7 +43,6 @@ namespace Practice.ViewModels
             });
 
             this.IsCheck = _autoStartupService.IsAutoStartup();
-            this.IsCheckForAllUsers = _autoStartupService.IsAutoStartup(true);
         }
 
         private bool _isCheck;
@@ -59,6 +60,14 @@ namespace Practice.ViewModels
         {
             get => _isCheckForAllUsers;
             set => this.RaiseAndSetIfChanged(ref _isCheckForAllUsers, value);
+        }
+
+        /// <summary>
+        /// 重置 IsCheckForAllUsers 属性
+        /// </summary>
+        public void ResetIsCheckForAllUsers()
+        {
+            this.IsCheckForAllUsers = _autoStartupService.IsAutoStartup(true);
         }
     }
 }

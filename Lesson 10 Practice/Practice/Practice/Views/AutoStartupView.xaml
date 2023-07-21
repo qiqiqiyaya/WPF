@@ -2,12 +2,17 @@
     x:Class="Practice.Views.AutoStartupView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:Practice.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:Practice.Helpers"
     xmlns:local="clr-namespace:Practice.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:smtx="clr-namespace:ShowMeTheXAML;assembly=ShowMeTheXAML"
     xmlns:viewModels="clr-namespace:Practice.ViewModels"
+    Name="AutoStartup"
     d:DataContext="{d:DesignInstance viewModels:AutoStartupViewModel}"
-    d:DesignHeight="450"
+    d:DesignHeight="650"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
@@ -16,35 +21,105 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="设定为开机自启动" />
-        <StackPanel
-            Grid.Row="1"
-            Margin="0,10"
-            Orientation="Horizontal">
-            <TextBlock Text="开启" />
-            <ToggleButton
-                Margin="8,0,16,0"
-                Command="{Binding CheckChangeCommand}"
-                IsChecked="{Binding Path=IsCheck}" />
-            <TextBlock Text="关闭" />
-        </StackPanel>
+        <common:Blockquote Title="设定为开机自启动" Grid.Row="0">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="开启" />
+                    <ToggleButton
+                        Margin="8,0,16,0"
+                        Command="{Binding CheckChangeCommand}"
+                        IsChecked="{Binding Path=IsCheck}" />
+                    <TextBlock Text="关闭" />
+                </StackPanel>
+                <FlowDocumentScrollViewer
+                    MinHeight="100"
+                    MaxHeight="300"
+                    HorizontalAlignment="Left">
+                    <FlowDocument PagePadding="0,15,0,15" PageWidth="650">
+                        <Paragraph>
+                            <Run FontWeight="Bold">
+                                修改注册表，当前用户注册表
+                            </Run>
+                            <LineBreak />
+                            <Run>【CurrentUser\SOFTWARE\Microsoft\Windows\CurrentVersion\Run】</Run>
+                            <LineBreak />
+                            <Run>
+                                手动查看：按住 Win + R ，然后输入 Regedit 查看
+                            </Run>
+                            <LineBreak />
+                            <Run>var key =  Registry.CurrentUser.OpenSubKey(RegistryKey, true)</Run>
+                            <LineBreak />
+                            <Run>key.SetValue(键, .exe结尾程序路径);</Run>
+                        </Paragraph>
+                    </FlowDocument>
+                </FlowDocumentScrollViewer>
+            </StackPanel>
+        </common:Blockquote>
 
-        <TextBlock
-            Grid.Row="2"
-            Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
-            Text="设定为所有用户开机自启动" />
-        <StackPanel
-            Grid.Row="3"
-            Margin="0,10"
-            Orientation="Horizontal">
-            <TextBlock Text="开启" />
-            <ToggleButton
-                Margin="8,0,16,0"
-                Command="{Binding CheckForAllUsersChangeCommand}"
-                IsChecked="{Binding Path=IsCheckForAllUsers}" />
-            <TextBlock Text="关闭" />
-        </StackPanel>
+        <common:Blockquote Title="设定为所有用户开机自启动（需要管理员权限）" Grid.Row="1">
+            <StackPanel>
+                <TextBlock x:Name="IsAdmin" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="开启" />
+                    <ToggleButton
+                        x:Name="CheckForAllUsers"
+                        Margin="16,0"
+                        Command="{Binding CheckForAllUsersChangeCommand}"
+                        IsChecked="{Binding Path=IsCheckForAllUsers}"
+                        IsEnabled="False" />
+                    <TextBlock Text="关闭" />
+                </StackPanel>
+                <FlowDocumentScrollViewer
+                    MinHeight="100"
+                    MaxHeight="500"
+                    HorizontalAlignment="Left">
+                    <FlowDocument PagePadding="0,15,0,15" PageWidth="650">
+                        <Paragraph>
+                            <Run>1. 关闭此程序</Run>
+                            <LineBreak />
+                            <Run>2. 使用管理员启动此程序，该功能才能开放，否则抛出异常</Run>
+                            <LineBreak />
+                            <Run>手动查看：按住 Win + R ，然后输入 Regedit 查看</Run>
+                            <LineBreak />
+                            <Run>var key=Registry.</Run>
+                            <Bold>LocalMachine</Bold>
+                            <Run>.OpenSubKey(“SOFTWARE\Microsoft\Windows\CurrentVersion\Run”, true)</Run>
+                            <LineBreak />
+                            <Run>key.SetValue(键, .exe结尾程序路径);</Run>
+                            <LineBreak />
+                            <Hyperlink
+                                Cursor="Hand"
+                                NavigateUri="https://stackoverflow.com/questions/11065139/launch-window-on-windows-startup"
+                                RequestNavigate="Hyperlink_OnRequestNavigate">
+                                如何设置开启启动
+                            </Hyperlink>
+                            <LineBreak />
+                            <Hyperlink
+                                Cursor="Hand"
+                                NavigateUri="https://www.cnblogs.com/flamegreat/p/14620625.html"
+                                RequestNavigate="Hyperlink_OnRequestNavigate">
+                                管理员权限启动程序
+                            </Hyperlink>
+                            <LineBreak />
+                            <Bold>坑</Bold>
+                            ，如果设置管理员权限启动程序，系统无法启动此程序。
+                            <LineBreak />
+                            写这自启动，熬了个通宵，给所有用户设置开机启动，一直失败，,这期间看了很多帖子、博客，最终还是失败了。
+                            <Bold>给所有用户设置开机启动，程序启动时，就需要管理员权限，而系统启动程序时，怎么获取管理员权限呢？</Bold>
+                            <LineBreak />
+                            睡了一觉后，我发现可能是我思考方式进入了误区。
+                            <LineBreak />
+                            1. 一般程序在安装时，会去设置【给所有用户开机启动】。
+                            <LineBreak />
+                            2. 程序设置某些项目此，会告知用户，说明程序需要管理员权限，让用户以管理员方式启动。
+                        </Paragraph>
+                    </FlowDocument>
+                </FlowDocumentScrollViewer>
+            </StackPanel>
+        </common:Blockquote>
     </Grid>
 </UserControl>

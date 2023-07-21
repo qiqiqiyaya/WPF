@@ -14,8 +14,6 @@ using Prism.Ioc;
 using Prism.Regions;
 using Serilog;
 using System;
-using System.Reflection;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,40 +25,9 @@ namespace Practice
     /// </summary>
     public partial class App : PrismApplication
     {
-        //[STAThread]
-        //public static void Main(string[] args)
-        //{
-        //    if (args != null && args.Length > 0)
-        //    {
-        //        // ...
-        //    }
-        //    else
-        //    {
-        //        var app = new App();
-        //        app.InitializeComponent();
-        //        app.Run();
-        //    }
-        //}
-
-
         public App()
         {
-            App.Main();
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Information()
-                .Enrich.FromLogContext()
-                .WriteTo.Async(c => c.File($"Logs/logs.txt"))
-                .CreateLogger();
-
-            Log.Logger.Information("应用程序启动");
-
             Startup += App_Startup;
-            Exit += App_Exit;
-
-            //WindowsIdentity current = WindowsIdentity.GetCurrent();
-            //WindowsPrincipal windowsPrincipal = new WindowsPrincipal(current);
-            //var aa = windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         private void App_Startup(object sender, StartupEventArgs e)
@@ -77,11 +44,6 @@ namespace Practice
             // task 任务调度器中 task 执行发生异常
             TaskScheduler.UnobservedTaskException += (o, args) =>
             {
-                //if (args.Exception is OperationCanceledException canceled)
-                //{
-
-                //}
-
                 Log.Logger.Error(args.Exception, $"{nameof(Task)}执行出现异常");
             };
 
@@ -118,12 +80,6 @@ namespace Practice
             // .HasMap<Foo>( .... ) 
             // .HasMap<Bar>( .... ) 
             );
-        }
-
-        private void App_Exit(object sender, ExitEventArgs e)
-        {
-            Log.Logger.Information("应用程序退出");
-            Log.CloseAndFlush();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -171,7 +127,6 @@ namespace Practice
         protected override void ConfigureRegionAdapterMappings(RegionAdapterMappings regionAdapterMappings)
         {
             base.ConfigureRegionAdapterMappings(regionAdapterMappings);
-
             regionAdapterMappings.RegisterMapping<TabControl, TabControlRegionAdapter>();
         }
     }

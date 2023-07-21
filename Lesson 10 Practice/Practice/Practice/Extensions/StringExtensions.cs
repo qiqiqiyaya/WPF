@@ -1,13 +1,15 @@
 using ImTools;
 using JetBrains.Annotations;
-using Practice;
-using System.Collections.Generic;
+using Practice.Extensions;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using Practice.Extensions;
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
+// ReSharper disable RedundantNullnessAttributeWithNullableReferenceTypes
+#pragma warning disable CS8603
 
+// ReSharper disable once CheckNamespace
 namespace System;
 
 /// <summary>
