@@ -114,14 +114,12 @@ namespace Practice.ViewModels
 
         public void OnLeave()
         {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource.CancelAndDispose();
         }
 
         public void Dispose()
         {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource.CancelAndDispose();
         }
 
         public void Subscribe(PracticeWindowState state)

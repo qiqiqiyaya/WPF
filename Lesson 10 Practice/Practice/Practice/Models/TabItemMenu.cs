@@ -1,6 +1,7 @@
 ﻿using Prism.Mvvm;
 using System;
 using System.Windows;
+#pragma warning disable CS8618
 
 namespace Practice.Models
 {

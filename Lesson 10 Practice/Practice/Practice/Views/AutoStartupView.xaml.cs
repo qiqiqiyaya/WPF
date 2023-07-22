@@ -30,11 +30,11 @@ namespace Practice.Views
             {
                 CheckForAllUsers.IsEnabled = true;
                 viewModel.ResetIsCheckForAllUsers();
-                IsAdmin.Text = "当前用户是管理员";
+                IsAdmin.Text = "当前用户是管理员，功能启用！";
             }
             else
             {
-                IsAdmin.Text = "当前用户不是管理员";
+                IsAdmin.Text = "当前用户不是管理员，功能禁用！";
             }
         }
 

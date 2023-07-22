@@ -9,13 +9,13 @@ namespace Practice.Core
     /// </summary>
     public class AutoSubscribeNotifyIconEventHandler : IAutoSubscribeNotifyIconEventHandler
     {
-        private readonly IEventAggregator _eventAggregator;
         private readonly Dictionary<string, SubscriptionToken> _container;
         private readonly object _lock = new object();
+        private readonly NotifyIconEvent _notifyIconEvent;
 
         public AutoSubscribeNotifyIconEventHandler(IEventAggregator eventAggregator)
         {
-            _eventAggregator = eventAggregator;
+            _notifyIconEvent = eventAggregator.GetEvent<NotifyIconEvent>();
             _container = new Dictionary<string, SubscriptionToken>();
         }
 
@@ -27,8 +27,8 @@ namespace Practice.Core
         {
             lock (_lock)
             {
-                var token = _eventAggregator.GetEvent<NotifyIconEvent>().Subscribe(model.Subscribe);
-                var key = model.GetType()?.FullName;
+                var token = _notifyIconEvent.Subscribe(model.Subscribe);
+                var key = model.GetType().FullName;
                 _container.Add(key!, token);
             }
         }
@@ -41,6 +41,7 @@ namespace Practice.Core
                 if (_container.TryGetValue(key!, out SubscriptionToken? token))
                 {
                     token?.Dispose();
+                    _container.Remove(key!);
                 }
             }
         }

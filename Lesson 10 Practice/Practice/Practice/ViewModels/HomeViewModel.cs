@@ -15,10 +15,11 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Practice.Events;
 
 namespace Practice.ViewModels
 {
-    public sealed class HomeViewModel : ReactiveObject, ITabItemMenuChangeAction, IDisposable
+    public sealed class HomeViewModel : ReactiveObject, ITabItemMenuChangeAction, IDisposable, IAutoSubscribeNotifyIconEvent
     {
         private static readonly SKColor Blue = new(25, 118, 210);
 
@@ -44,8 +45,7 @@ namespace Practice.ViewModels
 
         public void OnLeave()
         {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource.CancelAndDispose();
         }
 
         private readonly ObservableLimitedLengthQueue<ObservableValue> _cupValues = new ObservableLimitedLengthQueue<ObservableValue>(15);
@@ -215,9 +215,24 @@ namespace Practice.ViewModels
 
         public void Dispose()
         {
-            if (!_cancellationTokenSource.IsCancellationRequested) _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource.CancelAndDispose();
             _currentProcess.Dispose();
+        }
+
+        public void Subscribe(PracticeWindowState state)
+        {
+            switch (state)
+            {
+                case PracticeWindowState.Normal:
+                case PracticeWindowState.Maximized:
+                    this.OnEnter();
+                    break;
+
+                case PracticeWindowState.Minimized:
+                case PracticeWindowState.Tray:
+                    this.OnLeave();
+                    break;
+            }
         }
     }
 }

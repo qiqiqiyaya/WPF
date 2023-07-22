@@ -109,6 +109,7 @@ namespace Practice
                 return systemSettingsManager.GetSetting<RootConfiguration>(SystemSettingKeys.RootConfiguration) ?? new RootConfiguration();
             });
             containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
+            containerRegistry.RegisterSingleton<IAutoSubscribeNotifyIconEventHandler, AutoSubscribeNotifyIconEventHandler>();
 
             // Transient
             containerRegistry.Register<IMenuProvider, MenuProvider>();

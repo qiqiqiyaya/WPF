@@ -15,16 +15,13 @@ namespace Practice
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IEventAggregator _eventAggregator;
         private readonly INotifyIconService _notifyIconService;
 
         public MainWindow(IRegionManager regionManager,
             IMenuManager menuManager,
             IRootDialogService rootDialogService,
-            INotifyIconService notifyIconService,
-            IEventAggregator eventAggregator)
+            INotifyIconService notifyIconService)
         {
-            _eventAggregator = eventAggregator;
             _notifyIconService = notifyIconService;
             InitializeComponent();
 
@@ -56,18 +53,6 @@ namespace Practice
             };
 
             Closed += (sender, args) => { notifyIconService.MainWindowsClose(); };
-
-            _eventAggregator.GetEvent<NotifyIconEvent>().Subscribe()
-
-            //NotifyIcon.DoubleClickCommand = new DelegateCommand(() =>
-            //{
-            //    this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Maximized : WindowState.Normal;
-            //    // 程序任务栏 展示
-            //    this.ShowInTaskbar = true;
-            //    // 程序窗口置顶
-            //    this.Activate();
-            //    _eventAggregator.GetEvent<NotifyIconEvent>().Publish((PracticeWindowState)this.WindowState);
-            //});
         }
 
         private void Minimized_OnClick(object sender, RoutedEventArgs e)

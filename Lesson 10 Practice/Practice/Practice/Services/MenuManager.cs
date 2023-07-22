@@ -17,7 +17,7 @@ using System.Windows.Controls;
 
 namespace Practice.Services
 {
-    public class MenuManager : ReactiveObject, IMenuManager
+    public class MenuManager : ReactiveObject, IMenuManager, ICurrentMenuBar
     {
         private readonly IMenuProvider _menuProvider;
         private readonly IRegionViewRegistry _regionViewRegistry;
@@ -109,9 +109,9 @@ namespace Practice.Services
         {
             for (int i = 0; i < menus.Count; i++)
             {
-                menus[i].Index = i;
+                menus[i].SetIndex(i);
                 //Check.NotNull(menus[i].TabItemMenu, nameof(TabItemMenu));
-                if (menus[i].TabItemMenu == null) continue;
+                if (menus[i]?.TabItemMenu == null) continue;
                 menus[i].TabItemMenu.Reset();
             }
         }
@@ -168,6 +168,7 @@ namespace Practice.Services
                     TabItemMenuChangeAction(_lastSelectedMenuBar, null);
                 }
 
+                menu.SetSelectedState(tru);
                 _lastSelectedMenuBar = menu;
                 return;
             }
@@ -197,11 +198,7 @@ namespace Practice.Services
                 ViewModelLocator.SetAutoWireViewModel(view, true);
             }
 
-            // 自动订阅 NotifyIconEvent 事件
-            if (userControl?.DataContext is IAutoSubscribeNotifyIconEvent model)
-            {
-                _notifyIconEventHandler.Subscribe(model);
-            }
+            NotifyIconEventSubscribe(userControl);
 
             menu.TabItemMenu.UserControl = userControl!;
             _regionViewRegistry.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, () => menu);
@@ -293,7 +290,11 @@ namespace Practice.Services
         private void ToCloseTabItemMenu(MenuBar menu)
         {
             Region.Remove(menu);
-            ViewDispose(menu);
+
+            var userControl = (UserControl)menu.TabItemMenu.UserControl;
+
+            NotifyIconEventUnsubscribe(userControl);
+            ViewDispose(userControl);
             menu.TabItemMenu.Reset();
         }
 
@@ -342,23 +343,51 @@ namespace Practice.Services
         /// <summary>
         /// View、ViewModel相关对象释放
         /// </summary>
-        /// <param name="oldMenu"></param>
-        protected virtual void ViewDispose(MenuBar oldMenu)
+        /// <param name="userControl"></param>
+        protected virtual void ViewDispose(UserControl userControl)
         {
-            if (oldMenu.TabItemMenu.UserControl is UserControl oldControl)
+            if (userControl.DataContext is IDisposable disposable)
             {
-                if (oldControl.DataContext is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
-
-                if (oldControl.DataContext is IAutoSubscribeNotifyIconEvent model)
-                {
-                    _notifyIconEventHandler.Unsubscribe(model);
-                }
-
-                oldControl.DataContext = null;
+                disposable.Dispose();
             }
+
+            userControl.DataContext = null;
+        }
+
+        protected virtual void SelectedMenu()
+        {
+
+        }
+
+        /// <summary>
+        /// 订阅事件
+        /// </summary>
+        /// <param name="userControl"></param>
+        protected virtual void NotifyIconEventSubscribe(UserControl? userControl)
+        {
+            // 自动订阅 NotifyIconEvent 事件
+            if (userControl?.DataContext is IAutoSubscribeNotifyIconEvent model)
+            {
+                _notifyIconEventHandler.Subscribe(model);
+            }
+        }
+
+        /// <summary>
+        /// 取消订阅
+        /// </summary>
+        /// <param name="userControl"></param>
+        protected virtual void NotifyIconEventUnsubscribe(UserControl? userControl)
+        {
+            if (userControl?.DataContext is IAutoSubscribeNotifyIconEvent model)
+            {
+                _notifyIconEventHandler.Unsubscribe(model);
+            }
+        }
+
+        public MenuBar CurrentMenuBar { get; }
+        public void SetCurrentMenuBar(MenuBar bar)
+        {
+            throw new NotImplementedException();
         }
     }
 }
