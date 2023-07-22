@@ -12,7 +12,6 @@ namespace Practice
     public partial class MainWindow : Window
     {
         private readonly INotifyIconService _notifyIconService;
-        private readonly IAutoSubscribeNotifyIconEventHandler _notifyIconEventHandler;
 
         public MainWindow(IRegionManager regionManager,
             IMenuManager menuManager,
@@ -20,7 +19,6 @@ namespace Practice
             INotifyIconService notifyIconService,
             IAutoSubscribeNotifyIconEventHandler notifyIconEventHandler)
         {
-            _notifyIconEventHandler = notifyIconEventHandler;
             _notifyIconService = notifyIconService;
             InitializeComponent();
 
@@ -37,7 +35,7 @@ namespace Practice
 
             // 通知图标初始化
             notifyIconService.Init(this, NotifyIcon);
-            _notifyIconEventHandler.Init();
+            notifyIconEventHandler.Init();
 
             this.Header.MouseDown += (sender, args) =>
             {
