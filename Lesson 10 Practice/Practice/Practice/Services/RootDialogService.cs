@@ -37,13 +37,11 @@ namespace Practice.Services
         {
             _rooDialogHost.DialogContent = new LoadingView();
             _rooDialogHost.IsOpen = true;
-            //DialogHost.Show(new LoadingView(), SystemSettingKeys.RootDialogIdentity);
         }
 
         public void LoadingStateClose()
         {
             Close();
-            //DialogHost.Close(SystemSettingKeys.RootDialogIdentity);
         }
     }
 }

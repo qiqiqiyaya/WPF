@@ -1,49 +1,62 @@
-﻿using Practice.Events;
+﻿using System;
+using Practice.Events;
 using Prism.Events;
-using System.Collections.Generic;
+using System.Windows.Controls;
+#pragma warning disable CS8618
 
 namespace Practice.Core
 {
     /// <summary>
     /// 单例处理器
     /// </summary>
-    public class AutoSubscribeNotifyIconEventHandler : IAutoSubscribeNotifyIconEventHandler
+    public class AutoSubscribeNotifyIconEventHandler : IAutoSubscribeNotifyIconEventHandler, IDisposable
     {
-        private readonly Dictionary<string, SubscriptionToken> _container;
-        private readonly object _lock = new object();
-        private readonly NotifyIconEvent _notifyIconEvent;
+        private readonly ICurrentMenuBar _currentMenuBar;
+        private readonly IEventAggregator _eventAggregator;
+        private SubscriptionToken _token;
 
-        public AutoSubscribeNotifyIconEventHandler(IEventAggregator eventAggregator)
+        public AutoSubscribeNotifyIconEventHandler(IEventAggregator eventAggregator, ICurrentMenuBar currentMenuBar)
         {
-            _notifyIconEvent = eventAggregator.GetEvent<NotifyIconEvent>();
-            _container = new Dictionary<string, SubscriptionToken>();
+            _eventAggregator = eventAggregator;
+            _currentMenuBar = currentMenuBar;
         }
 
         /// <summary>
         /// 自动订阅 <see cref="NotifyIconEvent"/> 事件
         /// </summary>
-        /// <param name="model"></param>
-        public void Subscribe(IAutoSubscribeNotifyIconEvent model)
+        public void Init()
         {
-            lock (_lock)
+            // 订阅事件
+            _token = _eventAggregator.GetEvent<NotifyIconEvent>().Subscribe(state =>
             {
-                var token = _notifyIconEvent.Subscribe(model.Subscribe);
-                var key = model.GetType().FullName;
-                _container.Add(key!, token);
-            }
+                //程序初始化完成后，ICurrentMenuBar 必定存在值
+
+                // 获取当前ViewModel
+                var viewModel = GetSubscribeViewModel();
+                if (viewModel == null) return;
+
+                // 触发当前主界面选中的菜单，视图模型
+                viewModel.Subscribe(state);
+            });
         }
 
-        public void Unsubscribe(IAutoSubscribeNotifyIconEvent model)
+        private IAutoSubscribeNotifyIconEvent? GetSubscribeViewModel()
         {
-            lock (_lock)
+            var menuBar = _currentMenuBar.CurrentMenuBar;
+            var userControl = (UserControl)menuBar.TabItemMenu.UserControl;
+            var viewModel = userControl.DataContext;
+
+            if (viewModel is IAutoSubscribeNotifyIconEvent model)
             {
-                var key = model.GetType().FullName;
-                if (_container.TryGetValue(key!, out SubscriptionToken? token))
-                {
-                    token?.Dispose();
-                    _container.Remove(key!);
-                }
+                return model;
             }
+
+            return null;
+        }
+
+        public void Dispose()
+        {
+            _token.Dispose();
         }
     }
 }

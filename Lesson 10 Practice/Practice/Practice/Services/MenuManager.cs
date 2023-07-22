@@ -17,13 +17,13 @@ using System.Windows.Controls;
 
 namespace Practice.Services
 {
-    public class MenuManager : ReactiveObject, IMenuManager, ICurrentMenuBar
+    public class MenuManager : ReactiveObject, IMenuManager
     {
         private readonly IMenuProvider _menuProvider;
         private readonly IRegionViewRegistry _regionViewRegistry;
         private readonly SafetyUiActionService _safetyUiActionService;
         private readonly IContainerExtension _containerProvider;
-        private readonly IAutoSubscribeNotifyIconEventHandler _notifyIconEventHandler;
+        private readonly ICurrentMenuBar _currentMenuBar;
 
         /// <summary>
         /// 内容显示区域
@@ -34,17 +34,15 @@ namespace Practice.Services
             IRegionViewRegistry regionViewRegistry,
             SafetyUiActionService safetyUiActionService,
             IContainerExtension containerProvider,
-            IAutoSubscribeNotifyIconEventHandler notifyIconEventHandler)
+            ICurrentMenuBar currentMenuBar)
         {
+            _currentMenuBar = currentMenuBar;
             _menuProvider = menuProvider;
             _regionViewRegistry = regionViewRegistry;
             _safetyUiActionService = safetyUiActionService;
             _containerProvider = containerProvider;
-            _notifyIconEventHandler = notifyIconEventHandler;
-
             _menuItems = new ObservableCollection<MenuBar>();
         }
-
 
         private ObservableCollection<MenuBar> _menuItems;
 
@@ -168,8 +166,8 @@ namespace Practice.Services
                     TabItemMenuChangeAction(_lastSelectedMenuBar, null);
                 }
 
-                menu.SetSelectedState(tru);
                 _lastSelectedMenuBar = menu;
+                _currentMenuBar.SetCurrentMenuBar(menu);
                 return;
             }
 
@@ -179,6 +177,7 @@ namespace Practice.Services
                 TabItemMenuChangeAction(_lastSelectedMenuBar, menu);
                 TabItemMenuSelectedIndex = menu.TabItemMenu.Index;
                 _lastSelectedMenuBar = menu;
+                _currentMenuBar.SetCurrentMenuBar(menu);
             }
         }
 
@@ -198,9 +197,8 @@ namespace Practice.Services
                 ViewModelLocator.SetAutoWireViewModel(view, true);
             }
 
-            NotifyIconEventSubscribe(userControl);
-
             menu.TabItemMenu.UserControl = userControl!;
+            // 设置区域里的值
             _regionViewRegistry.RegisterViewWithRegion(SystemSettingKeys.TabMenuRegion, () => menu);
         }
 
@@ -216,6 +214,7 @@ namespace Practice.Services
                 TabItemMenuChangeAction(_lastSelectedMenuBar, newMenu);
                 MenuSelectIndex = newMenu.Index;
                 _lastSelectedMenuBar = newMenu;
+                _currentMenuBar.SetCurrentMenuBar(newMenu);
             }
         }
 
@@ -232,13 +231,17 @@ namespace Practice.Services
                 _lastSelectedMenuBar = MenuItems[0];
                 TabItemMenuChangeAction(null, _lastSelectedMenuBar);
 
-                var list = Region.Views.Cast<MenuBar>().Where(x => x.TabItemMenu.CloseBtn == Visibility.Visible)
-                    .Reverse()
-                    .ToList();
+                var list = Region.Views.Cast<MenuBar>().Reverse();
                 foreach (var menuBar in list)
                 {
-                    ToCloseTabItemMenu(menuBar);
+                    if (menuBar.TabItemMenu.CloseBtn == Visibility.Visible)
+                    {
+                        ToCloseTabItemMenu(menuBar);
+                    }
                 }
+
+                // 关闭所有菜单，除 Home 外
+                _currentMenuBar.SetCurrentMenuBar((MenuBar)Region.Views.First());
 
                 _doingRemoveAllAction = false;
             }, 150);
@@ -266,6 +269,7 @@ namespace Practice.Services
                     MenuSelectIndex = prev.Index;
                     TabItemMenuChangeAction(null, prev);
                     _lastSelectedMenuBar = prev;
+                    _currentMenuBar.SetCurrentMenuBar(prev);
                 }
                 else
                 {
@@ -275,6 +279,7 @@ namespace Practice.Services
                     MenuSelectIndex = next.Index;
                     TabItemMenuChangeAction(null, next);
                     _lastSelectedMenuBar = next;
+                    _currentMenuBar.SetCurrentMenuBar(next);
                 }
             }
 
@@ -293,7 +298,6 @@ namespace Practice.Services
 
             var userControl = (UserControl)menu.TabItemMenu.UserControl;
 
-            NotifyIconEventUnsubscribe(userControl);
             ViewDispose(userControl);
             menu.TabItemMenu.Reset();
         }
@@ -352,42 +356,6 @@ namespace Practice.Services
             }
 
             userControl.DataContext = null;
-        }
-
-        protected virtual void SelectedMenu()
-        {
-
-        }
-
-        /// <summary>
-        /// 订阅事件
-        /// </summary>
-        /// <param name="userControl"></param>
-        protected virtual void NotifyIconEventSubscribe(UserControl? userControl)
-        {
-            // 自动订阅 NotifyIconEvent 事件
-            if (userControl?.DataContext is IAutoSubscribeNotifyIconEvent model)
-            {
-                _notifyIconEventHandler.Subscribe(model);
-            }
-        }
-
-        /// <summary>
-        /// 取消订阅
-        /// </summary>
-        /// <param name="userControl"></param>
-        protected virtual void NotifyIconEventUnsubscribe(UserControl? userControl)
-        {
-            if (userControl?.DataContext is IAutoSubscribeNotifyIconEvent model)
-            {
-                _notifyIconEventHandler.Unsubscribe(model);
-            }
-        }
-
-        public MenuBar CurrentMenuBar { get; }
-        public void SetCurrentMenuBar(MenuBar bar)
-        {
-            throw new NotImplementedException();
         }
     }
 }

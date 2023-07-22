@@ -7,6 +7,7 @@ using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 using Practice.Core;
+#pragma warning disable CS8618
 
 namespace Practice.ViewModels
 {

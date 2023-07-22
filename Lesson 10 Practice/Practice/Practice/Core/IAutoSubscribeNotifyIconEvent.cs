@@ -6,7 +6,7 @@ namespace Practice.Core
     /// 订阅 <see cref="NotifyIconEvent"/> 事件 
     /// </summary>
     /// <remarks>
-    /// 当tab菜单处于指定Viewmodel时，才会触发
+    /// 当tab菜单处于主界面选择的View时，才会触发
     /// </remarks>
     public interface IAutoSubscribeNotifyIconEvent
     {

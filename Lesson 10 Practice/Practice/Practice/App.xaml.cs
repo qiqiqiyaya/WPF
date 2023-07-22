@@ -11,7 +11,6 @@ using Practice.Services.Interfaces;
 using Practice.ViewModels;
 using Practice.Views;
 using Prism.DryIoc;
-using Prism.Events;
 using Prism.Ioc;
 using Prism.Regions;
 using Serilog;
@@ -86,8 +85,6 @@ namespace Practice
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            //var regionManager = containerRegistry.Resolve<IRegionManager>();
-
             containerRegistry.RegisterForNavigation<MainWindow, MainWindowViewModel>();
             containerRegistry.RegisterForNavigation<HomeView, HomeViewModel>("Home");
             containerRegistry.RegisterForNavigation<WorkingSoftwareView, WorkingSoftwareViewModel>("WorkingSoftware");
@@ -110,6 +107,7 @@ namespace Practice
             });
             containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
             containerRegistry.RegisterSingleton<IAutoSubscribeNotifyIconEventHandler, AutoSubscribeNotifyIconEventHandler>();
+            containerRegistry.RegisterSingleton<ICurrentMenuBar, CacheCurrentMenuBar>();
 
             // Transient
             containerRegistry.Register<IMenuProvider, MenuProvider>();

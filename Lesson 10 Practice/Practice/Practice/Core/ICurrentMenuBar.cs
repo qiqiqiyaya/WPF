@@ -5,6 +5,9 @@ namespace Practice.Core
     /// <summary>
     /// 当前菜单
     /// </summary>
+    /// <remarks>
+    /// 线程安全
+    /// </remarks>
     public interface ICurrentMenuBar
     {
         /// <summary>

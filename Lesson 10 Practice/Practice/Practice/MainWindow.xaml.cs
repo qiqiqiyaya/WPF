@@ -1,12 +1,8 @@
 ﻿using Practice.Core;
-using Practice.Services;
 using Practice.Services.Interfaces;
-using Prism.Commands;
-using Prism.Events;
 using Prism.Regions;
 using System.Windows;
 using System.Windows.Input;
-using Practice.Events;
 
 namespace Practice
 {
@@ -16,12 +12,15 @@ namespace Practice
     public partial class MainWindow : Window
     {
         private readonly INotifyIconService _notifyIconService;
+        private readonly IAutoSubscribeNotifyIconEventHandler _notifyIconEventHandler;
 
         public MainWindow(IRegionManager regionManager,
             IMenuManager menuManager,
             IRootDialogService rootDialogService,
-            INotifyIconService notifyIconService)
+            INotifyIconService notifyIconService,
+            IAutoSubscribeNotifyIconEventHandler notifyIconEventHandler)
         {
+            _notifyIconEventHandler = notifyIconEventHandler;
             _notifyIconService = notifyIconService;
             InitializeComponent();
 
@@ -38,6 +37,7 @@ namespace Practice
 
             // 通知图标初始化
             notifyIconService.Init(this, NotifyIcon);
+            _notifyIconEventHandler.Init();
 
             this.Header.MouseDown += (sender, args) =>
             {
