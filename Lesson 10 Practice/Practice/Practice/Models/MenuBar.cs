@@ -18,11 +18,6 @@ namespace Practice.Models
 
         public string NameSpace { get; set; }
 
-        /// <summary>
-        /// 当前菜单是否被选中
-        /// </summary>
-        public bool IsSelectedMenu { get; protected set; }
-
         private TabItemMenu _tabItemMenu;
 
         /// <summary>
@@ -41,15 +36,6 @@ namespace Practice.Models
         public void SetIndex(int index)
         {
             Index = index;
-        }
-
-        /// <summary>
-        /// 设置选中状态
-        /// </summary>
-        /// <param name="isSelected"></param>
-        public void SetSelectedState(bool isSelected)
-        {
-            IsSelectedMenu = isSelected;
         }
     }
 }

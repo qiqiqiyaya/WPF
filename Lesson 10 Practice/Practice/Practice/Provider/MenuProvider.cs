@@ -50,6 +50,11 @@ namespace Practice.Provider
                 {
                     Icon = "GestureTap", NameSpace = "", Title = "最大小化",
                     TabItemMenu = new TabItemMenu(typeof(MinimizedView))
+                },
+                new MenuBar()
+                {
+                    Icon = "TextBoxOutline", NameSpace = "", Title = "系统日志",
+                    TabItemMenu = new TabItemMenu(typeof(LogView))
                 }
             };
 
