@@ -16,5 +16,15 @@ namespace Practice.Services.Interfaces
         /// 重置相关配置
         /// </summary>
         void ResetConfiguration();
+
+        /// <summary>
+        /// 最小化
+        /// </summary>
+        void Minimized();
+
+        /// <summary>
+        /// 最大化
+        /// </summary>
+        void Maximized();
     }
 }

@@ -133,13 +133,29 @@ namespace Practice.Services
                 _systemSettingsManager.SetSetting(SystemSettingKeys.RootConfiguration, _rootConfiguration);
             }
 
-            _notifyIconEvent.Publish((PracticeWindowState)_mainWindow.WindowState);
+            _notifyIconEvent.Publish(PracticeWindowState.Tray);
+        }
+
+        /// <summary>
+        /// 最小化
+        /// </summary>
+        public void Minimized()
+        {
+            _mainWindow.WindowState = WindowState.Minimized;
+        }
+
+        /// <summary>
+        /// 最大化
+        /// </summary>
+        public void Maximized()
+        {
+            _mainWindow.WindowState = _mainWindow.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
         }
 
         /// <summary>
         /// 重置相关配置
         /// </summary>
-        public void ResetConfiguration()
+        public virtual void ResetConfiguration()
         {
             _rootConfiguration.ShowMinimizeToTrayTip = true;
             _systemSettingsManager.SetSetting(SystemSettingKeys.RootConfiguration, _rootConfiguration);

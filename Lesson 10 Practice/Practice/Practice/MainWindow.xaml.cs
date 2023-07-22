@@ -1,8 +1,13 @@
-﻿using Practice.Core;
+﻿using System;
+using Practice.Core;
+using Practice.Events;
 using Practice.Services.Interfaces;
+using Prism.Events;
 using Prism.Regions;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
+using XamlAnimatedGif;
 
 namespace Practice
 {
@@ -12,13 +17,16 @@ namespace Practice
     public partial class MainWindow : Window
     {
         private readonly INotifyIconService _notifyIconService;
+        private readonly IEventAggregator _eventAggregator;
 
         public MainWindow(IRegionManager regionManager,
             IMenuManager menuManager,
             IRootDialogService rootDialogService,
             INotifyIconService notifyIconService,
-            IAutoSubscribeNotifyIconEventHandler notifyIconEventHandler)
+            IAutoSubscribeNotifyIconEventHandler notifyIconEventHandler,
+            IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             _notifyIconService = notifyIconService;
             InitializeComponent();
 
@@ -50,26 +58,39 @@ namespace Practice
                 this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
             };
 
+            _eventAggregator.GetEvent<NotifyIconEvent>().Subscribe(res =>
+            {
+                var animator = AnimationBehavior.GetAnimator(Avatar);
+                if (animator == null) return;
+                switch (res)
+                {
+                    case PracticeWindowState.Normal:
+                    case PracticeWindowState.Maximized:
+                        if (animator.IsPaused) animator.Play();
+                        break;
+                    case PracticeWindowState.Minimized:
+                    case PracticeWindowState.Tray:
+                        animator.Pause();
+                        break;
+                }
+            });
+
             Closed += (sender, args) => { notifyIconService.MainWindowsClose(); };
         }
 
         private void Minimized_OnClick(object sender, RoutedEventArgs e)
         {
-            // 最小化
-            this.WindowState = WindowState.Minimized;
-            // 程序任务栏 隐藏
-            this.ShowInTaskbar = false;
+            _notifyIconService.Minimized();
         }
 
         private void Maximized_OnClick(object sender, RoutedEventArgs e)
         {
-            this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+            _notifyIconService.Maximized();
         }
 
         private void Close_OnClick(object sender, RoutedEventArgs e)
         {
             _notifyIconService.MainWindowsClose();
-            //this.Close();
         }
 
         /// <summary>
@@ -81,5 +102,6 @@ namespace Practice
         {
             e.Handled = true;
         }
+
     }
 }

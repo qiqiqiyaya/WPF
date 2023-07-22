@@ -58,6 +58,7 @@
 
                             <StackPanel VerticalAlignment="Center">
                                 <Image
+                                    x:Name="Avatar"
                                     Width="120"
                                     Height="120"
                                     gif:AnimationBehavior.SourceUri="Resources/R.gif"
