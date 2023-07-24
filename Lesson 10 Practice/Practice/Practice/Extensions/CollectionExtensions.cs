@@ -100,7 +100,7 @@ public static class CollectionExtensions
     /// <typeparam name="T">Type of the items in the collection</typeparam>
     /// <param name="source">The collection</param>
     /// <param name="predicate">The condition to remove the items</param>
-    /// <returns>List of removed items</returns>
+    /// <returns>Logs of removed items</returns>
     public static IList<T> RemoveAll<T>([NotNull] this ICollection<T> source, Func<T, bool> predicate)
     {
         var items = source.Where(predicate).ToList();

@@ -20,21 +20,10 @@ namespace Practice.Extensions
                 if (t.IsFaulted && t.Exception != null)
                 {
                     var ex = t.Exception.GetBaseException();
-                    Log.Information(ex, "The exception occurrences in task.");
+                    string msg = ex.Message ?? "The exception occurrences in task.";
+                    Log.Information(ex, msg);
                 }
             }, TaskContinuationOptions.OnlyOnFaulted);
         }
-
-        //public static void RunAndForget(this Task task)
-        //{
-        //    task.ContinueWith(t =>
-        //    {
-        //        if (t.IsFaulted && t.Exception != null)
-        //        {
-        //            var ex = t.Exception.GetBaseException();
-        //            Log.Information(ex, "The exception occurrences in task.");
-        //        }
-        //    }, TaskContinuationOptions.OnlyOnFaulted);
-        //}
     }
 }

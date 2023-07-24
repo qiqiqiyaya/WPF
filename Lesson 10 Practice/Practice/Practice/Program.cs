@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Practice.Core;
+using Serilog;
 using System;
 
 namespace Practice
@@ -15,9 +16,10 @@ namespace Practice
                 .MinimumLevel.Information()
                 .Enrich.FromLogContext()
                 // 滚动日志，按天，最多保存最近15天内的日志
-                .WriteTo.Async(c => c.File($"Logs/logs.txt",
+                .WriteTo.Async(c => c.File($"Logs/Logs.txt",
                     rollingInterval: RollingInterval.Day,
                     retainedFileCountLimit: 15))
+                .WriteTo.SQLite(SystemSettingKeys.SqlitePath)
                 .CreateLogger();
 
             Log.Logger.Information("应用程序启动");

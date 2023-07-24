@@ -168,7 +168,7 @@
                             VerticalAlignment="Center"
                             AutomationProperties.Name="Material Design In XAML Toolkit"
                             FontSize="22"
-                            Text="To Do List" />
+                            Text="To Do Logs" />
 
                         <StackPanel Grid.Column="2" Orientation="Horizontal">
 

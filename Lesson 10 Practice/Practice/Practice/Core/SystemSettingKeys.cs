@@ -28,5 +28,15 @@
 
 
         public static string RootConfiguration = nameof(RootConfiguration);
+
+        /// <summary>
+        /// Sqlite 数据路径
+        /// </summary>
+        public static string SqlitePath = "Db/PracticeData.db";
+
+        /// <summary>
+        /// 分页，默认20行
+        /// </summary>
+        public const int RowNumber = 20;
     }
 }

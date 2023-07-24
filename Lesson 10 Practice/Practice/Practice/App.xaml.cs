@@ -5,6 +5,8 @@ using Practice.Core;
 using Practice.Core.Configuration;
 using Practice.Core.RegionAdapterMappings;
 using Practice.Provider;
+using Practice.Provider.DBContext;
+using Practice.Provider.interfaces;
 using Practice.Provider.Interfaces;
 using Practice.Services;
 using Practice.Services.Interfaces;
@@ -114,7 +116,10 @@ namespace Practice
             containerRegistry.Register<IAppInfoProvider, AppInfoProvider>();
             containerRegistry.Register<IAppInfoManager, AppInfoManager>();
             containerRegistry.Register<IAutoStartupService, AutoStartupService>();
+            containerRegistry.Register<ILogProvider, LogProvider>();
 
+            // Scope
+            containerRegistry.RegisterScoped<IPracticeDataDbContext, PracticeDataDbContext>();
         }
 
         protected override Window CreateShell()

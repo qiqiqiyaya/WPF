@@ -59,7 +59,7 @@ namespace Practice.Services
 
             try
             {
-                //Result<List<AppIcon>> iconResult = new Result<List<AppIcon>>();
+                //Result<Logs<AppIcon>> iconResult = new Result<Logs<AppIcon>>();
 
 
 

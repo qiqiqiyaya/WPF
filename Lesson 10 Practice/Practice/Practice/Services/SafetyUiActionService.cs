@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Practice.Extensions;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Serilog;
 
 namespace Practice.Services
 {
@@ -25,7 +25,21 @@ namespace Practice.Services
             {
                 await Task.Delay(delay);
                 UiDispatcher.Invoke(action);
-            });
+            }).FireAndForget();
+        }
+
+        /// <summary>
+        /// 执行操作后，在执行等待指定时间
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="delay"></param>
+        public void ActionThenDelay(Action action, int delay)
+        {
+            Task.Run(async () =>
+            {
+                UiDispatcher.Invoke(action);
+                await Task.Delay(delay);
+            }).FireAndForget();
         }
 
         /// <summary>
@@ -38,7 +52,7 @@ namespace Practice.Services
             {
                 var uiAction = await function();
                 UiDispatcher.Invoke(uiAction);
-            });
+            }).FireAndForget();
         }
 
         /// <summary>

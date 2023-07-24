@@ -14,5 +14,7 @@
         /// 默认值 true
         /// </remarks>
         public bool ShowMinimizeToTrayTip { get; set; } = true;
+
+
     }
 }

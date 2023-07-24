@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using System.Threading.Tasks;
 
 namespace Practice.Services.Interfaces
 {
@@ -10,8 +11,20 @@ namespace Practice.Services.Interfaces
 
         void Close();
 
-        void LoadingStateShow();
+        /// <summary>
+        /// loading 加载状态展示
+        /// </summary>
+        void LoadingShow();
 
-        void LoadingStateClose();
+        /// <summary>
+        /// loading 加载状态展示，默认延时 500ms ，防止画面一闪而过。
+        /// </summary>
+        /// <param name="delay"></param>
+        Task LoadingShowAsync(int delay = 500);
+
+        /// <summary>
+        /// 加载状态关闭
+        /// </summary>
+        void LoadingClose();
     }
 }
