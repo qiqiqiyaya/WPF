@@ -24,6 +24,7 @@ namespace Practice
 
             try
             {
+
                 var app = new App();
                 app.InitializeComponent();
                 app.Run();

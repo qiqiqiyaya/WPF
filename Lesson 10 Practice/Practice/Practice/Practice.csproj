@@ -92,6 +92,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Provider\DBContext\" />
 		<Folder Include="Services\Models\" />
 	</ItemGroup>
 

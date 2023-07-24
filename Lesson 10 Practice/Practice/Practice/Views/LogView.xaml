@@ -20,18 +20,11 @@
             CanUserAddRows="False"
             ItemsSource="{Binding List}">
             <!--  列的头部标题居中  -->
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="DataGridColumnHeader">
+            <!--<DataGrid.ColumnHeaderStyle>
+                <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="DataGridColumnHeader">
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                 </Style>
-            </DataGrid.ColumnHeaderStyle>
-            <DataGrid.CellStyle>
-                <!--  列的文本居中  -->
-                <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="HorizontalAlignment" Value="Center" />
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                </Style>
-            </DataGrid.CellStyle>
+            </DataGrid.ColumnHeaderStyle>-->
             <DataGrid.Columns>
                 <DataGridTextColumn
                     MaxWidth="220"
@@ -50,19 +43,14 @@
                 <DataGridTemplateColumn Header="Action">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Margin="0" Orientation="Horizontal">
                                 <Button
-                                    Content="Edit"
-                                    Style="{StaticResource MaterialDesignFlatButton}"
-                                    ToolTip="MaterialDesignFlatButton" />
-                                <Button
-                                    Content="Edit"
-                                    Style="{StaticResource MaterialDesignFlatButton}"
-                                    ToolTip="MaterialDesignFlatButton" />
-                                <Button
-                                    Content="Edit"
-                                    Style="{StaticResource MaterialDesignFlatButton}"
-                                    ToolTip="MaterialDesignFlatButton" />
+                                    Height="22"
+                                    Margin="0"
+                                    Padding="2"
+                                    Style="{StaticResource MaterialDesignFlatButton}">
+                                    <TextBlock FontSize="13" Text="Detail" />
+                                </Button>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
