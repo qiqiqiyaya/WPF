@@ -2,11 +2,11 @@
     x:Class="Practice.Views.LogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:Practice.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Practice.Models"
-    xmlns:pagination="clr-namespace:Practice.Common.Pagination"
     xmlns:viewModels="clr-namespace:Practice.ViewModels"
     Name="LogViewUserControl"
     d:DataContext="{d:DesignInstance viewModels:LogViewModel}"
@@ -39,20 +39,21 @@
                     MaxWidth="100"
                     Binding="{Binding Id}"
                     CanUserSort="False"
-                    Header="Title"
+                    Header="Id"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="200"
                     Binding="{Binding Timestamp}"
-                    Header="Index" />
+                    Header="Timestamp" />
                 <DataGridTextColumn
                     MaxWidth="250"
                     Binding="{Binding Level}"
-                    Header="Icon" />
+                    Header="Level" />
                 <DataGridTextColumn
                     MinWidth="350"
+                    MaxWidth="450"
                     Binding="{Binding RenderedMessage}"
-                    Header="Icon" />
+                    Header="RenderedMessage" />
                 <DataGridTemplateColumn MaxWidth="300" Header="Action">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type models:LogDetail}">
@@ -83,6 +84,13 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <pagination:Pagination Grid.Row="1" />
+        <common:Pagination
+            Grid.Row="1"
+            Margin="0,15,0,0"
+            Command="{Binding Path=PageChangedCommand}"
+            PageChanged="Pagination_OnPageChanged"
+            PageNumber="{Binding Path=PageNumber}"
+            PageSize="{Binding PageSize}"
+            Total="{Binding Total}" />
     </Grid>
 </UserControl>

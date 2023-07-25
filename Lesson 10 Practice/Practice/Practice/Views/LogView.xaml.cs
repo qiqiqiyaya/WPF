@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Practice.Views
@@ -20,6 +21,11 @@ namespace Practice.Views
             eventArg.Source = sender;
             // 事件上浮，让外界的那个滚动条滚动
             RaiseEvent(eventArg);
+        }
+
+        private void Pagination_OnPageChanged(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

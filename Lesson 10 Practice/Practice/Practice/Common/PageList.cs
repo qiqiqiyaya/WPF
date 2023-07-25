@@ -1,6 +1,4 @@
-﻿#pragma warning disable CS8618
-
-namespace Practice.Common
+﻿namespace Practice.Common
 {
     public class PageList<T>
     {

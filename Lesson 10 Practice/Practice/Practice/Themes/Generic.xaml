@@ -2,7 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="clr-namespace:Practice.Common"
-    xmlns:local="clr-namespace:Practice">
+    xmlns:local="clr-namespace:Practice"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
     <Style TargetType="{x:Type common:Blockquote}">
         <Setter Property="Margin" Value="0,0,0,15" />
@@ -24,6 +25,53 @@
                             <ContentPresenter />
                         </Border>
                     </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style BasedOn="{StaticResource MaterialDesignFlatButton}" TargetType="{x:Type common:PaginationButton}">
+        <Setter Property="Padding" Value="10,0" />
+    </Style>
+
+    <Style TargetType="{x:Type common:Pagination}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type common:Pagination}">
+                    <WrapPanel>
+                        <common:PaginationButton
+                            x:Name="PART_PREV"
+                            Margin="0,0,10,0"
+                            Style="{StaticResource MaterialDesignRaisedButton}">
+                            <materialDesign:PackIcon Kind="ChevronLeft" />
+                        </common:PaginationButton>
+                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        <common:PaginationButton
+                            x:Name="PART_Next"
+                            Margin="10,0,0,0"
+                            Style="{StaticResource MaterialDesignRaisedButton}">
+                            <materialDesign:PackIcon Kind="ChevronRight" />
+                        </common:PaginationButton>
+
+                        <Label
+                            Margin="10,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=Total}"
+                            ContentStringFormat="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=ContentStringFormat}" />
+                        <ComboBox
+                            Margin="10,0"
+                            ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=PageSizeSource}"
+                            SelectedValue="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=PageSize}" />
+                        <Label VerticalContentAlignment="Center" Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=GotoFormat}" />
+                        <TextBox
+                            Width="30"
+                            Margin="10,0,0,0"
+                            HorizontalContentAlignment="Center"
+                            IsReadOnly="True"
+                            Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=PageNumber, Mode=TwoWay}" />
+                        <Label VerticalContentAlignment="Center" Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=PageNameFormat}" />
+                    </WrapPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

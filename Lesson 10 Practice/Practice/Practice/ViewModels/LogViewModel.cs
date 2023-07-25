@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Practice.Common;
+using Practice.Core;
 using Practice.Extensions;
 using Practice.Models;
 using Practice.Provider.interfaces;
@@ -30,6 +31,8 @@ namespace Practice.ViewModels
         /// </summary>
         public DelegateCommand<LogDetail> CopyCommand { get; }
 
+        public DelegateCommand PageChangedCommand { get; }
+
         public LogViewModel(
             SafetyUiActionService safetyUiActionService,
             IContainerExtension containerProvider,
@@ -40,8 +43,30 @@ namespace Practice.ViewModels
             _containerProvider = containerProvider;
             ViewDetailCommand = new DelegateCommand<LogDetail>(OpenLogDetail);
             CopyCommand = new DelegateCommand<LogDetail>(Copy);
+            PageChangedCommand = new DelegateCommand(PageChanged);
 
             Init();
+        }
+
+        private int _pageSize = SystemSettingKeys.RowNumber;
+        public int PageSize
+        {
+            get => _pageSize;
+            set => this.RaiseAndSetIfChanged(ref _pageSize, value);
+        }
+
+        private int _pageNumber = 1;
+        public int PageNumber
+        {
+            get => _pageNumber;
+            set => this.RaiseAndSetIfChanged(ref _pageNumber, value);
+        }
+
+        private int _total = 0;
+        public int Total
+        {
+            get => _total;
+            set => this.RaiseAndSetIfChanged(ref _total, value);
         }
 
         private ObservableCollection<LogDetail> _logs = new ObservableCollection<LogDetail>();
@@ -56,17 +81,19 @@ namespace Practice.ViewModels
             _safetyUiActionService.AsyncInvokeThenUiAction(async () =>
             {
                 await _rootDialogService.LoadingShowAsync();
-                PageList<List<LogDetail>>? list = null;
+                PageList<List<LogDetail>>? pageList = null;
 
                 await _containerProvider.NewScopeAsync(async provider =>
                 {
                     var logProvider = provider.Resolve<ILogProvider>();
-                    list = await logProvider.GetPageList(1);
+                    pageList = await logProvider.GetPageList(PageNumber, PageSize);
                 });
 
                 return () =>
                 {
-                    Logs.AddRange(list!.Data);
+                    Logs.Clear();
+                    Logs.AddRange(pageList!.Data);
+                    Total = pageList.Count;
                     _rootDialogService.LoadingClose();
                 };
             });
@@ -80,6 +107,11 @@ namespace Practice.ViewModels
         protected void Copy(LogDetail detail)
         {
             Clipboard.SetText(JsonConvert.SerializeObject(detail));
+        }
+
+        protected void PageChanged()
+        {
+            Init();
         }
     }
 }

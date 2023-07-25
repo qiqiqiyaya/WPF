@@ -20,12 +20,16 @@
 
 	<ItemGroup>
 		<Compile Remove="CommonViews\**" />
+		<Compile Remove="Common\Pagination\**" />
 		<Compile Remove="obj\**" />
 		<EmbeddedResource Remove="CommonViews\**" />
+		<EmbeddedResource Remove="Common\Pagination\**" />
 		<EmbeddedResource Remove="obj\**" />
 		<None Remove="CommonViews\**" />
+		<None Remove="Common\Pagination\**" />
 		<None Remove="obj\**" />
 		<Page Remove="CommonViews\**" />
+		<Page Remove="Common\Pagination\**" />
 		<Page Remove="obj\**" />
 	</ItemGroup>
 

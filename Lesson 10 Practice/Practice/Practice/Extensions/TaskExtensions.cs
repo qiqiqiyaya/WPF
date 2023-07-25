@@ -21,7 +21,7 @@ namespace Practice.Extensions
                 {
                     var ex = t.Exception.GetBaseException();
                     string msg = ex.Message ?? "The exception occurrences in task.";
-                    Log.Information(ex, msg);
+                    Log.Error(ex, msg);
                 }
             }, TaskContinuationOptions.OnlyOnFaulted);
         }

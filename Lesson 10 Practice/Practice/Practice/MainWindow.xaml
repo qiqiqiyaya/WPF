@@ -141,7 +141,7 @@
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition x:Name="TabContentGrid" Height="*" />
                 </Grid.RowDefinitions>
                 <md:ColorZone
                     x:Name="Header"
@@ -194,7 +194,7 @@
                 <TabControl
                     x:Name="TabMenus"
                     Grid.Row="1"
-                    Margin="5,0,5,0"
+                    Margin="5,0,5,5"
                     HorizontalContentAlignment="Left"
                     d:DataContext="{d:DesignInstance models:MenuBar}"
                     prism:RegionManager.RegionName="{x:Static contract:SystemSettingKeys.TabMenuRegion}"
@@ -238,7 +238,7 @@
                             <!--  ContentControl 的 DataContext 就是每一个 item 项  -->
                             <ScrollViewer>
                                 <Border
-                                    Margin="0,3"
+                                    Margin="0"
                                     Padding="10,10,10,5"
                                     Background="{DynamicResource PrimaryHueMidForegroundBrush}"
                                     CornerRadius="5">
