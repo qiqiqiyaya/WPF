@@ -283,7 +283,7 @@ namespace Practice.Common
                             return;
                         }
 
-                        if (pagination.Command.CanExecute(pagination.PageNumber))
+                        if (pagination.Command != null && pagination.Command.CanExecute(pagination.PageNumber))
                         {
                             pagination.Command.Execute(pagination.PageNumber);
                         }
@@ -300,7 +300,7 @@ namespace Practice.Common
                         return;
                     }
 
-                    if (pagination.Command.CanExecute(page))
+                    if (pagination.Command != null && pagination.Command.CanExecute(page))
                     {
                         pagination.Command.Execute(page);
                     }
@@ -446,7 +446,7 @@ namespace Practice.Common
                         return;
                     }
 
-                    if (pagination.Command.CanExecute(newValue))
+                    if (pagination.Command != null && pagination.Command.CanExecute(newValue))
                     {
                         pagination.Command.Execute(newValue);
                     }

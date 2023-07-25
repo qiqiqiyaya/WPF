@@ -104,18 +104,6 @@
                                 RequestNavigate="Hyperlink_OnRequestNavigate">
                                 管理员权限启动程序
                             </Hyperlink>
-                            <LineBreak />
-                            <Bold>坑</Bold>
-                            ，如果设置管理员权限启动程序，系统无法启动此程序。
-                            <LineBreak />
-                            写这自启动，熬了个通宵，给所有用户设置开机启动，一直失败，,这期间看了很多帖子、博客，最终还是失败了。
-                            <Bold>给所有用户设置开机启动，程序启动时，就需要管理员权限，而系统启动程序时，怎么获取管理员权限呢？</Bold>
-                            <LineBreak />
-                            睡了一觉后，我发现可能是我思考方式进入了误区。
-                            <LineBreak />
-                            1. 一般程序在安装时，会去设置【给所有用户开机启动】。
-                            <LineBreak />
-                            2. 程序设置某些项目此，会告知用户，说明程序需要管理员权限，让用户以管理员方式启动。
                         </Paragraph>
                     </FlowDocument>
                 </FlowDocumentScrollViewer>
