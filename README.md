@@ -2,7 +2,7 @@
 .Net 6 Demo project 
 <br/>
 学习、演示项目
-![image](https://github.com/qiqiqiyaya/WPF/assets/37217632/dd38c8c0-faf5-4698-8523-f53d65b47903)
+![Demo](https://github.com/qiqiqiyaya/WPF/assets/37217632/c9c283a5-75d6-42de-b999-f996aefd3eff)
 <br/>
 ![image](https://github.com/qiqiqiyaya/WPF/assets/37217632/09cffa62-8343-48f3-bd9c-1ebc92cfc5ab)
 <br/>
