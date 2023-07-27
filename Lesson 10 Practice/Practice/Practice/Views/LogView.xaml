@@ -83,14 +83,5 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-
-        <common:Pagination
-            Grid.Row="1"
-            Margin="0,15,0,0"
-            Command="{Binding Path=PageChangedCommand}"
-            PageChanged="Pagination_OnPageChanged"
-            PageNumber="{Binding Path=PageNumber}"
-            PageSize="{Binding PageSize}"
-            Total="{Binding Total}" />
     </Grid>
 </UserControl>

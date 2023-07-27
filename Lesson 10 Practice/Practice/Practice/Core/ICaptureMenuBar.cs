@@ -8,17 +8,11 @@ namespace Practice.Core
     /// <remarks>
     /// 线程安全
     /// </remarks>
-    public interface ICurrentMenuBar
+    public interface ICaptureMenuBar
     {
         /// <summary>
         /// 当前选中的菜单
         /// </summary>
         MenuBar CurrentMenuBar { get; }
-
-        /// <summary>
-        /// 设置当前选中菜单
-        /// </summary>
-        /// <param name="bar"></param>
-        void SetCurrentMenuBar(MenuBar bar);
     }
 }

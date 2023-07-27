@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Practice.Common;
-using Practice.Core;
+using Practice.Core.BaseModels;
 using Practice.Extensions;
 using Practice.Models;
 using Practice.Provider.interfaces;
@@ -15,7 +15,7 @@ using System.Windows;
 
 namespace Practice.ViewModels
 {
-    public class LogViewModel : ReactiveObject
+    public class LogViewModel : PaginationBaseViewModel
     {
         private readonly SafetyUiActionService _safetyUiActionService;
         private readonly IContainerExtension _containerProvider;
@@ -36,7 +36,8 @@ namespace Practice.ViewModels
         public LogViewModel(
             SafetyUiActionService safetyUiActionService,
             IContainerExtension containerProvider,
-            IRootDialogService rootDialogService)
+            IRootDialogService rootDialogService,
+            IPaginationService pagination) : base(pagination)
         {
             _rootDialogService = rootDialogService;
             _safetyUiActionService = safetyUiActionService;
@@ -45,28 +46,10 @@ namespace Practice.ViewModels
             CopyCommand = new DelegateCommand<LogDetail>(Copy);
             PageChangedCommand = new DelegateCommand(PageChanged);
 
+            PaginationShow = Visibility.Visible;
+            PageNumber = 1;
+
             Init();
-        }
-
-        private int _pageSize = SystemSettingKeys.RowNumber;
-        public int PageSize
-        {
-            get => _pageSize;
-            set => this.RaiseAndSetIfChanged(ref _pageSize, value);
-        }
-
-        private int _pageNumber = 1;
-        public int PageNumber
-        {
-            get => _pageNumber;
-            set => this.RaiseAndSetIfChanged(ref _pageNumber, value);
-        }
-
-        private int _total = 0;
-        public int Total
-        {
-            get => _total;
-            set => this.RaiseAndSetIfChanged(ref _total, value);
         }
 
         private ObservableCollection<LogDetail> _logs = new ObservableCollection<LogDetail>();
@@ -109,8 +92,10 @@ namespace Practice.ViewModels
             Clipboard.SetText(JsonConvert.SerializeObject(detail));
         }
 
-        protected void PageChanged()
+        public override void PageChanged()
         {
+            var a = PageNumber;
+            var c = PageSize;
             Init();
         }
     }

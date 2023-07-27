@@ -20,6 +20,9 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using DryIoc;
+using Prism.Mvvm;
+using Practice.Events.Handlers;
 
 namespace Practice
 {
@@ -109,7 +112,9 @@ namespace Practice
             });
             containerRegistry.RegisterSingleton<INotifyIconService, NotifyIconService>();
             containerRegistry.RegisterSingleton<IAutoSubscribeNotifyIconEventHandler, AutoSubscribeNotifyIconEventHandler>();
-            containerRegistry.RegisterSingleton<ICurrentMenuBar, CacheCurrentMenuBar>();
+            containerRegistry.RegisterSingleton<ICaptureMenuBar, CacheCurrentMenuBar>();
+            containerRegistry.RegisterSingleton<IPaginationService, PaginationService>();
+            containerRegistry.RegisterSingleton<IPaginationControlViewPresentHandler, PaginationControlViewPresentHandler>();
 
             // Transient
             containerRegistry.Register<IMenuProvider, MenuProvider>();
@@ -120,6 +125,23 @@ namespace Practice
 
             // Scope
             containerRegistry.RegisterScoped<IPracticeDataDbContext, PracticeDataDbContext>();
+
+            // 重新设置底层 视图模型、绑定 、view的方法
+            //ViewModelLocationProvider.SetDefaultViewModelFactory((view, type) =>
+            //{
+            //    // 从容器中解析出 ViewModel
+            //    var viewModel = ContainerLocator.Container.Resolve(type);
+
+            //    // 设置属性注入
+            //    var container = ContainerLocator.Container.GetContainer();
+            //    if (container == null) return viewModel;
+
+            //    if (viewModel is IPagination model)
+            //    {
+            //        container.InjectPropertiesAndFields(model);
+            //    }
+            //    return viewModel;
+            //});
         }
 
         protected override Window CreateShell()

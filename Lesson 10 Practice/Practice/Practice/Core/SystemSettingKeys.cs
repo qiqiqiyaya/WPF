@@ -37,6 +37,6 @@
         /// <summary>
         /// 分页，默认20行
         /// </summary>
-        public const int RowNumber = 20;
+        public const int PageSize = 20;
     }
 }

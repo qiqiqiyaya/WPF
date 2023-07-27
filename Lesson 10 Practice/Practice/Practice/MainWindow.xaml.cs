@@ -26,7 +26,8 @@ namespace Practice
             IRootDialogService rootDialogService,
             INotifyIconService notifyIconService,
             IAutoSubscribeNotifyIconEventHandler notifyIconEventHandler,
-            IEventAggregator eventAggregator)
+            IEventAggregator eventAggregator,
+            IPaginationControlViewPresentHandler paginationControlViewPresentHandler)
         {
             _eventAggregator = eventAggregator;
             _notifyIconService = notifyIconService;
@@ -46,6 +47,7 @@ namespace Practice
             // 通知图标初始化
             notifyIconService.Init(this, NotifyIcon);
             notifyIconEventHandler.Init();
+            paginationControlViewPresentHandler.Init();
 
             this.Header.MouseDown += (sender, args) =>
             {

@@ -1,13 +1,10 @@
 ﻿using Practice.Extensions;
-using Practice.Models;
-using Prism.Commands;
 using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Button = System.Windows.Controls.Button;
 
 #pragma warning disable CS8602
@@ -20,7 +17,7 @@ namespace Practice.Common
 {
     [TemplatePart(Name = "PrevButtonTemplateName", Type = typeof(Button))]
     [TemplatePart(Name = "NextButtonTemplateName", Type = typeof(Button))]
-    public class Pagination : Selector
+    public class PaginationControl : Selector
     {
         private const string PrevButtonTemplateName = "PART_PREV";
         private const string NextButtonTemplateName = "PART_Next";
@@ -32,19 +29,14 @@ namespace Practice.Common
         private Button _prevButton;
         private Button _nextButton;
 
-        /// <summary>
-        /// 是否第一次触发事件，第一次初始化时，阻止事件粗发
-        /// </summary>
-        //public bool IsFirstRaise { get; set; } = true;
-
-        static Pagination()
+        static PaginationControl()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(Pagination), new FrameworkPropertyMetadata(typeof(Pagination)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(PaginationControl), new FrameworkPropertyMetadata(typeof(PaginationControl)));
 
             // 重写原数据
             ItemsPanelTemplate template = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(WrapPanel)));
             template.Seal();
-            ItemsPanelProperty.OverrideMetadata(typeof(Pagination), new FrameworkPropertyMetadata(template));
+            ItemsPanelProperty.OverrideMetadata(typeof(PaginationControl), new FrameworkPropertyMetadata(template));
         }
 
         /// <summary>
@@ -54,7 +46,7 @@ namespace Practice.Common
             DependencyProperty.Register(
                 nameof(Command),
                 typeof(ICommand),
-                typeof(Pagination),
+                typeof(PaginationControl),
                 new FrameworkPropertyMetadata((ICommand)null!));
 
         /// <summary>
@@ -71,7 +63,7 @@ namespace Practice.Common
         public static readonly RoutedEvent PageChangedEvent = EventManager.RegisterRoutedEvent(nameof(PageChangedEvent),
             RoutingStrategy.Direct,
             typeof(RoutedPropertyChangedEventArgs<int>),
-            typeof(Pagination));
+            typeof(PaginationControl));
 
         /// <summary>
         /// PageChanging事件
@@ -85,8 +77,8 @@ namespace Practice.Common
         public static readonly DependencyProperty PageSizeSourceProperty =
             DependencyProperty.Register(nameof(PageSizeSource),
                 typeof(int[]),
-                typeof(Pagination),
-                new PropertyMetadata(new int[5] { 20, 30, 40, 50, 60 }));
+                typeof(PaginationControl),
+                new PropertyMetadata(new[] { 20, 30, 40, 50, 60 }));
 
         /// <summary>
         /// 每页行数显示
@@ -100,7 +92,7 @@ namespace Practice.Common
         public static readonly DependencyProperty PageSizeProperty =
             DependencyProperty.Register(nameof(PageSize),
                 typeof(int),
-                typeof(Pagination),
+                typeof(PaginationControl),
                 new FrameworkPropertyMetadata(20, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, PageSizeChange));
 
         /// <summary>
@@ -124,7 +116,7 @@ namespace Practice.Common
         public static readonly DependencyProperty TotalPageCountProperty =
             DependencyProperty.Register(nameof(TotalPageCount),
                 typeof(int),
-                typeof(Pagination),
+                typeof(PaginationControl),
                 new PropertyMetadata(0));
 
         /// <summary>
@@ -139,7 +131,7 @@ namespace Practice.Common
         public static readonly DependencyProperty TotalProperty =
             DependencyProperty.Register(nameof(Total),
                 typeof(int),
-                typeof(Pagination),
+                typeof(PaginationControl),
                 new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RoutedRaiseEvent));
 
         /// <summary>
@@ -154,8 +146,8 @@ namespace Practice.Common
         public static readonly DependencyProperty PageNumberProperty =
             DependencyProperty.Register(nameof(PageNumber),
                 typeof(int),
-                typeof(Pagination),
-                new FrameworkPropertyMetadata(1, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RoutedRaiseEvent));
+                typeof(PaginationControl),
+                new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, RoutedRaiseEvent));
 
         /// <summary>
         /// 页码按钮的数量，当总页数超过该值时会折叠  大于等于 5 且小于等于 21 的奇数
@@ -172,16 +164,16 @@ namespace Practice.Common
         public static readonly DependencyProperty ButtonCountProperty =
             DependencyProperty.Register(nameof(ButtonCount),
                 typeof(int),
-                typeof(Pagination),
+                typeof(PaginationControl),
                 new PropertyMetadata(7, ButtonCountChange),
                 OnPagerCountPropertyValidate);
 
         public override void OnApplyTemplate()
         {
-            if (Total == 0 || PageNumber == 0)
-            {
-                SetCurrentValue(VisibilityProperty, Visibility.Collapsed);
-            }
+            //if (Total == 0 || PageNumber == 0)
+            //{
+            //    SetCurrentValue(VisibilityProperty, Visibility.Collapsed);
+            //}
 
             base.OnApplyTemplate();
             _prevButton = GetTemplateChild(PrevButtonTemplateName) as Button;
@@ -192,8 +184,16 @@ namespace Practice.Common
 
             _prevButton.Click += Prev;
             _nextButton.Click += Next;
-            _prevButton.SetCurrentValue(IsEnabledProperty, PageNumber != 1);
-            _nextButton.SetCurrentValue(IsEnabledProperty, PageNumber != TotalPageCount);
+            if (Total == 0 || PageNumber == 0)
+            {
+                _prevButton.SetCurrentValue(IsEnabledProperty, false);
+                _nextButton.SetCurrentValue(IsEnabledProperty, false);
+            }
+            else
+            {
+                _prevButton.SetCurrentValue(IsEnabledProperty, PageNumber != 1);
+                _nextButton.SetCurrentValue(IsEnabledProperty, PageNumber != TotalPageCount);
+            }
 
             ButtonRender();
         }
@@ -201,15 +201,15 @@ namespace Practice.Common
         private void Next(object sender, RoutedEventArgs e)
         {
             SetCurrentValue(PageNumberProperty, PageNumber + 1);
-            ButtonRender();
-            OtherButtonRender();
+            //ButtonRender();
+            //OtherButtonRender();
         }
 
         private void Prev(object sender, RoutedEventArgs e)
         {
             SetCurrentValue(PageNumberProperty, PageNumber - 1);
-            ButtonRender();
-            OtherButtonRender();
+            //ButtonRender();
+            //OtherButtonRender();
         }
 
         #region 汉化设置
@@ -217,7 +217,7 @@ namespace Practice.Common
         public static readonly DependencyProperty PageNameFormatProperty =
             DependencyProperty.Register(nameof(PageNameFormat),
                 typeof(string),
-                typeof(Pagination),
+                typeof(PaginationControl),
                 new PropertyMetadata("页"));
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace Practice.Common
         public static readonly DependencyProperty GotoFormatProperty =
             DependencyProperty.Register(nameof(GotoFormat),
                 typeof(string),
-                typeof(Pagination),
+                typeof(PaginationControl),
                 new PropertyMetadata("前往"));
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace Practice.Common
         public static readonly DependencyProperty ContentStringFormatProperty =
             DependencyProperty.Register(nameof(ContentStringFormat),
                 typeof(string),
-                typeof(Pagination),
+                typeof(PaginationControl),
                 new PropertyMetadata("共{0}条"));
 
         /// <summary>
@@ -263,8 +263,10 @@ namespace Practice.Common
 
         private static void PageSizeChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Pagination pagination)
+            if (d is PaginationControl pagination)
             {
+                if (pagination.PageNumber == 0 || pagination.Total == 0) return;
+
                 var newValue = (int)e.NewValue;
                 var oldValue = (int)e.OldValue;
                 if (newValue > oldValue)
@@ -318,7 +320,7 @@ namespace Practice.Common
         /// <param name="e"></param>
         private static void ButtonCountChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Pagination pagination)
+            if (d is PaginationControl pagination)
             {
                 pagination.ButtonRender();
             }
@@ -329,6 +331,12 @@ namespace Practice.Common
         /// </summary>
         public void ButtonRender()
         {
+            if (Total == 0 || PageNumber == 0)
+            {
+                Items.Clear();
+                return;
+            }
+
             var pageCount = (int)Math.Ceiling((double)Total / PageSize);
             var currentPage = PageNumber;
             var pagerCount = ButtonCount;
@@ -378,7 +386,22 @@ namespace Practice.Common
 
         private void OtherButtonRender()
         {
-            if (Total == 0 || PageNumber == 0) return;
+            if (Total == 0 || PageNumber == 0)
+            {
+                //if (TotalPageCount != 0)
+                //{
+                //    SetCurrentValue(TotalPageCountProperty, 0);
+                //}
+
+                if (_prevButton != null && _nextButton != null &&
+                (_prevButton.IsEnabled || _nextButton.IsEnabled))
+                {
+                    _prevButton?.SetCurrentValue(IsEnabledProperty, false);
+                    _nextButton?.SetCurrentValue(IsEnabledProperty, false);
+                }
+
+                return;
+            }
 
             var pageCount = (int)Math.Ceiling((double)Total / PageSize);
             SetCurrentValue(TotalPageCountProperty, pageCount);
@@ -434,8 +457,10 @@ namespace Practice.Common
 
         private static void RoutedRaiseEvent(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Pagination pagination)
+            if (d is PaginationControl pagination)
             {
+                if (pagination.Total == 0 || pagination.PageNumber == 0) return;
+
                 if (e.Property == PageNumberProperty)
                 {
                     var newValue = (int)e.NewValue;
@@ -454,10 +479,6 @@ namespace Practice.Common
 
                 pagination.ButtonRender();
                 pagination.OtherButtonRender();
-                if (pagination.Total > 0 && pagination.PageNumber > 0)
-                {
-                    pagination.SetValue(VisibilityProperty, Visibility.Visible);
-                }
             }
         }
     }

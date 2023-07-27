@@ -1,8 +1,10 @@
 ﻿using Practice.Core;
+using Practice.Events;
 using Practice.Extensions;
 using Practice.Models;
 using Practice.Provider.Interfaces;
 using Practice.Services.Interfaces;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -23,7 +25,15 @@ namespace Practice.Services
         private readonly IRegionViewRegistry _regionViewRegistry;
         private readonly SafetyUiActionService _safetyUiActionService;
         private readonly IContainerExtension _containerProvider;
-        private readonly ICurrentMenuBar _currentMenuBar;
+        /// <summary>
+        /// 菜单变更事件
+        /// </summary>
+        private readonly MenuChangedEvent _menuChangedEvent;
+
+        /// <summary>
+        /// 菜单变更之前
+        /// </summary>
+        private readonly MenuChangingEvent _menuChangingEvent;
 
         /// <summary>
         /// 内容显示区域
@@ -34,14 +44,17 @@ namespace Practice.Services
             IRegionViewRegistry regionViewRegistry,
             SafetyUiActionService safetyUiActionService,
             IContainerExtension containerProvider,
-            ICurrentMenuBar currentMenuBar)
+            IEventAggregator eventAggregator)
         {
-            _currentMenuBar = currentMenuBar;
             _menuProvider = menuProvider;
             _regionViewRegistry = regionViewRegistry;
             _safetyUiActionService = safetyUiActionService;
             _containerProvider = containerProvider;
             _menuItems = new ObservableCollection<MenuBar>();
+
+            // 菜单变更事件
+            _menuChangedEvent = eventAggregator.GetEvent<MenuChangedEvent>();
+            _menuChangingEvent = eventAggregator.GetEvent<MenuChangingEvent>();
         }
 
         private ObservableCollection<MenuBar> _menuItems;
@@ -159,6 +172,7 @@ namespace Practice.Services
                 var count = Region.Views.Count();
                 menu.TabItemMenu.SetIndex(Region.Views.Any() ? count : 0);
 
+                _menuChangingEvent.Publish(_lastSelectedMenuBar);
                 TabItemMenuSelectedIndex = menu.TabItemMenu.Index;
                 TabContentResolve(menu);
                 if (count >= 1 && _lastSelectedMenuBar != null)
@@ -167,17 +181,19 @@ namespace Practice.Services
                 }
 
                 _lastSelectedMenuBar = menu;
-                _currentMenuBar.SetCurrentMenuBar(menu);
+                _menuChangedEvent.Publish(menu);
                 return;
             }
 
             // 后续，菜单 或 tabItem 切换时
             if (_tabItemMenuSelectedIndex != menu.TabItemMenu.Index)
             {
+                _menuChangingEvent.Publish(_lastSelectedMenuBar);
+
                 TabItemMenuChangeAction(_lastSelectedMenuBar, menu);
                 TabItemMenuSelectedIndex = menu.TabItemMenu.Index;
                 _lastSelectedMenuBar = menu;
-                _currentMenuBar.SetCurrentMenuBar(menu);
+                _menuChangedEvent.Publish(menu);
             }
         }
 
@@ -211,10 +227,12 @@ namespace Practice.Services
             if (newMenu == null || _doingRemoveAction || _doingRemoveAllAction) return;
             if (_menuSelectIndex != newMenu.Index)
             {
+                _menuChangingEvent.Publish(_lastSelectedMenuBar);
+
                 TabItemMenuChangeAction(_lastSelectedMenuBar, newMenu);
                 MenuSelectIndex = newMenu.Index;
                 _lastSelectedMenuBar = newMenu;
-                _currentMenuBar.SetCurrentMenuBar(newMenu);
+                _menuChangedEvent.Publish(newMenu);
             }
         }
 
@@ -229,6 +247,8 @@ namespace Practice.Services
                 MenuSelectIndex = 0;
                 TabItemMenuSelectedIndex = 0;
                 _lastSelectedMenuBar = MenuItems[0];
+                _menuChangingEvent.Publish(_lastSelectedMenuBar);
+
                 TabItemMenuChangeAction(null, _lastSelectedMenuBar);
 
                 var list = Region.Views.Cast<MenuBar>().Reverse();
@@ -241,7 +261,7 @@ namespace Practice.Services
                 }
 
                 // 关闭所有菜单，除 Home 外
-                _currentMenuBar.SetCurrentMenuBar((MenuBar)Region.Views.First());
+                _menuChangedEvent.Publish((MenuBar)Region.Views.First());
 
                 _doingRemoveAllAction = false;
             }, 150);
@@ -262,6 +282,8 @@ namespace Practice.Services
                 // 当前项是否是最后一项
                 if (count - 1 == TabItemMenuSelectedIndex)
                 {
+                    _menuChangingEvent.Publish(_lastSelectedMenuBar);
+
                     // tabItem项向前移设置，选中项
                     TabItemMenuSelectedIndex -= 1;
                     // 设置菜单选中项
@@ -269,17 +291,19 @@ namespace Practice.Services
                     MenuSelectIndex = prev.Index;
                     TabItemMenuChangeAction(null, prev);
                     _lastSelectedMenuBar = prev;
-                    _currentMenuBar.SetCurrentMenuBar(prev);
+                    _menuChangedEvent.Publish(prev);
                 }
                 else
                 {
+                    _menuChangingEvent.Publish(_lastSelectedMenuBar);
+
                     // tabItem项向后移设置，选中项
                     var nextIndex = TabItemMenuSelectedIndex + 1;
                     var next = (MenuBar)TabItemMenus.First(x => ((MenuBar)x).TabItemMenu.Index == nextIndex);
                     MenuSelectIndex = next.Index;
                     TabItemMenuChangeAction(null, next);
                     _lastSelectedMenuBar = next;
-                    _currentMenuBar.SetCurrentMenuBar(next);
+                    _menuChangedEvent.Publish(next);
                 }
             }
 

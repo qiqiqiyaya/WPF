@@ -18,7 +18,7 @@ namespace Practice.Provider
             _dbContext = dbContext;
         }
 
-        public async Task<PageList<List<LogDetail>>> GetPageList(int page, int rowNumber = SystemSettingKeys.RowNumber)
+        public async Task<PageList<List<LogDetail>>> GetPageList(int page, int rowNumber = SystemSettingKeys.PageSize)
         {
             var list = await _dbContext.Log
                 .OrderByDescending(s => s.Timestamp)

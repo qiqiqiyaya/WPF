@@ -1,7 +1,7 @@
-﻿using System;
-using Practice.Events;
+﻿using Practice.Events;
+using Practice.Extensions;
 using Prism.Events;
-using System.Windows.Controls;
+using System;
 #pragma warning disable CS8618
 
 namespace Practice.Core
@@ -11,11 +11,11 @@ namespace Practice.Core
     /// </summary>
     public class AutoSubscribeNotifyIconEventHandler : IAutoSubscribeNotifyIconEventHandler, IDisposable
     {
-        private readonly ICurrentMenuBar _currentMenuBar;
+        private readonly ICaptureMenuBar _currentMenuBar;
         private readonly IEventAggregator _eventAggregator;
         private SubscriptionToken _token;
 
-        public AutoSubscribeNotifyIconEventHandler(IEventAggregator eventAggregator, ICurrentMenuBar currentMenuBar)
+        public AutoSubscribeNotifyIconEventHandler(IEventAggregator eventAggregator, ICaptureMenuBar currentMenuBar)
         {
             _eventAggregator = eventAggregator;
             _currentMenuBar = currentMenuBar;
@@ -42,9 +42,7 @@ namespace Practice.Core
 
         private IAutoSubscribeNotifyIconEvent? GetSubscribeViewModel()
         {
-            var menuBar = _currentMenuBar.CurrentMenuBar;
-            var userControl = (UserControl)menuBar.TabItemMenu.UserControl;
-            var viewModel = userControl.DataContext;
+            var viewModel = _currentMenuBar.CurrentMenuBar.GetViewModel();
 
             if (viewModel is IAutoSubscribeNotifyIconEvent model)
             {

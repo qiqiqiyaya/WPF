@@ -35,10 +35,10 @@
         <Setter Property="Padding" Value="10,0" />
     </Style>
 
-    <Style TargetType="{x:Type common:Pagination}">
+    <Style TargetType="{x:Type common:PaginationControl}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type common:Pagination}">
+                <ControlTemplate TargetType="{x:Type common:PaginationControl}">
                     <WrapPanel>
                         <common:PaginationButton
                             x:Name="PART_PREV"
@@ -57,20 +57,18 @@
                         <Label
                             Margin="10,0,0,0"
                             VerticalContentAlignment="Center"
-                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=Total}"
-                            ContentStringFormat="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=ContentStringFormat}" />
+                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:PaginationControl}, Path=Total}"
+                            ContentStringFormat="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:PaginationControl}, Path=ContentStringFormat}" />
                         <ComboBox
                             Margin="10,0"
-                            ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=PageSizeSource}"
-                            SelectedValue="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=PageSize}" />
-                        <Label VerticalContentAlignment="Center" Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=GotoFormat}" />
-                        <TextBox
-                            Width="30"
+                            ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:PaginationControl}, Path=PageSizeSource}"
+                            SelectedValue="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:PaginationControl}, Path=PageSize}" />
+                        <Label VerticalContentAlignment="Center" Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:PaginationControl}, Path=GotoFormat}" />
+                        <Label
                             Margin="10,0,0,0"
                             HorizontalContentAlignment="Center"
-                            IsReadOnly="True"
-                            Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=PageNumber, Mode=TwoWay}" />
-                        <Label VerticalContentAlignment="Center" Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:Pagination}, Path=PageNameFormat}" />
+                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:PaginationControl}, Path=PageNumber}" />
+                        <Label VerticalContentAlignment="Center" Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=common:PaginationControl}, Path=PageNameFormat}" />
                     </WrapPanel>
                 </ControlTemplate>
             </Setter.Value>

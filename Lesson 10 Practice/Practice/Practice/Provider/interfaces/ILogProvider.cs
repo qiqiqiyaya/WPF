@@ -14,6 +14,6 @@ namespace Practice.Provider.interfaces
         /// <param name="page"></param>
         /// <param name="rowNumber"></param>
         /// <returns></returns>
-        Task<PageList<List<LogDetail>>> GetPageList(int page, int rowNumber = SystemSettingKeys.RowNumber);
+        Task<PageList<List<LogDetail>>> GetPageList(int page, int rowNumber = SystemSettingKeys.PageSize);
     }
 }

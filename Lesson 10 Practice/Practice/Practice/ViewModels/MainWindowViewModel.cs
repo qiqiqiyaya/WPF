@@ -1,10 +1,10 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Practice.Models;
+using Practice.Services.Interfaces;
 using Prism.Commands;
 using ReactiveUI;
 using System;
 using System.Windows;
-using Practice.Services.Interfaces;
 
 // ReSharper disable ConvertToAutoProperty
 
@@ -33,9 +33,10 @@ namespace Practice.ViewModels
         /// </summary>
         public DelegateCommand TabItemMenuCloseAllCommand { get; }
 
-        public MainWindowViewModel(IMenuManager menuManager)
+        public MainWindowViewModel(IMenuManager menuManager, IPaginationService paginationService)
         {
             MenuManager = menuManager;
+            Pagination = paginationService;
             MenuNavigateCommand = new DelegateCommand<MenuBar>(menuManager.MenuNavigate);
             LeftContentSwitchCommand = new DelegateCommand(LeftContentSwitch);
             TabItemMenuChangeCommand = new DelegateCommand<MenuBar>(menuManager.TabItemMenuChange);
@@ -143,5 +144,10 @@ namespace Practice.ViewModels
         }
 
         public IMenuManager MenuManager { get; }
+
+        /// <summary>
+        /// 分页控件
+        /// </summary>
+        public IPaginationService Pagination { get; }
     }
 }
