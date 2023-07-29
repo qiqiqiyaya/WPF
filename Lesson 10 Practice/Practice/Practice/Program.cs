@@ -11,6 +11,7 @@ namespace Practice
         {
             // serilog 设置参考 https://mbarkt3sto.hashnode.dev/logging-to-a-file-using-serilog#heading-configuration
 
+            var template = "{Timestamp:O} [{Level:u3}]{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}";
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Information()
@@ -18,7 +19,8 @@ namespace Practice
                 // 滚动日志，按天，最多保存最近15天内的日志
                 .WriteTo.Async(c => c.File(SystemSettingKeys.GetTxtLogsPath(),
                     rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 15))
+                    retainedFileCountLimit: 15,
+                    outputTemplate: template))
                 .WriteTo.SQLite(SystemSettingKeys.GetSqliteDbPath())
                 .CreateLogger();
 

@@ -1,15 +1,12 @@
-﻿using System;
-using Practice.Core;
+﻿using Practice.Core;
 using Practice.Events;
 using Practice.Services.Interfaces;
 using Prism.Events;
 using Prism.Regions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
-using XamlAnimatedGif;
 using System.Windows.Media;
+using XamlAnimatedGif;
 
 namespace Practice
 {
