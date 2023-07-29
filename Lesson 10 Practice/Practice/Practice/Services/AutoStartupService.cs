@@ -1,7 +1,8 @@
 ﻿using Microsoft.Win32;
+using Practice.Core;
 using Practice.Services.Interfaces;
+using Serilog;
 using System;
-using System.IO;
 
 namespace Practice.Services
 {
@@ -15,11 +16,12 @@ namespace Practice.Services
         // start it for all users
         private const string RegistryKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
         private readonly string _applicationName;
+        private readonly ILogger _logger;
 
-        public AutoStartupService()
+        public AutoStartupService(ILogger logger)
         {
             _applicationName = AppDomain.CurrentDomain.FriendlyName;
-            //_applicationName = AppDomain.CurrentDomain.FriendlyName;
+            _logger = logger;
         }
 
         /// <summary>
@@ -28,7 +30,7 @@ namespace Practice.Services
         /// <returns></returns>
         private string GetCurrentExecutableFile()
         {
-            return Path.Combine(Environment.CurrentDirectory, AppDomain.CurrentDomain.FriendlyName + ".exe");
+            return SystemSettingKeys.GetExecutableFile();
         }
 
         /// <summary>
@@ -56,6 +58,10 @@ namespace Practice.Services
             {
                 var executableFile = GetCurrentExecutableFile();
                 key.SetValue(_applicationName, executableFile);
+
+                _logger.Information(forAllUsers
+                    ? $"给【所有用户】设置开启启动！可执行程序路径：{executableFile}"
+                    : $"给【当前用户】设置开启启动！可执行程序路径：{executableFile}");
             }, forAllUsers);
         }
 

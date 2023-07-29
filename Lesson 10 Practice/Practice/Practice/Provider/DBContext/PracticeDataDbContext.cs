@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Practice.Common;
-using Practice.Core;
 using Practice.Models;
 using Practice.Provider.interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Serilog;
+using Practice.Core;
 
 namespace Practice.Provider.DBContext
 {
@@ -20,7 +21,7 @@ namespace Practice.Provider.DBContext
         // special "local" folder for your platform.
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlite($"Data Source={SystemSettingKeys.SqlitePath}");
+            options.UseSqlite($"Data Source={SystemSettingKeys.GetSqliteDbPath()}");
         }
 
         public async Task<PageList<List<LogDetail>>> GetPageList(int page, int rowNumber)

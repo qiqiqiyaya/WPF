@@ -1,4 +1,7 @@
-﻿namespace Practice.Core
+﻿using System;
+using System.IO;
+
+namespace Practice.Core
 {
     /// <summary>
     /// 系统静态设置键
@@ -30,13 +33,28 @@
         public static string RootConfiguration = nameof(RootConfiguration);
 
         /// <summary>
-        /// Sqlite 数据路径
-        /// </summary>
-        public static string SqlitePath = "Db/PracticeData.db";
-
-        /// <summary>
         /// 分页，默认20行
         /// </summary>
         public const int PageSize = 20;
+
+        public static string GetBaseDirectory()
+        {
+            return Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)!;
+        }
+
+        public static string GetExecutableFile()
+        {
+            return Path.Combine(GetBaseDirectory(), AppDomain.CurrentDomain.FriendlyName + ".exe");
+        }
+
+        public static string GetSqliteDbPath()
+        {
+            return Path.Combine(GetBaseDirectory(), "Db\\Practice.db");
+        }
+
+        public static string GetTxtLogsPath()
+        {
+            return Path.Combine(GetBaseDirectory(), "Logs\\Logs.txt");
+        }
     }
 }
