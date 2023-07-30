@@ -74,6 +74,14 @@ namespace Practice.Services
         }
 
         /// <summary>
+        /// 直接关闭应用程序
+        /// </summary>
+        public void DirectClose()
+        {
+            _mainWindow.Close();
+        }
+
+        /// <summary>
         /// 主窗口展示
         /// </summary>
         public void MainWindowsShow()

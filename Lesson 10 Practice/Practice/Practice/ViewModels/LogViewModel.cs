@@ -61,7 +61,7 @@ namespace Practice.ViewModels
 
         protected void Init()
         {
-            _safetyUiActionService.AsyncInvokeThenUiAction(async () =>
+            _safetyUiActionService.TaskRun(async () =>
             {
                 await _rootDialogService.LoadingShowAsync();
                 PageList<List<LogDetail>>? pageList = null;
@@ -72,13 +72,14 @@ namespace Practice.ViewModels
                     pageList = await logProvider.GetPageList(PageNumber, PageSize);
                 });
 
-                return () =>
+                _safetyUiActionService.Invoke(() =>
                 {
                     Logs.Clear();
-                    Logs.AddRange(pageList!.Data);
-                    Total = pageList.Count;
+                    //Logs.AddRange(pageList!.Data);
+                    Total = pageList!.Count;
                     _rootDialogService.LoadingClose();
-                };
+                });
+                _safetyUiActionService.NonBlockingAdd(pageList!.Data, Logs);
             });
         }
 
@@ -94,8 +95,6 @@ namespace Practice.ViewModels
 
         public override void PageChanged()
         {
-            var a = PageNumber;
-            var c = PageSize;
             Init();
         }
     }

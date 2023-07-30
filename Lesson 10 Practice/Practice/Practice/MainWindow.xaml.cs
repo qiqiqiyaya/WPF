@@ -77,9 +77,6 @@ namespace Practice
             });
 
             Closed += (sender, args) => { notifyIconService.MainWindowsClose(); };
-
-
-
         }
 
         private void Minimized_OnClick(object sender, RoutedEventArgs e)
@@ -95,6 +92,16 @@ namespace Practice
         private void Close_OnClick(object sender, RoutedEventArgs e)
         {
             _notifyIconService.MainWindowsClose();
+        }
+
+        private void MenuItemClose_OnClick(object sender, RoutedEventArgs e)
+        {
+            _notifyIconService.DirectClose();
+        }
+
+        private void MainWindowsShowMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            _notifyIconService.MainWindowsShow();
         }
 
         /// <summary>

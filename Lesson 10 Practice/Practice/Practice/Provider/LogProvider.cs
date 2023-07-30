@@ -21,7 +21,7 @@ namespace Practice.Provider
         public async Task<PageList<List<LogDetail>>> GetPageList(int page, int rowNumber = SystemSettingKeys.PageSize)
         {
             var list = await _dbContext.Log
-                .OrderByDescending(s => s.Timestamp)
+                .OrderByDescending(s => s.Id)
                 .Skip((page - 1) * rowNumber)
                 .Take(rowNumber)
                 .ToListAsync();

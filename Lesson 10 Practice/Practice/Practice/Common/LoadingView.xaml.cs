@@ -10,7 +10,6 @@ namespace Practice.CommonViews
         public LoadingView(string text = "Loading")
         {
             InitializeComponent();
-
             this.Content.Text = text;
         }
     }

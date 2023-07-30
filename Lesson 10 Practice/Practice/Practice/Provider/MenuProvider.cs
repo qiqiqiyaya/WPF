@@ -53,6 +53,11 @@ namespace Practice.Provider
                 },
                 new MenuBar()
                 {
+                    Icon = "Tray", NameSpace = "", Title = "托盘图标",
+                    TabItemMenu = new TabItemMenu(typeof(TrayView))
+                },
+                new MenuBar()
+                {
                     Icon = "TextBoxOutline", NameSpace = "", Title = "系统日志",
                     TabItemMenu = new TabItemMenu(typeof(LogView))
                 }

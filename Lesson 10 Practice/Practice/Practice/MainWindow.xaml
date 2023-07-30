@@ -374,7 +374,20 @@
 
             <!--  不占用任何可是界面空间  -->
             <StackPanel Grid.Column="2">
-                <tb:TaskbarIcon x:Name="NotifyIcon" IconSource="/Resources/demonstrate.ico" />
+                <tb:TaskbarIcon x:Name="NotifyIcon" IconSource="/Resources/demonstrate.ico">
+                    <tb:TaskbarIcon.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem
+                                Click="MainWindowsShowMenuItem_OnClick"
+                                Header="显示主窗口"
+                                Icon="{md:PackIcon Kind=ViewDashboard}" />
+                            <MenuItem
+                                Click="MenuItemClose_OnClick"
+                                Header="退出"
+                                Icon="{md:PackIcon Kind=ExitToApp}" />
+                        </ContextMenu>
+                    </tb:TaskbarIcon.ContextMenu>
+                </tb:TaskbarIcon>
             </StackPanel>
         </Grid>
     </md:DialogHost>

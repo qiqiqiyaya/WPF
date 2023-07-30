@@ -27,27 +27,17 @@ namespace Practice.Services
             _safetyUiActionService.Invoke(() =>
             {
                 Check.NotNull(content, nameof(content));
-                _rooDialogHost.DialogContent = content;
-                _rooDialogHost.IsOpen = true;
+                _rooDialogHost.ShowDialog(content);
             });
         }
 
         public void Close()
         {
-            _safetyUiActionService.Invoke(() =>
+            _safetyUiActionService.DelayWhen(() =>
             {
-                _rooDialogHost.DialogContent = null;
-                _rooDialogHost.IsOpen = false;
-            });
-        }
-
-        /// <summary>
-        /// loading 加载状态展示
-        /// </summary>
-        public void LoadingShow()
-        {
-            _rooDialogHost.DialogContent = new LoadingView();
-            _rooDialogHost.IsOpen = true;
+                _rooDialogHost.CurrentSession?.Close();
+                _rooDialogHost.CurrentSession?.UpdateContent(null);
+            }, 200);
         }
 
         /// <summary>
@@ -58,8 +48,7 @@ namespace Practice.Services
         {
             _safetyUiActionService.Invoke(() =>
             {
-                _rooDialogHost.DialogContent = new LoadingView();
-                _rooDialogHost.IsOpen = true;
+                _rooDialogHost.ShowDialog(new LoadingView());
             });
             await Task.Delay(delay);
         }

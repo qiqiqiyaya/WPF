@@ -12,11 +12,6 @@ namespace Practice.Services.Interfaces
         void Close();
 
         /// <summary>
-        /// loading 加载状态展示
-        /// </summary>
-        void LoadingShow();
-
-        /// <summary>
         /// loading 加载状态展示，默认延时 500ms ，防止画面一闪而过。
         /// </summary>
         /// <param name="delay"></param>

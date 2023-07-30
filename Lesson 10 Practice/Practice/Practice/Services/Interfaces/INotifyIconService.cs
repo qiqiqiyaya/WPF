@@ -13,6 +13,11 @@ namespace Practice.Services.Interfaces
         void MainWindowsClose();
 
         /// <summary>
+        /// 直接关闭应用程序
+        /// </summary>
+        void DirectClose();
+
+        /// <summary>
         /// 重置相关配置
         /// </summary>
         void ResetConfiguration();
@@ -26,5 +31,10 @@ namespace Practice.Services.Interfaces
         /// 最大化
         /// </summary>
         void Maximized();
+
+        /// <summary>
+        /// 主窗口展示
+        /// </summary>
+        void MainWindowsShow();
     }
 }
