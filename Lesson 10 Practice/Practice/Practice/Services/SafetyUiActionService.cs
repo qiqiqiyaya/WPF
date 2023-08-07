@@ -74,29 +74,47 @@ namespace Practice.Services
         /// <typeparam name="T"></typeparam>
         /// <param name="data">待添加的数据</param>
         /// <param name="container">容器</param>
+        /// <param name="continueWith">后续操作</param>
+        /// <param name="size">每次添加多少条数据</param>
+        /// <param name="delay">等待时间</param>
+        public void NonBlockingAdd<T>(IList<T> data, IList<T> container, Action? continueWith, int size = 10, int delay = 5)
+        {
+            Task.Run(async () =>
+                {
+                    int loopTimes;
+                    if (data.Count <= size)
+                    {
+                        loopTimes = 1;
+                    }
+                    else
+                    {
+                        loopTimes = data.Count % size == 0 ? data.Count / size : data.Count / size + 1;
+                    }
+
+                    for (int i = 0; i < loopTimes; i++)
+                    {
+                        // ReSharper disable once AccessToModifiedClosure
+                        UiDispatcher.Invoke(() => container.AddRange(data.Skip(i * size).Take(size)));
+                        await Task.Delay(delay);
+                    }
+                }).ContinueWith(task =>
+                {
+                    continueWith?.Invoke();
+                })
+                .FireAndForget();
+        }
+
+        /// <summary>
+        /// 非阻塞添加
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data">待添加的数据</param>
+        /// <param name="container">容器</param>
         /// <param name="size">每次添加多少条数据</param>
         /// <param name="delay">等待时间</param>
         public void NonBlockingAdd<T>(IList<T> data, IList<T> container, int size = 10, int delay = 5)
         {
-            Task.Run(async () =>
-            {
-                int loopTimes;
-                if (data.Count <= size)
-                {
-                    loopTimes = 1;
-                }
-                else
-                {
-                    loopTimes = data.Count % size == 0 ? data.Count / size : data.Count / size + 1;
-                }
-
-                for (int i = 0; i < loopTimes; i++)
-                {
-                    // ReSharper disable once AccessToModifiedClosure
-                    UiDispatcher.Invoke(() => container.AddRange(data.Skip(i * size).Take(size)));
-                    await Task.Delay(delay);
-                }
-            }).FireAndForget();
+            NonBlockingAdd(data, container, null, size, delay);
         }
 
         /// <summary>

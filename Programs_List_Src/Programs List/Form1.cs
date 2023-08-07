@@ -87,6 +87,11 @@ namespace Programs_List
                                 SettingsIdentifier.ToString(),
                             });
 
+                            if (string.IsNullOrWhiteSpace(installLocation.ToString()))
+                            {
+                                continue;
+                            }
+
                             lstDisplayHardware.Items.Add(item);
                         }
                         catch (Exception ex)

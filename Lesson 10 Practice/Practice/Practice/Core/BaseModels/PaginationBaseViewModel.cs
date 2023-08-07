@@ -1,8 +1,7 @@
-﻿using Practice.Events;
+﻿using Practice.Common;
 using Practice.Services.Interfaces;
 using ReactiveUI;
 using System.Windows;
-using Practice.Common;
 
 namespace Practice.Core.BaseModels
 {

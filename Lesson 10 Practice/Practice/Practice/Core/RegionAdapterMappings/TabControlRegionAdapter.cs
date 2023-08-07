@@ -1,24 +1,18 @@
-﻿using System;
-using Practice.Extensions;
-using Practice.Models;
+﻿using Practice.Models;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
+using System;
 using System.Collections.Specialized;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Practice.Core.RegionAdapterMappings
 {
     public class TabControlRegionAdapter : RegionAdapterBase<TabControl>
     {
-        private readonly IContainerExtension _containerProvider;
-
-        public TabControlRegionAdapter(IRegionBehaviorFactory regionBehaviorFactory,
-            IContainerExtension containerProvider) : base(regionBehaviorFactory)
+        public TabControlRegionAdapter(IRegionBehaviorFactory regionBehaviorFactory)
+            : base(regionBehaviorFactory)
         {
 
-            _containerProvider = containerProvider;
         }
 
         protected override void Adapt(IRegion region, TabControl regionTarget)

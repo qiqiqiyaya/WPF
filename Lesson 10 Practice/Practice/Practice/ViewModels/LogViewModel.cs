@@ -77,9 +77,12 @@ namespace Practice.ViewModels
                     Logs.Clear();
                     //Logs.AddRange(pageList!.Data);
                     Total = pageList!.Count;
+                });
+
+                _safetyUiActionService.NonBlockingAdd(pageList!.Data, Logs, () =>
+                {
                     _rootDialogService.LoadingClose();
                 });
-                _safetyUiActionService.NonBlockingAdd(pageList!.Data, Logs);
             });
         }
 

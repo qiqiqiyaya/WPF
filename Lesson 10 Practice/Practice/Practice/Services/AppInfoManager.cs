@@ -49,26 +49,16 @@ namespace Practice.Services
         public virtual async IAsyncEnumerable<AppIcon> GetAllIcons()
         {
             var result = GetAll();
+            if (result.HasException)
+            {
+                throw result.Exception!;
+            }
 
             foreach (var item in result.Data)
             {
                 await Task.Delay(10);
                 var icon = ConvertToIcon(item);
                 yield return item.ToIcon(icon);
-            }
-
-            try
-            {
-                //Result<Logs<AppIcon>> iconResult = new Result<Logs<AppIcon>>();
-
-
-
-                //iconResult.Data = ConvertToAppIcon(result.Data).ToList();
-
-            }
-            catch (Exception e)
-            {
-                throw;
             }
         }
 
@@ -161,9 +151,8 @@ namespace Practice.Services
                     IconExtractor icon = new IconExtractor(info.DisplayIcon);
                     return icon.GetIcon(0);
                 }
-                catch (Exception e)
+                catch
                 {
-                    _logger.ErrorDetail(e);
                     return null;
                 }
 
