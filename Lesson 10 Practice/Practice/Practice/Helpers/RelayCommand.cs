@@ -8,7 +8,7 @@ namespace Practice.Helpers
     /// A command whose sole purpose is to relay its functionality to other
     /// objects by invoking delegates. The default return value for the CanExecute
     /// method is 'true'.  This class does not allow you to accept command parameters in the
-    /// Init and CanExecute callback methods.
+    /// LoadingData and CanExecute callback methods.
     /// </summary>
     /// <remarks>If you are using this class in WPF4.5 or above, you need to use the
     /// GalaSoft.MvvmLight.CommandWpf namespace (instead of GalaSoft.MvvmLight.Command).

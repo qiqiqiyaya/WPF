@@ -9,6 +9,9 @@ using System.Windows.Threading;
 
 namespace Practice.Services
 {
+    /// <summary>
+    /// 安全的ui操作，单例服务
+    /// </summary>
     public class SafetyUiActionService
     {
         public Dispatcher UiDispatcher { get; protected set; }
@@ -69,39 +72,46 @@ namespace Practice.Services
         }
 
         /// <summary>
-        /// 非阻塞添加
+        /// 非阻塞添加。每次在UI线程中向 <see cref="target"/> 添加最大 <see cref="PaginationConfiguration.NonBlockingAddSize"/> 行数据,
+        /// 然后休眠指定时间 <see cref="delay"/> 再次在UI线程中添加数据
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="data">待添加的数据</param>
-        /// <param name="container">容器</param>
+        /// <param name="source">数据源</param>
+        /// <param name="target">目标容器</param>
         /// <param name="continueWith">后续操作</param>
         /// <param name="size">每次添加多少条数据</param>
         /// <param name="delay">等待时间</param>
-        public void NonBlockingAdd<T>(IList<T> data, IList<T> container, Action? continueWith, int size = PaginationConfiguration.NonBlockingAddSize, int delay = 5)
+        public async Task NonBlockingAdd<T>(IList<T> source,
+            IList<T> target,
+            Action? continueWith,
+            int size = PaginationConfiguration.NonBlockingAddSize,
+            int delay = 5)
         {
-            Task.Run(async () =>
-                {
-                    int loopTimes;
-                    if (data.Count <= size)
-                    {
-                        loopTimes = 1;
-                    }
-                    else
-                    {
-                        loopTimes = data.Count % size == 0 ? data.Count / size : data.Count / size + 1;
-                    }
+            int loopTimes;
+            if (source.Count <= size)
+            {
+                loopTimes = 1;
+            }
+            else
+            {
+                loopTimes = source.Count % size == 0 ? source.Count / size : source.Count / size + 1;
+            }
 
-                    for (int i = 0; i < loopTimes; i++)
-                    {
-                        // ReSharper disable once AccessToModifiedClosure
-                        UiDispatcher.Invoke(() => container.AddRange(data.Skip(i * size).Take(size)));
-                        await Task.Delay(delay);
-                    }
-                }).ContinueWith(task =>
-                {
-                    continueWith?.Invoke();
-                })
-                .FireAndForget();
+            for (int i = 0; i < loopTimes; i++)
+            {
+                // ReSharper disable once AccessToModifiedClosure
+                UiDispatcher.Invoke(() => target.AddRange(source.Skip(i * size).Take(size)));
+                await Task.Delay(delay);
+            }
+
+            //Task.Run(async () =>
+            //    {
+
+            //    }).ContinueWith(task =>
+            //    {
+            //        continueWith?.Invoke();
+            //    })
+            //    .FireAndForget();
         }
 
         /// <summary>
@@ -112,9 +122,24 @@ namespace Practice.Services
         /// <param name="container">容器</param>
         /// <param name="size">每次添加多少条数据</param>
         /// <param name="delay">等待时间</param>
-        public void NonBlockingAdd<T>(IList<T> data, IList<T> container, int size = PaginationConfiguration.NonBlockingAddSize, int delay = 5)
+        public Task NonBlockingAdd<T>(IList<T> data, IList<T> container, int size = PaginationConfiguration.NonBlockingAddSize, int delay = 5)
         {
+            return NonBlockingAdd(data, container, null, size, delay);
+        }
+
+        /// <summary>
+        /// 非阻塞添加
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data">待添加的数据</param>
+        /// <param name="container">容器</param>
+        /// <param name="size">每次添加多少条数据</param>
+        /// <param name="delay">等待时间</param>
+        public void NonBlockingAddWithNewTask<T>(IList<T> data, IList<T> container, int size = PaginationConfiguration.NonBlockingAddSize, int delay = 5)
+        {
+#pragma warning disable CS4014
             NonBlockingAdd(data, container, null, size, delay);
+#pragma warning restore CS4014
         }
 
         /// <summary>

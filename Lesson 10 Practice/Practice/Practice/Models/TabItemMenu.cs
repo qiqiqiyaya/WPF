@@ -44,6 +44,9 @@ namespace Practice.Models
             Index = index;
         }
 
+        /// <summary>
+        /// 菜单重置
+        /// </summary>
         public void Reset()
         {
             Index = -1;

@@ -1,4 +1,6 @@
-﻿using Prism.Mvvm;
+﻿using System.Windows.Controls;
+using Prism.Mvvm;
+#pragma warning disable CS8618
 
 namespace Practice.Models
 {
@@ -36,6 +38,17 @@ namespace Practice.Models
         public void SetIndex(int index)
         {
             Index = index;
+        }
+
+        /// <summary>
+        /// 获取 视图模型
+        /// </summary>
+        /// <returns></returns>
+        public object? GetViewModel()
+        {
+            var userControl = (UserControl)TabItemMenu.UserControl;
+            var viewModel = userControl?.DataContext;
+            return viewModel;
         }
     }
 }

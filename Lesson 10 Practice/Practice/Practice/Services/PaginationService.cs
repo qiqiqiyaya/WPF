@@ -15,11 +15,11 @@ namespace Practice.Services
     public class PaginationService : ReactiveObject, IPaginationService
     {
         public DelegateCommand PageChangedCommand { get; }
-        private readonly InternalPageChangedEvent _internalPageChangedEvent;
+        private readonly PageChangedEvent _pageChangedEvent;
 
         public PaginationService(IEventAggregator eventAggregator)
         {
-            _internalPageChangedEvent = eventAggregator.GetEvent<InternalPageChangedEvent>();
+            _pageChangedEvent = eventAggregator.GetEvent<PageChangedEvent>();
             PageChangedCommand = new DelegateCommand(PageChanged);
         }
 
@@ -88,7 +88,7 @@ namespace Practice.Services
 
         private void PageChanged()
         {
-            _internalPageChangedEvent.Publish();
+            _pageChangedEvent.Publish();
         }
     }
 }

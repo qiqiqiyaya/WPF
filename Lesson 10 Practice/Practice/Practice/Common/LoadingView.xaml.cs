@@ -7,7 +7,7 @@ namespace Practice.CommonViews
     /// </summary>
     public partial class LoadingView : UserControl
     {
-        public LoadingView(string text = "Loading")
+        public LoadingView(string text = "LoadingData")
         {
             InitializeComponent();
             this.Content.Text = text;

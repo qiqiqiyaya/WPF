@@ -322,7 +322,7 @@ namespace Practice.Services
 
             var userControl = (UserControl)menu.TabItemMenu.UserControl;
 
-            ViewDispose(userControl);
+            ToDispose(userControl);
             menu.TabItemMenu.Reset();
         }
 
@@ -372,14 +372,14 @@ namespace Practice.Services
         /// View、ViewModel相关对象释放
         /// </summary>
         /// <param name="userControl"></param>
-        protected virtual void ViewDispose(UserControl userControl)
+        protected virtual void ToDispose(UserControl userControl)
         {
             if (userControl.DataContext is IDisposable disposable)
             {
                 disposable.Dispose();
             }
-
             userControl.DataContext = null;
+            userControl.TryDispose();
         }
     }
 }

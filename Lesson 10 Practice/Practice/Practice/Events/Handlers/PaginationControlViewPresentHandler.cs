@@ -1,6 +1,4 @@
 ﻿using Practice.Core;
-using Practice.Extensions;
-using Practice.Models;
 using Practice.Services.Interfaces;
 using Prism.Events;
 using System;
@@ -44,6 +42,7 @@ namespace Practice.Events.Handlers
         public void Init()
         {
             // 订阅事件
+            // 控制分页是否展示
             _menuChangedToken = _eventAggregator.GetEvent<MenuChangedEvent>().Subscribe(menuBar =>
             {
                 var viewModel = menuBar.GetViewModel();
@@ -91,7 +90,8 @@ namespace Practice.Events.Handlers
             });
 
             // 订阅事件
-            _pageChangedToken = _eventAggregator.GetEvent<InternalPageChangedEvent>().Subscribe(() =>
+            // 分页控件触发事件
+            _pageChangedToken = _eventAggregator.GetEvent<PageChangedEvent>().Subscribe(() =>
             {
                 var menu = _currentMenuBar.CurrentMenuBar;
                 var viewModel = menu.GetViewModel();
@@ -100,18 +100,6 @@ namespace Practice.Events.Handlers
                     model.PageChanged();
                 }
             });
-        }
-
-        private bool IsShow(MenuBar menu)
-        {
-            var viewModel = menu.GetViewModel();
-
-            if (viewModel is IPagination model)
-            {
-                return model.PaginationShow == Visibility.Visible;
-            }
-
-            return false;
         }
 
         public void Dispose()

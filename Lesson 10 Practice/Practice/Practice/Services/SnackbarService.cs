@@ -1,14 +1,14 @@
-﻿using Practice.Services.Interfaces;
+﻿using MaterialDesignThemes.Wpf;
+using Practice.Services.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Practice.Services
 {
     public class SnackbarService : ISnackbarService
     {
-
+        public void Init(DialogHost rooDialogHost)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

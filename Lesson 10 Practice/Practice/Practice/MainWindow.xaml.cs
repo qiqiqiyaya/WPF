@@ -30,6 +30,8 @@ namespace Practice
             _notifyIconService = notifyIconService;
             InitializeComponent();
 
+            #region 相关服务、事件初始化
+
             // root mdDialog Identifier set
             RootDialog.Identifier = SystemSettingKeys.RootDialogIdentity;
             rootDialogService.Init(RootDialog);
@@ -37,14 +39,18 @@ namespace Practice
             // code-behind set region
             RegionManager.SetRegionName(TabMenus, SystemSettingKeys.TabMenuRegion);
             RegionManager.SetRegionManager(TabMenus, regionManager);
-
             menuManager.SetContentRegion(regionManager.Regions[SystemSettingKeys.TabMenuRegion]);
             menuManager.LoadMenus();
 
             // 通知图标初始化
             notifyIconService.Init(this, NotifyIcon);
+            // 通知事件处理器
             notifyIconEventHandler.Init();
+            // 分页控件视图展示处理器
             paginationControlViewPresentHandler.Init();
+
+            #endregion
+
 
             this.Header.MouseDown += (sender, args) =>
             {
@@ -113,39 +119,5 @@ namespace Practice
         {
             e.Handled = true;
         }
-
-        /// <summary>
-        /// 查找子控件
-        /// </summary>
-        /// <typeparam name="T">子控件的类型</typeparam>
-        /// <param name="obj">要找的是obj的子控件</param>
-        /// <param name="name">想找的子控件的Name属性</param>
-        /// <returns>目标子控件</returns>
-        public static T GetChildObject<T>(DependencyObject obj, string name) where T : FrameworkElement
-        {
-            DependencyObject child = null;
-            T grandChild = null;
-
-            for (int i = 0; i <= VisualTreeHelper.GetChildrenCount(obj) - 1; i++)
-            {
-                child = VisualTreeHelper.GetChild(obj, i);
-
-                if (child is T && (((T)child).Name == name | string.IsNullOrEmpty(name)))
-                {
-                    return (T)child;
-                }
-                else
-                {
-                    // 在下一级中没有找到指定名字的子控件，就再往下一级找
-                    grandChild = GetChildObject<T>(child, name);
-                    if (grandChild != null)
-                        return grandChild;
-                }
-            }
-
-            return null;
-
-        }
-
     }
 }

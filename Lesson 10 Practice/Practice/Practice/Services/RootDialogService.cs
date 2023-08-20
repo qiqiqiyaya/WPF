@@ -35,12 +35,14 @@ namespace Practice.Services
         {
             _safetyUiActionService.Invoke(() =>
             {
+                // 关闭 对话窗口
                 _rooDialogHost.CurrentSession?.Close();
+                // 切断对话窗口对象的引用
                 _rooDialogHost.CurrentSession?.UpdateContent(null);
             });
         }
 
-        public void DelayThenClose(int delay = 200)
+        public void DelayThenClose(int delay = 250)
         {
             _safetyUiActionService.DelayWhen(() =>
             {
@@ -53,7 +55,7 @@ namespace Practice.Services
         /// loading 加载状态展示，默认延时 500ms ，防止画面一闪而过。
         /// </summary>
         /// <param name="delay"></param>
-        public async Task LoadingShowAsync(int delay = 500)
+        public async Task LoadingShowAsync(int delay = 250)
         {
             _safetyUiActionService.Invoke(() =>
             {

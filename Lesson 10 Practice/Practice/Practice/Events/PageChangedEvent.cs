@@ -8,7 +8,7 @@ namespace Practice.Events
     /// <remarks>
     /// 系统内部使用
     /// </remarks>
-    public class InternalPageChangedEvent : PubSubEvent
+    public class PageChangedEvent : PubSubEvent
     {
 
     }
