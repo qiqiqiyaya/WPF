@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Practice.Services
 {
+    /// <summary>
+    /// 单例服务
+    /// </summary>
     public class RootDialogService : IRootDialogService
     {
         private readonly SafetyUiActionService _safetyUiActionService;

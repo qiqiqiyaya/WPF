@@ -5,7 +5,6 @@ using Prism.Events;
 using Prism.Regions;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using XamlAnimatedGif;
 
 namespace Practice
@@ -24,7 +23,8 @@ namespace Practice
             INotifyIconService notifyIconService,
             IAutoSubscribeNotifyIconEventHandler notifyIconEventHandler,
             IEventAggregator eventAggregator,
-            IPaginationControlViewPresentHandler paginationControlViewPresentHandler)
+            IPaginationControlViewPresentHandler paginationControlViewPresentHandler,
+            ISnackbarService snackbarService)
         {
             _eventAggregator = eventAggregator;
             _notifyIconService = notifyIconService;
@@ -48,7 +48,8 @@ namespace Practice
             notifyIconEventHandler.Init();
             // 分页控件视图展示处理器
             paginationControlViewPresentHandler.Init();
-
+            // SnackbarService
+            snackbarService.Init(MainSnackbar);
             #endregion
 
 

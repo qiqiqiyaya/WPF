@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Practice.Services.Interfaces
 {
     /// <summary>
-    /// 根级对话窗口
+    /// 根级对话窗口，单例服务
     /// </summary>
     public interface IRootDialogService
     {

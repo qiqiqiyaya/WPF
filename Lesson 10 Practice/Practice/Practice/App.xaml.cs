@@ -114,6 +114,7 @@ namespace Practice
             containerRegistry.RegisterSingleton<ICaptureMenuBar, CacheCurrentMenuBar>();
             containerRegistry.RegisterSingleton<IPaginationService, PaginationService>();
             containerRegistry.RegisterSingleton<IPaginationControlViewPresentHandler, PaginationControlViewPresentHandler>();
+            containerRegistry.RegisterSingleton<ISnackbarService, SnackbarService>();
 
             // Transient
             containerRegistry.Register<IMenuProvider, MenuProvider>();

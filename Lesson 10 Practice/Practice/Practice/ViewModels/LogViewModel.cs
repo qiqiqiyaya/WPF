@@ -19,6 +19,7 @@ namespace Practice.ViewModels
     {
         private readonly SafetyUiActionService _safetyUiActionService;
         private readonly IRootDialogService _rootDialogService;
+        private readonly ISnackbarService _snackbarService;
 
         /* 范围服务 */
         private readonly IScopedProvider _scopedProvider;
@@ -41,10 +42,12 @@ namespace Practice.ViewModels
             SafetyUiActionService safetyUiActionService,
             IContainerExtension containerProvider,
             IRootDialogService rootDialogService,
+            ISnackbarService snackbarService,
             IPaginationService pagination) : base(pagination)
         {
             _rootDialogService = rootDialogService;
             _safetyUiActionService = safetyUiActionService;
+            _snackbarService = snackbarService;
 
             _scopedProvider = containerProvider.CreateScope();
             _logProvider = _scopedProvider.Resolve<ILogProvider>();
@@ -95,6 +98,7 @@ namespace Practice.ViewModels
         protected void Copy(LogDetail detail)
         {
             Clipboard.SetText(JsonConvert.SerializeObject(detail));
+            _snackbarService.Show("已复制到粘贴板！", 800);
         }
 
         public override void PageChanged()
