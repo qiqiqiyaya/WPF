@@ -81,6 +81,7 @@ namespace Practice.ViewModels
 
                 _safetyUiActionService.NonBlockingAdd(pageList!.Data, Logs, () =>
                 {
+                    // 加载框关闭友好型
                     _rootDialogService.LoadingClose();
                 });
             });

@@ -11,7 +11,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <common:Blockquote Title="重置最小化到系统托盘设置">
+    <common:BlockquoteControl Title="重置最小化到系统托盘设置">
         <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
             <TextBlock VerticalAlignment="Center" Text="重置按钮：" />
             <Button
@@ -22,5 +22,5 @@
                 Content="{Binding ResetIcon}"
                 Style="{StaticResource MaterialDesignFloatingActionButton}" />
         </StackPanel>
-    </common:Blockquote>
+    </common:BlockquoteControl>
 </UserControl>

@@ -33,11 +33,20 @@ namespace Practice.Services
 
         public void Close()
         {
+            _safetyUiActionService.Invoke(() =>
+            {
+                _rooDialogHost.CurrentSession?.Close();
+                _rooDialogHost.CurrentSession?.UpdateContent(null);
+            });
+        }
+
+        public void DelayThenClose(int delay = 200)
+        {
             _safetyUiActionService.DelayWhen(() =>
             {
                 _rooDialogHost.CurrentSession?.Close();
                 _rooDialogHost.CurrentSession?.UpdateContent(null);
-            }, 200);
+            }, delay);
         }
 
         /// <summary>

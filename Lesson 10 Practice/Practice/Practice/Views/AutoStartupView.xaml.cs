@@ -25,16 +25,16 @@ namespace Practice.Views
             // 是否是管理员角色
             WindowsIdentity identity = WindowsIdentity.GetCurrent();
             WindowsPrincipal principal = new WindowsPrincipal(identity);
-            principal.IsInRole(WindowsBuiltInRole.Administrator);
+
             if (principal.IsInRole(WindowsBuiltInRole.Administrator))
             {
                 CheckForAllUsers.IsEnabled = true;
                 viewModel.ResetIsCheckForAllUsers();
-                IsAdmin.Text = "当前用户是管理员，功能启用！";
+                IsAdmin.Visibility = Visibility.Collapsed;
             }
             else
             {
-                IsAdmin.Text = "当前用户不是管理员，功能禁用！";
+                IsAdmin.Text = "当前用户不是管理员，功能禁用！！！";
             }
         }
 

@@ -10,13 +10,13 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <common:Blockquote Title="最小化到托盘，参考菜单【最大小化】">
+        <common:BlockquoteControl Title="最小化到托盘，参考菜单【最大小化】">
             <StackPanel>
                 <TextBlock>所用类库：Hardcodet.NotifyIcon.Wpf</TextBlock>
                 <TextBlock>参考 MainWindow 下的 TaskbarIcon 中的 TaskbarIcon.ContextMenu 的 ContextMenu</TextBlock>
                 <TextBlock>添加 MenuItem 即可</TextBlock>
                 <TextBlock>当程序最小化到托盘后，托盘显示一个该程序的小图标，右键点击小图标显示操作菜单</TextBlock>
             </StackPanel>
-        </common:Blockquote>
+        </common:BlockquoteControl>
     </Grid>
 </UserControl>

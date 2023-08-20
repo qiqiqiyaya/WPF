@@ -388,6 +388,8 @@
                         </ContextMenu>
                     </tb:TaskbarIcon.ContextMenu>
                 </tb:TaskbarIcon>
+
+                <md:Snackbar x:Name="SnackbarOne" IsActive="False" />
             </StackPanel>
         </Grid>
     </md:DialogHost>

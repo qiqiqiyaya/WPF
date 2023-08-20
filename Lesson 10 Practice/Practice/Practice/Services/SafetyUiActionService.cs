@@ -1,11 +1,11 @@
-﻿using Practice.Extensions;
-using Practice.Models;
+﻿using DynamicData;
+using Practice.Core.Configuration;
+using Practice.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using DynamicData;
 
 namespace Practice.Services
 {
@@ -77,7 +77,7 @@ namespace Practice.Services
         /// <param name="continueWith">后续操作</param>
         /// <param name="size">每次添加多少条数据</param>
         /// <param name="delay">等待时间</param>
-        public void NonBlockingAdd<T>(IList<T> data, IList<T> container, Action? continueWith, int size = 10, int delay = 5)
+        public void NonBlockingAdd<T>(IList<T> data, IList<T> container, Action? continueWith, int size = PaginationConfiguration.NonBlockingAddSize, int delay = 5)
         {
             Task.Run(async () =>
                 {
@@ -112,7 +112,7 @@ namespace Practice.Services
         /// <param name="container">容器</param>
         /// <param name="size">每次添加多少条数据</param>
         /// <param name="delay">等待时间</param>
-        public void NonBlockingAdd<T>(IList<T> data, IList<T> container, int size = 10, int delay = 5)
+        public void NonBlockingAdd<T>(IList<T> data, IList<T> container, int size = PaginationConfiguration.NonBlockingAddSize, int delay = 5)
         {
             NonBlockingAdd(data, container, null, size, delay);
         }

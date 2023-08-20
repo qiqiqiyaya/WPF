@@ -11,6 +11,8 @@ namespace Practice.Services.Interfaces
 
         void Close();
 
+        void DelayThenClose(int delay = 200);
+
         /// <summary>
         /// loading 加载状态展示，默认延时 500ms ，防止画面一闪而过。
         /// </summary>

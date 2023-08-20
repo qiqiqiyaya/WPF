@@ -16,9 +16,6 @@ namespace Practice.Core.BaseModels
         /// <summary>
         /// 分页服务
         /// </summary>
-        /// <remarks>
-        /// 通过属性注入
-        /// </remarks>
         protected IPaginationService Pagination { get; set; }
 
         /// <summary>

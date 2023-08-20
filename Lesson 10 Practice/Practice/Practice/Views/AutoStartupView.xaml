@@ -25,7 +25,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <common:Blockquote Title="设定为开机自启动" Grid.Row="0">
+        <common:BlockquoteControl Title="设定为开机自启动" Grid.Row="0">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="开启" />
@@ -58,9 +58,9 @@
                     </FlowDocument>
                 </FlowDocumentScrollViewer>
             </StackPanel>
-        </common:Blockquote>
+        </common:BlockquoteControl>
 
-        <common:Blockquote Title="设定为所有用户开机自启动（需要管理员权限）" Grid.Row="1">
+        <common:BlockquoteControl Title="设定为所有用户开机自启动（需要管理员权限）" Grid.Row="1">
             <StackPanel>
                 <TextBlock x:Name="IsAdmin" />
                 <StackPanel Orientation="Horizontal">
@@ -108,6 +108,6 @@
                     </FlowDocument>
                 </FlowDocumentScrollViewer>
             </StackPanel>
-        </common:Blockquote>
+        </common:BlockquoteControl>
     </Grid>
 </UserControl>
