@@ -19,8 +19,103 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Right">
+                <Button Content="Search" />
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="75" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="220" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="220" />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HorizontalAlignment="Right"
+                        VerticalContentAlignment="Center"
+                        Content="关键字：" />
+
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Width="220" />
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        VerticalContentAlignment="Center"
+                        Content="日志等级：" />
+                    <ComboBox Grid.Row="0" Grid.Column="4">
+                        <ComboBoxItem Content="" IsSelected="True" />
+                        <ComboBoxItem Content="Debug" />
+                        <ComboBoxItem Content="Information" />
+                        <ComboBoxItem Content="Warning" />
+                        <ComboBoxItem Content="Error" />
+                        <ComboBoxItem Content="Fatal" />
+                    </ComboBox>
+
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalContentAlignment="Center"
+                        Content="开始日期：" />
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <DatePicker
+                            Width="120"
+                            materialDesign:HintAssist.HelperTextFontSize="12"
+                            materialDesign:HintAssist.Hint="年月日" />
+                        <materialDesign:TimePicker
+                            Width="100"
+                            materialDesign:HintAssist.Hint="时分秒"
+                            Is24Hours="True"
+                            WithSeconds="True" />
+                    </StackPanel>
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Padding="15,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="  -  " />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        Padding="0,0,0,0"
+                        VerticalAlignment="Center"
+                        Content="结束日期：" />
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="4"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <DatePicker
+                            Width="120"
+                            materialDesign:HintAssist.HelperTextFontSize="12"
+                            materialDesign:HintAssist.Hint="年月日" />
+                        <materialDesign:TimePicker
+                            Width="100"
+                            materialDesign:HintAssist.Hint="时分秒"
+                            Is24Hours="True"
+                            WithSeconds="True" />
+                    </StackPanel>
+
+                </Grid>
+            </StackPanel>
+        </DockPanel>
         <DataGrid
             x:Name="LogDataGrid"
+            Grid.Row="1"
             VerticalAlignment="Center"
             VerticalContentAlignment="Center"
             materialDesign:DataGridAssist.SelectedCellBorderBrush="Transparent"
