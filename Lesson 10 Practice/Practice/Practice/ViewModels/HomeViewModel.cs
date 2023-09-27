@@ -21,8 +21,7 @@ namespace Practice.ViewModels
 {
     public sealed class HomeViewModel : ReactiveObject, ITabItemMenuChangeAction, IDisposable, IAutoSubscribeNotifyIconEvent
     {
-        private static readonly SKColor Blue = new(25, 118, 210);
-
+        private readonly SKColor _solidColor = SKColors.Blue;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private CancellationToken _cancellationToken;
         private readonly SafetyUiActionService _safetyUiActionService;
@@ -57,9 +56,9 @@ namespace Practice.ViewModels
                 Values = _cupValues,
                 Fill = new SolidColorPaint(SKColors.CornflowerBlue),
                 Name = "CPU",
-                Stroke = new SolidColorPaint(Blue, 1),
+                Stroke = new SolidColorPaint(_solidColor, 1),
                 GeometrySize = 5,
-                GeometryStroke = new SolidColorPaint(Blue, 1),
+                GeometryStroke = new SolidColorPaint(_solidColor, 1),
             }
         };
 
@@ -83,9 +82,9 @@ namespace Practice.ViewModels
                 Values = _physicalMemory,
                 Fill = null,
                 Name = "Physical Memory",
-                Stroke = new SolidColorPaint(Blue, 1),
+                Stroke = new SolidColorPaint(_solidColor, 1),
                 GeometrySize = 5,
-                GeometryStroke = new SolidColorPaint(Blue, 1),
+                GeometryStroke = new SolidColorPaint(_solidColor, 1),
             }
         };
 
@@ -109,9 +108,9 @@ namespace Practice.ViewModels
                 Values = _privateMemory,
                 Fill = null,
                 Name = "Private Memory",
-                Stroke = new SolidColorPaint(Blue, 1),
+                Stroke = new SolidColorPaint(_solidColor, 1),
                 GeometrySize = 5,
-                GeometryStroke = new SolidColorPaint(Blue, 1),
+                GeometryStroke = new SolidColorPaint(_solidColor, 1),
             }
         };
 

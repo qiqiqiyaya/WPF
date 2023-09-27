@@ -60,6 +60,11 @@ namespace Practice.Provider
                 {
                     Icon = "TextBoxOutline", NameSpace = "", Title = "系统日志",
                     TabItemMenu = new TabItemMenu(typeof(LogView))
+                },
+                new MenuBar()
+                {
+                    Icon = "ChartLineStacked", NameSpace = "", Title = "图表缩放",
+                    TabItemMenu = new TabItemMenu(typeof(ChartZoomView))
                 }
             };
 

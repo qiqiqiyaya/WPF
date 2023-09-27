@@ -63,7 +63,7 @@
                                         x:Name="Avatar"
                                         Width="120"
                                         Height="120"
-                                        gif:AnimationBehavior.SourceUri="Resources/R.gif"
+                                        gif:AnimationBehavior.SourceUri="/Resources/R.gif"
                                         Stretch="UniformToFill">
                                         <!--  图片裁剪  -->
                                         <Image.Clip>

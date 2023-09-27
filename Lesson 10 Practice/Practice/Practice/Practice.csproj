@@ -43,6 +43,8 @@
 		<None Remove="Resources\demonstrate.ico" />
 		<None Remove="Resources\demonstrate.png" />
 		<None Remove="Resources\R.gif" />
+		<None Remove="Resources\zoom1.gif" />
+		<None Remove="Resources\zoom2.gif" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -52,6 +54,12 @@
 		</Resource>
 		<Resource Include="Resources\R.gif">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\zoom1.gif">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\zoom2.gif">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Resource>
 	</ItemGroup>
 
@@ -98,7 +106,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Common\新文件夹\" />
 		<Folder Include="Services\Models\" />
 	</ItemGroup>
 

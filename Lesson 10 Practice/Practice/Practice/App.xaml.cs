@@ -95,6 +95,7 @@ namespace Practice
             containerRegistry.RegisterForNavigation<GameView, GameViewModel>("Test");
             containerRegistry.RegisterForNavigation<ThemeChangeView, ThemeChangeViewModel>("ThemeChange");
             containerRegistry.RegisterForNavigation<ReactiveView, ReactiveViewModel>("Reactive");
+            containerRegistry.RegisterForNavigation<ChartZoomView, ChartZoomViewModel>(nameof(ChartZoomView));
             //regionManager
 
             // Singleton
