@@ -36,7 +36,7 @@ namespace Practice.Core
                 if (viewModel == null) return;
 
                 // 触发当前主界面选中的菜单，视图模型
-                viewModel.Subscribe(state);
+                viewModel.NotifyIconEventSubscribe(state);
             });
         }
 

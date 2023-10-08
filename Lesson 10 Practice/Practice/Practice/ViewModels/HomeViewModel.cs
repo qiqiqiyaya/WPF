@@ -218,7 +218,7 @@ namespace Practice.ViewModels
             _currentProcess.Dispose();
         }
 
-        public void Subscribe(PracticeWindowState state)
+        public void NotifyIconEventSubscribe(PracticeWindowState state)
         {
             switch (state)
             {

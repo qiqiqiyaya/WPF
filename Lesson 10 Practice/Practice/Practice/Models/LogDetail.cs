@@ -8,7 +8,7 @@ namespace Practice.Models
     {
         public int Id { get; set; }
 
-        public string Timestamp { get; set; }
+        public long Timestamp { get; set; }
 
         public string Level { get; set; }
 

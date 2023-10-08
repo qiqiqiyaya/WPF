@@ -2,6 +2,9 @@
 
 namespace Practice.Events
 {
+    /// <summary>
+    /// 最大最小化，最小化到托盘事件
+    /// </summary>
     public class NotifyIconEvent : PubSubEvent<PracticeWindowState>
     {
 

@@ -122,7 +122,7 @@ namespace Practice.ViewModels
             _cancellationTokenSource.CancelAndDispose();
         }
 
-        public void Subscribe(PracticeWindowState state)
+        public void NotifyIconEventSubscribe(PracticeWindowState state)
         {
             switch (state)
             {

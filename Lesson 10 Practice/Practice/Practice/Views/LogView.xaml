@@ -2,8 +2,8 @@
     x:Class="Practice.Views.LogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:common="clr-namespace:Practice.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markups="clr-namespace:Practice.Core.Markups"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Practice.Models"
@@ -21,38 +21,47 @@
 
         <DockPanel>
             <StackPanel DockPanel.Dock="Right">
-                <Button Content="Search" />
+                <Button Command="{Binding SearchCommand}" Content="Search" />
             </StackPanel>
-            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+            <StackPanel
+                Margin="0,0,0,10"
+                DockPanel.Dock="Left"
+                Orientation="Horizontal">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
-                        <RowDefinition Height="75" />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="110" />
                         <ColumnDefinition Width="220" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="110" />
                         <ColumnDefinition Width="220" />
                     </Grid.ColumnDefinitions>
                     <Label
                         Grid.Row="0"
                         Grid.Column="0"
-                        HorizontalAlignment="Right"
+                        HorizontalContentAlignment="Right"
                         VerticalContentAlignment="Center"
-                        Content="关键字：" />
+                        Content="{markups:TextBlock Text=关键字：}" />
 
                     <TextBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        Width="220" />
+                        Width="220"
+                        Text="{Binding Input.Key}" />
                     <Label
                         Grid.Row="0"
                         Grid.Column="3"
+                        HorizontalContentAlignment="Right"
                         VerticalContentAlignment="Center"
-                        Content="日志等级：" />
-                    <ComboBox Grid.Row="0" Grid.Column="4">
+                        Content="{markups:TextBlock Text=日志等级：}" />
+                    <ComboBox
+                        Grid.Row="0"
+                        Grid.Column="4"
+                        SelectedValue="{Binding Input.Level}"
+                        SelectedValuePath="Content">
                         <ComboBoxItem Content="" IsSelected="True" />
                         <ComboBoxItem Content="Debug" />
                         <ComboBoxItem Content="Information" />
@@ -64,8 +73,9 @@
                     <Label
                         Grid.Row="1"
                         Grid.Column="0"
+                        HorizontalContentAlignment="Right"
                         VerticalContentAlignment="Center"
-                        Content="开始日期：" />
+                        Content="{markups:TextBlock Text='开始日期：'}" />
                     <StackPanel
                         Grid.Row="1"
                         Grid.Column="1"
@@ -73,27 +83,24 @@
                         Orientation="Horizontal">
                         <DatePicker
                             Width="120"
+                            Margin="0,0,5,0"
                             materialDesign:HintAssist.HelperTextFontSize="12"
-                            materialDesign:HintAssist.Hint="年月日" />
+                            materialDesign:HintAssist.Hint="年月日"
+                            Text="{Binding Input.BeginTime.Left}" />
                         <materialDesign:TimePicker
-                            Width="100"
+                            Width="95"
                             materialDesign:HintAssist.Hint="时分秒"
                             Is24Hours="True"
+                            Text="{Binding Input.BeginTime.Right}"
                             WithSeconds="True" />
                     </StackPanel>
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="2"
-                        Padding="15,0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="  -  " />
                     <Label
                         Grid.Row="1"
                         Grid.Column="3"
                         Padding="0,0,0,0"
-                        VerticalAlignment="Center"
-                        Content="结束日期：" />
+                        HorizontalContentAlignment="Right"
+                        VerticalContentAlignment="Center"
+                        Content="{markups:TextBlock Text='结束日期： '}" />
                     <StackPanel
                         Grid.Row="1"
                         Grid.Column="4"
@@ -101,12 +108,15 @@
                         Orientation="Horizontal">
                         <DatePicker
                             Width="120"
+                            Margin="0,0,5,0"
                             materialDesign:HintAssist.HelperTextFontSize="12"
-                            materialDesign:HintAssist.Hint="年月日" />
+                            materialDesign:HintAssist.Hint="年月日"
+                            Text="{Binding Input.EndTime.Left}" />
                         <materialDesign:TimePicker
-                            Width="100"
+                            Width="95"
                             materialDesign:HintAssist.Hint="时分秒"
                             Is24Hours="True"
+                            Text="{Binding Input.EndTime.Right}"
                             WithSeconds="True" />
                     </StackPanel>
 
@@ -139,16 +149,19 @@
                 <DataGridTextColumn
                     Width="200"
                     Binding="{Binding Timestamp}"
-                    Header="Timestamp" />
+                    Header="Timestamp"
+                    IsReadOnly="True" />
                 <DataGridTextColumn
                     MaxWidth="250"
                     Binding="{Binding Level}"
-                    Header="Level" />
+                    Header="Level"
+                    IsReadOnly="True" />
                 <DataGridTextColumn
                     MinWidth="350"
                     MaxWidth="450"
                     Binding="{Binding RenderedMessage}"
-                    Header="RenderedMessage" />
+                    Header="RenderedMessage"
+                    IsReadOnly="True" />
                 <DataGridTemplateColumn MaxWidth="300" Header="Action">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type models:LogDetail}">

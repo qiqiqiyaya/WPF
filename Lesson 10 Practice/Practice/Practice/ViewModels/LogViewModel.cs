@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Practice.Common;
 using Practice.Core.BaseModels;
+using Practice.Dtos.Inputs;
 using Practice.Models;
 using Practice.Provider.interfaces;
 using Practice.Services;
@@ -38,6 +39,11 @@ namespace Practice.ViewModels
 
         public DelegateCommand PageChangedCommand { get; }
 
+        /// <summary>
+        /// 查询操作
+        /// </summary>
+        public DelegateCommand SearchCommand { get; }
+
         public LogViewModel(
             SafetyUiActionService safetyUiActionService,
             IContainerExtension containerProvider,
@@ -55,6 +61,7 @@ namespace Practice.ViewModels
             ViewDetailCommand = new DelegateCommand<LogDetail>(OpenLogDetail);
             CopyCommand = new DelegateCommand<LogDetail>(Copy);
             PageChangedCommand = new DelegateCommand(PageChanged);
+            SearchCommand = new DelegateCommand(() => LoadingData(true));
 
             PaginationShow = Visibility.Visible;
             PageNumber = 1;
@@ -69,12 +76,33 @@ namespace Practice.ViewModels
             set => this.RaiseAndSetIfChanged(ref value, _logs);
         }
 
-        protected void LoadingData()
+        private LogSearchInput _input = new LogSearchInput();
+        /// <summary>
+        /// 日志查询条件输入值
+        /// </summary>
+        public LogSearchInput Input
         {
-            _safetyUiActionService.TaskRun(async () =>
+            get => _input;
+            set => this.RaiseAndSetIfChanged(ref value, _input);
+        }
+
+        protected void LoadingData(bool toSearch = false)
+        {
+            LogSearchInput? input = null;
+            if (toSearch) input = _input;
+
+            _safetyUiActionService.SafetyTaskRun(async () =>
             {
                 await _rootDialogService.LoadingShowAsync();
-                PageList<List<LogDetail>> pageList = await _logProvider.GetPageList(PageNumber, PageSize);
+                PageList<List<LogDetail>> pageList;
+                if (input != null)
+                {
+                    pageList = await _logProvider.GetPageListAsync(input, PageNumber, PageSize);
+                }
+                else
+                {
+                    pageList = await _logProvider.GetPageListAsync(PageNumber, PageSize);
+                }
 
                 // 界面数据清空，分页按钮执行
                 _safetyUiActionService.Invoke(() =>

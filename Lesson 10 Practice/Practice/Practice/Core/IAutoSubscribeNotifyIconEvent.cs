@@ -14,6 +14,6 @@ namespace Practice.Core
         /// 订阅 <see cref="NotifyIconEvent"/> 事件
         /// </summary>
         /// <param name="state"></param>
-        void Subscribe(PracticeWindowState state);
+        void NotifyIconEventSubscribe(PracticeWindowState state);
     }
 }

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Practice.ViewModels
 {
-    public class ChartZoomViewModel : ReactiveObject
+    public class ChartZoomViewModel : ReactiveObject, IDisposable
     {
         private readonly SafetyUiActionService _safetyUiActionService;
 
@@ -73,6 +73,11 @@ namespace Practice.ViewModels
         protected void Reset()
         {
 
+        }
+
+        public void Dispose()
+        {
+            ChartSeries.Clear();
         }
     }
 }

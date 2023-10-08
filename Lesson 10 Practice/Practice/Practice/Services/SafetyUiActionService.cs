@@ -103,15 +103,6 @@ namespace Practice.Services
                 UiDispatcher.Invoke(() => target.AddRange(source.Skip(i * size).Take(size)));
                 await Task.Delay(delay);
             }
-
-            //Task.Run(async () =>
-            //    {
-
-            //    }).ContinueWith(task =>
-            //    {
-            //        continueWith?.Invoke();
-            //    })
-            //    .FireAndForget();
         }
 
         /// <summary>
@@ -146,7 +137,7 @@ namespace Practice.Services
         /// 执行异步操作，action 内部，使用 Invoke 去执行
         /// </summary>
         /// <param name="action"></param>
-        public void TaskRun(Func<Task> action)
+        public void SafetyTaskRun(Func<Task> action)
         {
             Task.Run(async () =>
             {

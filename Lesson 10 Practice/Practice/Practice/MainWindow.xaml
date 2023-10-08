@@ -358,11 +358,6 @@
                         </TabControl.Template>
                     </TabControl>
 
-                    <!--
-                        PageNumber="{Binding Path=Pagination.PageNumber}"
-                        PageSize="{Binding Path=Pagination.PageSize}"
-                        Total="{Binding Path=Pagination.Total}"
-                    -->
                     <common:PaginationControl
                         Grid.Row="2"
                         Margin="0,0,0,5"
