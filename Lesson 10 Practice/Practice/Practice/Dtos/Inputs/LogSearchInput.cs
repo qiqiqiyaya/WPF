@@ -21,21 +21,23 @@ namespace Practice.Dtos.Inputs
 
     public class SearchInputTimeDetail
     {
-        public string Left { get; set; }
+        public DateTime? Left { get; set; }
 
-        public string Right { get; set; }
+        public DateTime? Right { get; set; }
 
         public long? GetTimestamp()
         {
-            if (Left.IsNullOrWhiteSpace()) return null;
+            if (!Left.HasValue) return null;
+            var date = Left.Value;
 
-            string str = Left + " " + Right;
-            if (DateTimeOffset.TryParse(str, out DateTimeOffset output))
+            if (Right.HasValue)
             {
-                return output.ToUnixTimeMilliseconds();
+                date = date.AddHours(Right.Value.Hour);
+                date = date.AddMinutes(Right.Value.Minute);
+                date = date.AddMilliseconds(Right.Value.Millisecond);
             }
 
-            return null;
+            return new DateTimeOffset(date).ToUnixTimeMilliseconds();
         }
     }
 }
