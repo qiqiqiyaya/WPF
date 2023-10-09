@@ -16,6 +16,8 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Practice.Events;
+using System.Collections.Generic;
+using DynamicData;
 
 namespace Practice.ViewModels
 {
@@ -37,17 +39,29 @@ namespace Practice.ViewModels
 
         public void OnEnter()
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-            _cancellationToken = _cancellationTokenSource.Token;
-            IntervalAction();
+            //_cancellationTokenSource = new CancellationTokenSource();
+            //_cancellationToken = _cancellationTokenSource.Token;
+            //IntervalAction();
         }
 
         public void OnLeave()
         {
-            _cancellationTokenSource.CancelAndDispose();
+            //_cancellationTokenSource.CancelAndDispose();
         }
 
-        private readonly ObservableLimitedLengthQueue<ObservableValue> _cupValues = new ObservableLimitedLengthQueue<ObservableValue>(15);
+        private LimitedLengthQueue<string> _xAxes = new LimitedLengthQueue<string>(30);
+
+        public List<Axis> XAxes => new List<Axis>
+        {
+            new Axis
+            {
+                LabelsRotation = 45,
+                // Use the labels property to define named labels.
+                Labels = _xAxes
+            }
+        };
+
+        private readonly ObservableLimitedLengthQueue<ObservableValue> _cupValues = new ObservableLimitedLengthQueue<ObservableValue>(30);
 
         public ObservableCollection<ISeries> CpuSeries => new ObservableCollection<ISeries>
         {
@@ -73,7 +87,7 @@ namespace Practice.ViewModels
                 }
             };
 
-        private readonly ObservableLimitedLengthQueue<ObservableValue> _physicalMemory = new ObservableLimitedLengthQueue<ObservableValue>(15);
+        private readonly ObservableLimitedLengthQueue<ObservableValue> _physicalMemory = new ObservableLimitedLengthQueue<ObservableValue>(30);
 
         public ObservableCollection<ISeries> PhysicalMemorySeries => new ObservableCollection<ISeries>
         {
@@ -99,7 +113,7 @@ namespace Practice.ViewModels
                 }
             };
 
-        private readonly ObservableLimitedLengthQueue<ObservableValue> _privateMemory = new ObservableLimitedLengthQueue<ObservableValue>(15);
+        private readonly ObservableLimitedLengthQueue<ObservableValue> _privateMemory = new ObservableLimitedLengthQueue<ObservableValue>(30);
 
         public ObservableCollection<ISeries> PrivateMemorySeries => new ObservableCollection<ISeries>
         {
@@ -143,7 +157,7 @@ namespace Practice.ViewModels
             var startTime = DateTime.UtcNow;
             var startCpuUsage = _currentProcess.TotalProcessorTime;
 
-            await Task.Delay(500, token);
+            await Task.Delay(300, token);
 
             var endTime = DateTime.UtcNow;
             var endCpuUsage = _currentProcess.TotalProcessorTime;
@@ -200,9 +214,12 @@ namespace Practice.ViewModels
                     var usage = await GetCpuUsageForProcess(_cancellationToken);
                     var memory = GetMemoryUsageForProcess();
 
+                    var dateTime = DateTime.Now;
+
                     // 计算结果操作交给UI线程操作
                     _safetyUiActionService.Invoke(() =>
                     {
+                        _xAxes.Enqueue(dateTime.ToString("HH:mm:ss"));
                         _cupValues.Enqueue(new ObservableValue(usage));
                         _physicalMemory.Enqueue(new ObservableValue(memory.Item1));
                         _privateMemory.Enqueue(new ObservableValue(memory.Item2));
@@ -224,12 +241,17 @@ namespace Practice.ViewModels
             {
                 case PracticeWindowState.Normal:
                 case PracticeWindowState.Maximized:
-                    this.OnEnter();
+                case PracticeWindowState.Minimized:
+                    _cancellationTokenSource = new CancellationTokenSource();
+                    _cancellationToken = _cancellationTokenSource.Token;
+                    IntervalAction();
+                    //this.OnEnter();
                     break;
 
-                case PracticeWindowState.Minimized:
+                // 最小化到托盘时，暂停此功能，减少资源消耗
                 case PracticeWindowState.Tray:
-                    this.OnLeave();
+                    _cancellationTokenSource.CancelAndDispose();
+                    //this.OnLeave();
                     break;
             }
         }
