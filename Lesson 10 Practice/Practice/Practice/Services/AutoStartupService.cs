@@ -3,6 +3,7 @@ using Practice.Core;
 using Practice.Services.Interfaces;
 using Serilog;
 using System;
+using Practice.Extensions;
 
 namespace Practice.Services
 {
@@ -52,9 +53,9 @@ namespace Practice.Services
         /// <summary>
         /// 启动
         /// </summary>
-        public void Enable(bool forAllUsers = false)
+        public bool Enable(bool forAllUsers = false)
         {
-            AutoStartupRegistryAction(key =>
+            return AutoStartupRegistryAction(key =>
             {
                 var executableFile = GetCurrentExecutableFile();
                 key.SetValue(_applicationName, executableFile);
@@ -68,29 +69,39 @@ namespace Practice.Services
         /// <summary>
         /// 禁用
         /// </summary>
-        public void Disable(bool forAllUsers = false)
+        public bool Disable(bool forAllUsers = false)
         {
-            AutoStartupRegistryAction(key =>
+            return AutoStartupRegistryAction(key =>
             {
                 key.DeleteValue(_applicationName, false);
             }, forAllUsers);
         }
 
         /// <summary>
-        /// 更新自启动设定注册表
+        /// 更新自启动设定注册表,操作成功返回 true
         /// </summary>
         /// <param name="action">自启动注册表操作</param>
         /// <param name="forAllUsers">此程序是否为所有用户电脑自启动，如果是，则需要 “管理员权限”</param>
-        protected virtual void AutoStartupRegistryAction(Action<RegistryKey> action, bool forAllUsers = false)
+        protected virtual bool AutoStartupRegistryAction(Action<RegistryKey> action, bool forAllUsers = false)
         {
-            var key = forAllUsers
-                ? Registry.LocalMachine.OpenSubKey(RegistryKey, true)
-                : Registry.CurrentUser.OpenSubKey(RegistryKey, true);
-            if (key == null) return;
-
-            using (key)
+            // 如果杀毒软件阻止操作，将会产生异常
+            try
             {
-                action(key);
+                var key = forAllUsers
+                    ? Registry.LocalMachine.OpenSubKey(RegistryKey, true)
+                    : Registry.CurrentUser.OpenSubKey(RegistryKey, true);
+                if (key == null) return false;
+
+                using (key)
+                {
+                    action(key);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.ErrorDetail(ex);
+                return false;
             }
         }
     }

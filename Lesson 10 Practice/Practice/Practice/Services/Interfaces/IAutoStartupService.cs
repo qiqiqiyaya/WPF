@@ -11,11 +11,11 @@
         /// <summary>
         /// 启动
         /// </summary>
-        void Enable(bool forAllUsers = false);
+        bool Enable(bool forAllUsers = false);
 
         /// <summary>
         /// 禁用
         /// </summary>
-        void Disable(bool forAllUsers = false);
+        bool Disable(bool forAllUsers = false);
     }
 }

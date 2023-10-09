@@ -21,11 +21,11 @@ namespace Practice.ViewModels
             {
                 if (IsCheck)
                 {
-                    _autoStartupService.Enable();
+                    IsCheck = _autoStartupService.Enable();
                 }
                 else
                 {
-                    _autoStartupService.Disable();
+                    IsCheck = !_autoStartupService.Disable();
                 }
             });
 
@@ -34,11 +34,11 @@ namespace Practice.ViewModels
             {
                 if (IsCheckForAllUsers)
                 {
-                    _autoStartupService.Enable(true);
+                    IsCheckForAllUsers = _autoStartupService.Enable(true);
                 }
                 else
                 {
-                    _autoStartupService.Disable(true);
+                    IsCheckForAllUsers = !_autoStartupService.Disable(true);
                 }
             });
 
