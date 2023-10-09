@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Practice.Common;
+using Practice.Core;
 using Practice.Models;
 using Practice.Provider.interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Serilog;
-using Practice.Core;
+#pragma warning disable CS8618
 
 namespace Practice.Provider.DBContext
 {

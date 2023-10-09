@@ -65,6 +65,26 @@ namespace Practice.Provider
                 {
                     Icon = "ChartLineStacked", NameSpace = "", Title = "图表缩放",
                     TabItemMenu = new TabItemMenu(typeof(ChartZoomView))
+                },
+                new MenuBar()
+                {
+                    Icon = "TestTubeEmpty", NameSpace = "", Title = "Test",
+                    TabItemMenu = new TabItemMenu(typeof(TestView))
+                },
+                new MenuBar()
+                {
+                    Icon = "TestTubeEmpty", NameSpace = "", Title = "Test菜单",
+                    TabItemMenu = new TabItemMenu(typeof(TestView))
+                },
+                new MenuBar()
+                {
+                    Icon = "TestTubeEmpty", NameSpace = "", Title = "Test菜单",
+                    TabItemMenu = new TabItemMenu(typeof(TestView))
+                },
+                new MenuBar()
+                {
+                    Icon = "TestTubeEmpty", NameSpace = "", Title = "Test菜单",
+                    TabItemMenu = new TabItemMenu(typeof(TestView))
                 }
             };
 

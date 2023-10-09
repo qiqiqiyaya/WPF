@@ -111,10 +111,12 @@
                     <ListBox
                         x:Name="MenuItems"
                         Grid.Row="2"
-                        md:ScrollViewerAssist.IsAutoHideEnabled="True"
                         ItemContainerStyle="{DynamicResource MenuListBoxItemStyle}"
                         ItemsSource="{Binding MenuManager.MenuItems}"
                         SelectedIndex="{Binding MenuManager.MenuSelectIndex}">
+                        <ListBox.Resources>
+                            <Style BasedOn="{StaticResource ForScrollViewer}" TargetType="ScrollViewer" />
+                        </ListBox.Resources>
                         <!--  设置item绑定事件  -->
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
@@ -239,7 +241,7 @@
                             <!--  指定类型 DataType="models:MenuBar"  -->
                             <DataTemplate DataType="models:MenuBar">
                                 <!--  ContentControl 的 DataContext 就是每一个 item 项  -->
-                                <ScrollViewer>
+                                <ScrollViewer Style="{StaticResource ForScrollViewer}">
                                     <Border
                                         Margin="0"
                                         Padding="10,10,10,5"
@@ -347,9 +349,18 @@
                                                 </DockPanel>
 
                                             </md:PopupBox>
-                                            <StackPanel CanHorizontallyScroll="True" Orientation="Horizontal">
-                                                <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />
-                                            </StackPanel>
+                                            <ScrollViewer
+                                                md:ScrollViewerAssist.IsAutoHideEnabled="True"
+                                                HorizontalScrollBarVisibility="Auto"
+                                                VerticalScrollBarVisibility="Disabled">
+                                                <!--  只改变 ScrollBar  -->
+                                                <ScrollViewer.Resources>
+                                                    <Style BasedOn="{StaticResource ForScrollbar}" TargetType="ScrollBar" />
+                                                </ScrollViewer.Resources>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />
+                                                </StackPanel>
+                                            </ScrollViewer>
                                         </DockPanel>
                                         <ContentPresenter Grid.Row="1" ContentSource="SelectedContent" />
                                     </Grid>
@@ -360,7 +371,7 @@
 
                     <common:PaginationControl
                         Grid.Row="2"
-                        Margin="0,0,0,5"
+                        Margin="15,0,0,5"
                         Command="{Binding Pagination.PageChangedCommand}"
                         PageNumber="{Binding Path=Pagination.PageNumber}"
                         PageSize="{Binding Path=Pagination.PageSize}"
