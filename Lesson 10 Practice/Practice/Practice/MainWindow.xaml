@@ -237,10 +237,14 @@
                                 </StackPanel>
                             </DataTemplate>
                         </TabControl.ItemTemplate>
-                        <TabControl.ContentTemplate>
-                            <!--  指定类型 DataType="models:MenuBar"  -->
+                        <!--<TabControl.ContentTemplate>
+                        -->
+                        <!--  指定类型 DataType="models:MenuBar"  -->
+                        <!--
                             <DataTemplate DataType="models:MenuBar">
-                                <!--  ContentControl 的 DataContext 就是每一个 item 项  -->
+                        -->
+                        <!--  ContentControl 的 DataContext 就是每一个 item 项  -->
+                        <!--
                                 <ScrollViewer Style="{StaticResource ForScrollViewer}">
                                     <Border
                                         Margin="0"
@@ -251,7 +255,7 @@
                                     </Border>
                                 </ScrollViewer>
                             </DataTemplate>
-                        </TabControl.ContentTemplate>
+                        </TabControl.ContentTemplate>-->
 
                         <TabControl.Template>
                             <!--  控件模板设置  -->
@@ -357,12 +361,32 @@
                                                 <ScrollViewer.Resources>
                                                     <Style BasedOn="{StaticResource ForScrollbar}" TargetType="ScrollBar" />
                                                 </ScrollViewer.Resources>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TabPanel x:Name="HeaderPanel" IsItemsHost="True" />
+                                                <StackPanel IsItemsHost="True" Orientation="Horizontal">
+                                                    <!--<ItemsPresenter />-->
+                                                    <!--<TabPanel x:Name="HeaderPanel" IsItemsHost="True" />-->
                                                 </StackPanel>
                                             </ScrollViewer>
                                         </DockPanel>
-                                        <ContentPresenter Grid.Row="1" ContentSource="SelectedContent" />
+                                        <ContentPresenter Grid.Row="1">
+                                            <ContentPresenter.ContentTemplate>
+                                                <!--  指定类型 DataType="models:MenuBar"  -->
+                                                <DataTemplate DataType="models:MenuBar">
+                                                    <!--  ContentControl 的 DataContext 就是每一个 item 项  -->
+                                                    <ScrollViewer Style="{StaticResource ForScrollViewer}">
+                                                        <Border
+                                                            Margin="0"
+                                                            Padding="10,10,10,5"
+                                                            Background="{DynamicResource PrimaryHueMidForegroundBrush}"
+                                                            CornerRadius="5">
+                                                            <ContentControl Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Path=SelectedContent.(models:MenuBar.TabItemMenu).UserControl}" />
+                                                        </Border>
+                                                    </ScrollViewer>
+                                                </DataTemplate>
+                                            </ContentPresenter.ContentTemplate>
+                                        </ContentPresenter>
+                                        <!--  最简单的方式  -->
+                                        <!--  再配合 TabControl.ContentTemplate  -->
+                                        <!--<ContentPresenter Grid.Row="1" ContentSource="SelectedContent"/>-->
                                     </Grid>
                                 </md:ColorZone>
                             </ControlTemplate>

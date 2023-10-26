@@ -1,0 +1,29 @@
+﻿<Application
+    x:Class="BubbleLabelClick.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:BubbleLabelClick.Controls"
+    StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <Style TargetType="{x:Type controls:TestEventControl}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Button x:Name="TestButton" Content="TestButton" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type controls:TestContentControl}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Button x:Name="testButton" Content="TestContentControl" />
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,34 @@
+﻿<Window x:Class="TunneleEvent.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525" PreviewKeyDown="SomeKeyPressed" KeyDown="MainWindow_OnKeyDown">
+    <Grid Margin="3" PreviewKeyDown="SomeKeyPressed">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Margin="5" Grid.Row="0" HorizontalAlignment="Left" Background="AliceBlue"
+               BorderBrush="Black" BorderThickness="2" PreviewKeyDown="SomeKeyPressed">
+            <StackPanel>
+                <TextBlock Margin="3" PreviewKeyDown="SomeKeyPressed">
+                    Image and text label
+                </TextBlock>
+                <Image Source="face.png" Stretch="None" PreviewMouseUp="SomeKeyPressed"/>
+                <DockPanel Margin="0,5,0,0"  PreviewKeyDown="SomeKeyPressed">
+                    <TextBlock Margin="3" 
+                     PreviewKeyDown="SomeKeyPressed">
+                        Type here:
+                    </TextBlock>
+                    <TextBox PreviewKeyDown="SomeKeyPressed" KeyDown="SomeKeyPressed"></TextBox>
+                </DockPanel>
+            </StackPanel>
+        </Label>
+
+        <ListBox Grid.Row="1" Margin="3" Name="lstMessage">
+        </ListBox>
+        <CheckBox Margin="5" Grid.Row="2" Name="chkHandle">Handle first event</CheckBox>
+        <Button Click="cmdClear_Click"  Grid.Row="3" HorizontalAlignment="Right" Margin="5" Padding="3">Clear List</Button>
+    </Grid>
+</Window>

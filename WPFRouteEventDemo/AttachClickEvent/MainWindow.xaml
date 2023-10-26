@@ -1,0 +1,10 @@
+﻿<Window x:Class="AttachClickEvent.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <StackPanel Margin="3" Button.Click="DoSomething" Name="ButtonsPanel">
+        <Button Name="btn1">Button 1</Button>
+        <Button Name="btn2">Button 2</Button>
+        <Button Name="btn3">Button 3</Button>
+    </StackPanel>
+</Window>
