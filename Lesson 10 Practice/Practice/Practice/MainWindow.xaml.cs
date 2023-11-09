@@ -1,11 +1,17 @@
-﻿using Practice.Core;
+﻿using System;
+using Practice.Core;
 using Practice.Events;
 using Practice.Services.Interfaces;
 using Prism.Events;
 using Prism.Regions;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using XamlAnimatedGif;
+using Practice.Services;
 
 namespace Practice
 {
@@ -24,7 +30,8 @@ namespace Practice
             IAutoSubscribeNotifyIconEventHandler notifyIconEventHandler,
             IEventAggregator eventAggregator,
             IPaginationControlViewPresentHandler paginationControlViewPresentHandler,
-            ISnackbarService snackbarService)
+            ISnackbarService snackbarService,
+            MainWindowsContentService mainWindowsContentService)
         {
             _eventAggregator = eventAggregator;
             _notifyIconService = notifyIconService;
@@ -83,6 +90,16 @@ namespace Practice
                 }
             });
 
+            Loaded += (sender, e) =>
+            {
+                var controls = FindChildren<ScrollViewer>(TabMenus,
+                    content => content.Name == "TabHeadControl");
+                var tabHeadControl = controls.First();
+                var totalHeight = TabMenus.RenderSize.Height;
+
+                mainWindowsContentService.Init(totalHeight, TabMenus, tabHeadControl);
+            };
+
             Closed += (sender, args) => { notifyIconService.MainWindowsClose(); };
         }
 
@@ -119,6 +136,32 @@ namespace Practice
         private void PreventEventRaise_OnClick(object sender, RoutedEventArgs e)
         {
             e.Handled = true;
+        }
+
+        /// <summary>
+        /// FindChildren
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parent"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public IEnumerable<T> FindChildren<T>(DependencyObject parent, Func<T, bool> action)
+            where T : class
+        {
+            var count = VisualTreeHelper.GetChildrenCount(parent);
+            if (count > 0)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    var child = VisualTreeHelper.GetChild(parent, i);
+                    if (child is T t && action(t))
+                        yield return t;
+
+                    var children = FindChildren<T>(child, action);
+                    foreach (var item in children)
+                        yield return item;
+                }
+            }
         }
     }
 }

@@ -1,17 +1,48 @@
-﻿using System.Windows;
+﻿using System;
+using Practice.Services;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Prism.Events;
 
 namespace Practice.Views
 {
     /// <summary>
     /// LogView.xaml 的交互逻辑
     /// </summary>
-    public partial class LogView : UserControl
+    public partial class LogView : UserControl, IDisposable
     {
-        public LogView()
+        private readonly MainWindowsContentService _mainWindowsContentService;
+        private readonly SubscriptionToken _subscriptionToken;
+        private bool _isChanged;
+
+        public LogView(MainWindowsContentService mainWindowsContentService)
         {
+            _mainWindowsContentService = mainWindowsContentService;
             InitializeComponent();
+
+            //_subscriptionToken = _mainWindowsContentService.SizeChangeEvent.Subscribe(size =>
+            //{
+            //    var aa = size.Height - ConditionPanel.ActualHeight - 10 - 5;
+
+
+            //});
+
+            ConditionPanel.SizeChanged += (sender, args) =>
+            {
+
+            };
+
+            Loaded += (sender, args) =>
+            {
+                mainWindowsContentService.Subscribe(height =>
+                {
+                    if (_isChanged) return;
+                    var fds = height - ConditionPanel.ActualHeight - 10 - 5;
+                    LogDataGrid.Height = fds;
+                    _isChanged = true;
+                });
+            };
         }
 
         private void LogDataGrid_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -26,6 +57,11 @@ namespace Practice.Views
         private void Pagination_OnPageChanged(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        public void Dispose()
+        {
+            //_subscriptionToken.Dispose();
         }
     }
 }

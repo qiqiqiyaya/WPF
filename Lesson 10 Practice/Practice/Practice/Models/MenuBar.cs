@@ -9,6 +9,8 @@ namespace Practice.Models
     /// </summary>
     public class MenuBar : BindableBase
     {
+        public string Id { get; set; }
+
         /// <summary>
         /// 默认值 -1
         /// </summary>

@@ -353,6 +353,11 @@ namespace Practice.Services
         {
             if (oldMenu != null && oldMenu.TabItemMenu.UserControl is UserControl oldControl)
             {
+                if (oldMenu.TabItemMenu.UserControl is ITabItemMenuChangeAction userControlOldAction)
+                {
+                    userControlOldAction.OnLeave();
+                }
+
                 if (oldControl.DataContext is ITabItemMenuChangeAction oldAction)
                 {
                     oldAction.OnLeave();
@@ -361,6 +366,11 @@ namespace Practice.Services
 
             if (newMenu != null && newMenu.TabItemMenu.UserControl is UserControl newControl)
             {
+                if (newMenu.TabItemMenu.UserControl is ITabItemMenuChangeAction userControlOldAction)
+                {
+                    userControlOldAction.OnEnter();
+                }
+
                 if (newControl.DataContext is ITabItemMenuChangeAction newAction)
                 {
                     newAction.OnEnter();

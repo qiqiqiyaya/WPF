@@ -1,5 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Practice.Models;
+using Practice.Services;
 using Practice.Services.Interfaces;
 using Prism.Commands;
 using ReactiveUI;
@@ -33,10 +34,14 @@ namespace Practice.ViewModels
         /// </summary>
         public DelegateCommand TabItemMenuCloseAllCommand { get; }
 
-        public MainWindowViewModel(IMenuManager menuManager, IPaginationService paginationService)
+        public MainWindowViewModel(IMenuManager menuManager,
+            IPaginationService paginationService,
+            MainWindowsContentService mainWindowsContent)
         {
             MenuManager = menuManager;
             Pagination = paginationService;
+            MainWindowsContent = mainWindowsContent;
+
             MenuNavigateCommand = new DelegateCommand<MenuBar>(menuManager.MenuNavigate);
             LeftContentSwitchCommand = new DelegateCommand(LeftContentSwitch);
             TabItemMenuChangeCommand = new DelegateCommand<MenuBar>(menuManager.TabItemMenuChange);
@@ -149,5 +154,7 @@ namespace Practice.ViewModels
         /// 分页控件
         /// </summary>
         public IPaginationService Pagination { get; }
+
+        public MainWindowsContentService MainWindowsContent { get; }
     }
 }

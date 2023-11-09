@@ -23,7 +23,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <DockPanel>
+        <DockPanel Name="ConditionPanel">
             <StackPanel DockPanel.Dock="Right">
                 <Button Command="{Binding SearchCommand}" Content="Search" />
             </StackPanel>

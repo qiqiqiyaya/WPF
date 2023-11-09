@@ -354,6 +354,7 @@
 
                                             </md:PopupBox>
                                             <ScrollViewer
+                                                Name="TabHeadControl"
                                                 md:ScrollViewerAssist.IsAutoHideEnabled="True"
                                                 HorizontalScrollBarVisibility="Auto"
                                                 VerticalScrollBarVisibility="Disabled">
@@ -378,7 +379,10 @@
                                                             Padding="10,10,10,5"
                                                             Background="{DynamicResource PrimaryHueMidForegroundBrush}"
                                                             CornerRadius="5">
-                                                            <ContentControl Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Path=SelectedContent.(models:MenuBar.TabItemMenu).UserControl}" />
+                                                            <ContentControl
+                                                                Name="MainWindowsContent"
+                                                                Width="auto"
+                                                                Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Path=SelectedContent.(models:MenuBar.TabItemMenu).UserControl}" />
                                                         </Border>
                                                     </ScrollViewer>
                                                 </DataTemplate>

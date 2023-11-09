@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Practice.ViewModels
 {
@@ -90,6 +91,7 @@ namespace Practice.ViewModels
         {
             LogSearchInput? input = null;
             if (toSearch) input = _input;
+
 
             _safetyUiActionService.SafetyTaskRun(async () =>
             {
