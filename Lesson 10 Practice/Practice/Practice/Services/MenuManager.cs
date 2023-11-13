@@ -36,6 +36,16 @@ namespace Practice.Services
         private readonly MenuChangingEvent _menuChangingEvent;
 
         /// <summary>
+        /// 菜单变更之后
+        /// </summary>
+        private readonly MenuClosedEvent _menuClosedEvent;
+
+        /// <summary>
+        /// 菜单变更之前
+        /// </summary>
+        private readonly MenuClosingEvent _menuClosingEvent;
+
+        /// <summary>
         /// 内容显示区域
         /// </summary>
         protected IRegion Region;
@@ -55,6 +65,8 @@ namespace Practice.Services
             // 菜单变更事件
             _menuChangedEvent = eventAggregator.GetEvent<MenuChangedEvent>();
             _menuChangingEvent = eventAggregator.GetEvent<MenuChangingEvent>();
+            _menuClosingEvent = eventAggregator.GetEvent<MenuClosingEvent>();
+            _menuClosedEvent = eventAggregator.GetEvent<MenuClosedEvent>();
         }
 
         private ObservableCollection<MenuBar> _menuItems;
@@ -318,12 +330,14 @@ namespace Practice.Services
         /// <param name="menu"></param>
         private void ToCloseTabItemMenu(MenuBar menu)
         {
+            _menuClosingEvent.Publish(menu);
             Region.Remove(menu);
 
             var userControl = (UserControl)menu.TabItemMenu.UserControl;
 
             ToDispose(userControl);
             menu.TabItemMenu.Reset();
+            _menuClosedEvent.Publish(menu);
         }
 
         /// <summary>

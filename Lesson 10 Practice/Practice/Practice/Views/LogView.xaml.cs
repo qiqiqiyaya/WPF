@@ -37,10 +37,8 @@ namespace Practice.Views
             {
                 mainWindowsContentService.Subscribe(height =>
                 {
-                    if (_isChanged) return;
-                    var fds = height - ConditionPanel.ActualHeight - 10 - 5;
-                    LogDataGrid.Height = fds;
-                    _isChanged = true;
+                    // 内容区域高度 - 搜索条件输入框
+                    LogDataGrid.Height = height - ConditionPanel.ActualHeight;
                 });
             };
         }

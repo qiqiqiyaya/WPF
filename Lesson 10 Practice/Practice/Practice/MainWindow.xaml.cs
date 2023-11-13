@@ -95,9 +95,8 @@ namespace Practice
                 var controls = FindChildren<ScrollViewer>(TabMenus,
                     content => content.Name == "TabHeadControl");
                 var tabHeadControl = controls.First();
-                var totalHeight = TabMenus.RenderSize.Height;
 
-                mainWindowsContentService.Init(totalHeight, TabMenus, tabHeadControl);
+                mainWindowsContentService.Init(TabMenus, tabHeadControl);
             };
 
             Closed += (sender, args) => { notifyIconService.MainWindowsClose(); };
