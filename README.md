@@ -1,11 +1,8 @@
 # WPF
-.Net 6 Demo project 
+.Net 6 WPF project 
 <br/>
-学习、演示项目
-![Demo](https://github.com/qiqiqiyaya/WPF/assets/37217632/c9c283a5-75d6-42de-b999-f996aefd3eff)
+![1](https://github.com/qiqiqiyaya/WPF/assets/37217632/56d57056-f92d-4ae2-bcc3-3ef3bf1e8de6)
 <br/>
-![image](https://github.com/qiqiqiyaya/WPF/assets/37217632/09cffa62-8343-48f3-bd9c-1ebc92cfc5ab)
+![2](https://github.com/qiqiqiyaya/WPF/assets/37217632/88800460-f05a-48d7-a26e-2726589fc333)
 <br/>
-![image](https://github.com/qiqiqiyaya/WPF/assets/37217632/8ab1ab5a-d104-48d0-b3a0-d6cb77fc4808)
-<br/>
-![image](https://github.com/qiqiqiyaya/WPF/assets/37217632/2aa42ef2-364a-4750-abf7-44ad8f7535f3)
+![3](https://github.com/qiqiqiyaya/WPF/assets/37217632/192b34c1-0ca5-4883-8a87-585d725f7de8)
